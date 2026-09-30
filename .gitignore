@@ -1,0 +1,8 @@
+# 官方原始碼(有自己的 git 歷史,不納入本 repo)
+LibreChat/
+
+# 依賴與金鑰
+node_modules/
+.env
+.env.*
+!.env.example
