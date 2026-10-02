@@ -31,6 +31,8 @@
 - 有疑問或需要選擇時,先問使用者。
 - 使用者可隨時更新這些規則。
 - 使用者已授權 Claude 執行 commit 與 push(遠端為使用者自己的 repo)。
+- 提交訊息用 Conventional Commits:`type: 簡短英文描述`,類型小寫、不加表情符號(沿用使用者 `libre-chat-sep` 的慣例)。類型:`docs`(`docs/`、README、CLAUDE.md 等文件)、`feat`(帶入官方檔案或新增功能)、`fix`(修正錯誤)、`chore`(設定、整理)、`ci`、`refactor`。結尾照常附上 Co-Authored-By。
+- 提交時逐檔指定要加入的檔案,不用 `git add -A`。
 
 ## 內容來源規則
 - 根目錄的檔案(README.md、LICENSE 等)內容要來自原始來源,可取部分或翻成繁體中文,但不可自己發揮。
@@ -106,7 +108,7 @@ Helm 為 Kubernetes,本機不用,略過。
 
 #### 進度清單
 - [x] A. 固定 `v0.8.8-rc4`,並已重新對齊已帶入的檔案
-- [ ] B. 暫存區實驗(已大幅縮減:對照專案已證實 Windows 主機上 npm 安裝與建置可行,不再做基線實驗)。(a) 【已完成:缺少工作區資料夾時 `npm install` 不報錯、結束代碼 0;lockfile 只含根的 700 個套件,不含工作區;因此可逐階段增加工作區並重新安裝】;(b) 靜態分析:從精簡後的後端與前端入口追蹤 import 關係,算出 MVP 所需檔案集合(不安裝、不執行)
+- [ ] B. 暫存區實驗(已大幅縮減:對照專案已證實 Windows 主機上 npm 安裝與建置可行,不再做基線實驗)。(a) 【已完成:缺少工作區資料夾時 `npm install` 不報錯、結束代碼 0;lockfile 只含根的 700 個套件,不含工作區;因此可逐階段增加工作區並重新安裝】;(b) 後端靜態分析【已完成:api/ 排除測試共 393 檔,從 server/index.js 可達 356 檔;所有路由共用約 184 檔的核心;MVP 候選路由(config、endpoints、models、auth、user、convos、messages、balance、roles)約 236 檔,加 agents 路由(聊天走 /api/agents/chat)約 266 檔;其餘功能路由多半只多 1–4 檔,assistants +23、files +27;為靜態估計,動態 require 會漏】;(c) 前端靜態分析(待做,不安裝、不執行)
 - [ ] C. 修正 `docs/build-order.md`:加入功能時間軸(以 release 為骨幹),取代過時的「兩種切法」
 - [ ] D. MVP 設計文件:要留哪些檔案、刪哪些接線、為什麼、驗收標準;使用者讀懂
 - [ ] E. MVP 實作與驗證
