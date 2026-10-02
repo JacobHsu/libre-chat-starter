@@ -6,6 +6,12 @@
 - 以「現在的結構」為主,從入口檔開始讀(由 scripts 找到後端與前端的第一個檔案)。
 - 官方 git 歷史只當背景參考,需要時才查,不逐次追。
 
+## 本機環境(與使用者既有服務並存)
+- 使用者本機已有其他 LibreChat 與相關服務在 Docker 執行(含 `chat-mongodb` 佔 27017、後端佔 3080/3081)。**不可碰這些容器與資料,也不可直接執行官方整份 compose**(容器名稱與 port 會衝突)。
+- 學習專案專用 port:後端 `3090`、前端開發伺服器 `4090`、MongoDB `27018`。
+- MongoDB 另起學習專用容器(獨立名稱、獨立資料卷)。
+- 這些 port 偏離官方預設(後端 3080、前端 3090、MongoDB 27017),設定時要確認前後端的轉發設定一致。
+
 ## 來源
 - 官方文件:https://www.librechat.ai/zh
 - 原始碼:https://github.com/LibreChat-AI/LibreChat
@@ -28,7 +34,8 @@
 - 只有 `docs/` 底下的學習紀錄與教學文件,才是我們自己寫的內容。
 - `docs/` 檔案不編號,沿用官方檔名(如 `architecture`);閱讀順序由 `docs/README.md` 的目錄維護。
 - 核心原則:先慢慢帶入官方原檔(翻成繁中),使用者讀完後,再針對官方不足的地方補充。有需要才自己加入或自訂,不預先寫。
-- 寫教學文件前,先找官方文件:官方 repo 的 `docs/`,以及官網文件原始檔(librechat.ai repo 的 `content/docs/*.mdx`)。有官方的就優先採用(照原文翻成繁中),我們自己的說明只補官方沒講的部分。官方 `.zh.mdx` 若是簡中,以英文原文為準翻成繁中。
+- 寫教學文件前,先找官方文件:官方 repo 的 `docs/`,以及官網文件原始檔(librechat.ai repo 的 `content/docs/*.mdx`)。有官方的就優先採用(照原文翻成繁中),我們自己的說明只補官方沒講的部分。官方 `.zh.mdx` 若是簡中,以英文原文為準翻成繁中。查官方文件時英文與 `.zh.mdx` 都要看,並比對導覽(`meta.zh.json`)。
+- 每份 `docs/` 文件結尾放 `## References`,列出引用的官方檔案與網址。
 - 官方檔案一個一個(或一小段一小段)帶入我們根目錄的相同相對路徑,不整包 clone,也不用 `LibreChat/` 子資料夾。每帶入一個都先講解、使用者確認讀懂才帶下一個。
 - 內容引用的檔案(如 logo)下載到和官方相同的相對路徑,讓連結原樣可用。
 - 官方連結若指向我們沒有的檔案,列出選項讓使用者決定,不自行處理。
@@ -48,7 +55,7 @@
 - [x] 0. 唯讀查看官方第一層結構(目錄與檔案),逐一講解,不下載;說明文件見 `docs/repository-structure.md`
 - [x] 1. 查官方最早提交與第一個 package.json:第一個提交只有 .gitignore 等 3 檔(來自範本);第一份 package.json 在 2023-02-04,是 `npm init -y` 產生的 React + webpack 小專案。結論:以現在的結構為主線,歷史只當背景
 - [x] 2. 讀現在的根 package.json(workspaces、scripts);說明文件見 `docs/package-json.md`、`docs/architecture.md`
-- [ ] 3. Docker 啟動 MongoDB
+- [x] 3. Docker 啟動 MongoDB(學習專用容器 `learn-mongodb`,port 27018);說明文件見 `docs/mongodb.md`
 - [ ] 4. 設定 `.env`,`npm ci`
 - [ ] 5. 啟動後端
 - [ ] 6. 啟動前端,註冊、登入
