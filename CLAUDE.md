@@ -34,6 +34,7 @@
 - 使用者已授權 Claude 執行 commit 與 push(遠端為使用者自己的 repo)。
 - 提交訊息與官方 LibreChat 對齊(依官方最近 300 筆提交統計,295 筆符合):`<表情> <type>: <首字大寫的英文標題>`,例如 `📦 chore: Bump Packages`。表情官方沒有固定對應(144 種表情用在 176 筆 `fix`),依內容挑一個貼切的即可。類型:`docs`(`docs/`、README、CLAUDE.md 等文件)、`feat`(帶入官方檔案或新增功能)、`fix`、`chore`(設定、整理)、`refactor`、`ci`、`test`、`style`、`perf`。官方結尾的 `(#PR編號)` 來自 PR 合併,我們沒有 PR,省略。結尾照常附上 Co-Authored-By。使用者 `libre-chat-sep` 的無表情寫法不採用,以官方為準。
 - 提交時逐檔指定要加入的檔案,不用 `git add -A`。
+- **需要使用者閱讀的文件,先寫好、請使用者讀,使用者確認沒問題後才 commit 與 push**,不可先提交再請他讀。commit 與 push 的授權是針對「已確認的內容」,不是事先的一般授權。純規則或設定的小修正(使用者剛下達的指示)可以直接提交。
 
 ## 內容來源規則
 - 根目錄的檔案(README.md、LICENSE 等)內容要來自原始來源,可取部分或翻成繁體中文,但不可自己發揮。
@@ -109,7 +110,7 @@ Helm 為 Kubernetes,本機不用,略過。
 
 #### 進度清單
 - [x] A. 固定 `v0.8.8-rc4`,並已重新對齊已帶入的檔案
-- [x] B. 暫存區實驗(已大幅縮減:對照專案已證實 Windows 主機上 npm 安裝與建置可行,不再做基線實驗)。(a) 【已完成:缺少工作區資料夾時 `npm install` 不報錯、結束代碼 0;lockfile 只含根的 700 個套件,不含工作區;因此可逐階段增加工作區並重新安裝】;(b) 後端靜態分析【已完成:api/ 排除測試共 393 檔,從 server/index.js 可達 356 檔;所有路由共用約 184 檔的核心;MVP 候選路由(config、endpoints、models、auth、user、convos、messages、balance、roles)約 236 檔,加 agents 路由(聊天走 /api/agents/chat)約 266 檔;其餘功能路由多半只多 1–4 檔,assistants +23、files +27;為靜態估計,動態 require 會漏】;(c) 前端靜態分析【已完成:client/src 排除測試共 1421 個程式碼檔,從 main.jsx 可達約 94%(1329);單獨對話頁 ChatRoute 就可達 928 檔;對話頁加外層版面聯集 1254 檔(88%);無法只刪路由,但可在元件內刪除對功能目錄的 import 與其使用處(只刪不寫,符合規則)。砍掉 17 個功能目錄(SidePanel 各面板、Prompts、Skills、Agents、Trace 等)後剩 1001 檔(75%),需在 29 個檔案刪 57 條 import 及約等量的使用處,集中在 useSideNavLinks.ts(10)與 routes/index.tsx(7)。結論:前端同樣依階段精簡,不整包帶入;精簡後以 vite build、啟動與 MVP 驗收確認;功能隱藏另可搭配官方 librechat.yaml 的 interface 開關】 (d) 函式庫靜態分析【已完成:非測試 TS 檔 data-provider 65、data-schemas 243、packages/api 732、packages/client 205;MVP 約需 data-provider 95%、data-schemas 50%、packages/api 76%、client 至少 35%(低估,改名匯出未處理);前端有 16 個檔案整包匯入 data-provider。MVP 合計約 2077 / 2930 個程式碼檔(約 71%),結構高度整合,精簡幅度有限;階段的學習價值在功能說明而非檔案增量】
+- [x] B. 暫存區實驗(已大幅縮減:對照專案已證實 Windows 主機上 npm 安裝與建置可行,不再做基線實驗)。(a) 【已完成:缺少工作區資料夾時 `npm install` 不報錯、結束代碼 0;lockfile 只含根的 700 個套件,不含工作區;因此可逐階段增加工作區並重新安裝】;(b) 後端靜態分析【已完成:api/ 排除測試共 393 檔,從 server/index.js 可達 356 檔;所有路由共用約 184 檔的核心;MVP 候選路由(config、endpoints、models、auth、user、convos、messages、balance、roles)約 236 檔,加 agents 路由(聊天走 /api/agents/chat)約 266 檔;其餘功能路由多半只多 1–4 檔,assistants +23、files +27;為靜態估計,動態 require 會漏】;(c) 前端靜態分析【已完成:client/src 排除測試共 1421 個程式碼檔,從 main.jsx 可達約 94%(1329);單獨對話頁 ChatRoute 就可達 928 檔;對話頁加外層版面聯集 1254 檔(88%);無法只刪路由,但可在元件內刪除對功能目錄的 import 與其使用處(只刪不寫,符合規則)。砍掉功能目錄(SidePanel 各面板、Prompts、Skills、Agents、Trace 等)後剩 (經逐項檢查引用,Chat/Subagents、Share、SidePanel/Parameters 是聊天核心,不能砍,最終砍 14 個功能目錄)後剩 1033 檔(78%),需在 13 個檔案刪 29 條 import,集中在 useSideNavLinks.ts(9)與 routes/index.tsx(7)。結論:前端同樣依階段精簡,不整包帶入;精簡後以 vite build、啟動與 MVP 驗收確認;功能隱藏另可搭配官方 librechat.yaml 的 interface 開關】 (d) 函式庫靜態分析【已完成:非測試 TS 檔 data-provider 65、data-schemas 243、packages/api 732、packages/client 205;MVP 約需 data-provider 95%、data-schemas 50%、packages/api 76%、client 至少 35%(低估,改名匯出未處理);前端有 16 個檔案整包匯入 data-provider。MVP 合計約 2109 / 2930 個程式碼檔(約 72%),結構高度整合,精簡幅度有限;階段的學習價值在功能說明而非檔案增量】
 - [x] C. 修正 `docs/build-order.md`:已加入功能時間軸(以 release 為骨幹)與做法說明,取代過時的「兩種切法」
 - [ ] D. MVP 設計文件:要留哪些檔案、刪哪些接線、為什麼、驗收標準;使用者讀懂
 - [ ] E. MVP 實作與驗證

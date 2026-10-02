@@ -69,9 +69,9 @@ LibreChat 從空白專案長成現在結構的過程,以及我們據此規劃的
 | 層 | 完整 | MVP | 精簡方式 |
 |---|---|---|---|
 | 後端 `api/` | 356 | 約 266 | 刪除 `server/index.js` 與 `routes/index.js` 的路由註冊;聊天走 `/api/agents/chat`,所以 agents 路由必須保留 |
-| 前端 `client/` | 1329 | 約 1001 | 在 29 個檔案刪除 57 條 import 與使用處,砍掉 17 個功能目錄 |
+| 前端 `client/` | 1329 | 約 1033 | 在 13 個檔案刪除 29 條 import 與使用處,砍掉 14 個功能目錄(細節見 [MVP 設計](mvp-design.md)) |
 | 函式庫 `packages/*` | 1245 | 約 810 | 刪除各函式庫入口 `index.ts` 的 `export` 行 |
-| **合計** | **約 2930** | **約 2077(71%)** | |
+| **合計** | **約 2930** | **約 2109(72%)** | |
 
 各函式庫 MVP 需要的比例:`data-provider` 約 95%、`data-schemas` 約 50%、`packages/api` 約 76%、`packages/client` 至少 35%(低估)。
 
