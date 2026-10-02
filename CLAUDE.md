@@ -92,16 +92,16 @@
 註冊 → 登入 → 新對話 → 送出訊息 → 回覆串流顯示 → 重新整理後歷史仍在。
 
 #### 功能階段(順序依官方開發史)
-開發史以官方 release 與 changelog 為骨幹,提交紀錄當佐證。下列日期是各功能路徑最早出現的提交,屬近似值,每階段開始前需再核對。
+完整表格與核對方式見 `docs/build-order.md`。日期以官方 release 說明核對;標示近似者只有提交紀錄,階段開始前需再確認。
 1. MVP:註冊、登入、對話、保存、一個模型端點(2023-03 起:`api/` 拆出、多使用者登入)
-2. Meilisearch 搜尋(2023-03-16)
-3. 預設 presets(2023-04-01)
-4. 圖片與檔案上傳 Vision(2023-11-22)
-5. 自訂端點與 `librechat.yaml`(2024-01-03)
-6. RAG 跟檔案對話(2024-03-20)
-7. Agents(2024-08-31)
-8. MCP(2024-12-17)
-9. Redis(2025-07-15)
+2. Meilisearch 搜尋(2023-03-16,release v0.0.4)
+3. 預設 presets(2023-04-05,release v0.3.0)
+4. Redis(2023-10-22,release v0.6.0)
+5. 圖片與檔案上傳 Vision(2023-11-16,release v0.6.1)
+6. 自訂端點與 `librechat.yaml`(2024-01-19,release v0.6.6;MVP 為接 Ollama 會提前使用)
+7. RAG 跟檔案對話(約 2024-03,提交紀錄,未核對 release)
+8. Agents(約 2024-08 至 10,提交紀錄;MVP 因聊天走 agents 路由會提前使用)
+9. MCP(2024-12-20,release v0.7.6)
 Helm 為 Kubernetes,本機不用,略過。
 
 #### 每個階段的固定節奏
@@ -110,7 +110,7 @@ Helm 為 Kubernetes,本機不用,略過。
 #### 進度清單
 - [x] A. 固定 `v0.8.8-rc4`,並已重新對齊已帶入的檔案
 - [x] B. 暫存區實驗(已大幅縮減:對照專案已證實 Windows 主機上 npm 安裝與建置可行,不再做基線實驗)。(a) 【已完成:缺少工作區資料夾時 `npm install` 不報錯、結束代碼 0;lockfile 只含根的 700 個套件,不含工作區;因此可逐階段增加工作區並重新安裝】;(b) 後端靜態分析【已完成:api/ 排除測試共 393 檔,從 server/index.js 可達 356 檔;所有路由共用約 184 檔的核心;MVP 候選路由(config、endpoints、models、auth、user、convos、messages、balance、roles)約 236 檔,加 agents 路由(聊天走 /api/agents/chat)約 266 檔;其餘功能路由多半只多 1–4 檔,assistants +23、files +27;為靜態估計,動態 require 會漏】;(c) 前端靜態分析【已完成:client/src 排除測試共 1421 個程式碼檔,從 main.jsx 可達約 94%(1329);單獨對話頁 ChatRoute 就可達 928 檔;對話頁加外層版面聯集 1254 檔(88%);無法只刪路由,但可在元件內刪除對功能目錄的 import 與其使用處(只刪不寫,符合規則)。砍掉 17 個功能目錄(SidePanel 各面板、Prompts、Skills、Agents、Trace 等)後剩 1001 檔(75%),需在 29 個檔案刪 57 條 import 及約等量的使用處,集中在 useSideNavLinks.ts(10)與 routes/index.tsx(7)。結論:前端同樣依階段精簡,不整包帶入;精簡後以 vite build、啟動與 MVP 驗收確認;功能隱藏另可搭配官方 librechat.yaml 的 interface 開關】 (d) 函式庫靜態分析【已完成:非測試 TS 檔 data-provider 65、data-schemas 243、packages/api 732、packages/client 205;MVP 約需 data-provider 95%、data-schemas 50%、packages/api 76%、client 至少 35%(低估,改名匯出未處理);前端有 16 個檔案整包匯入 data-provider。MVP 合計約 2077 / 2930 個程式碼檔(約 71%),結構高度整合,精簡幅度有限;階段的學習價值在功能說明而非檔案增量】
-- [ ] C. 修正 `docs/build-order.md`:加入功能時間軸(以 release 為骨幹),取代過時的「兩種切法」
+- [x] C. 修正 `docs/build-order.md`:已加入功能時間軸(以 release 為骨幹)與做法說明,取代過時的「兩種切法」
 - [ ] D. MVP 設計文件:要留哪些檔案、刪哪些接線、為什麼、驗收標準;使用者讀懂
 - [ ] E. MVP 實作與驗證
 - [ ] F. 階段 2–9 依序進行
