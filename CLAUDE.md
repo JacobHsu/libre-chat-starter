@@ -31,7 +31,7 @@
 - 有疑問或需要選擇時,先問使用者。
 - 使用者可隨時更新這些規則。
 - 使用者已授權 Claude 執行 commit 與 push(遠端為使用者自己的 repo)。
-- 提交訊息用 Conventional Commits:`type: 簡短英文描述`,類型小寫、不加表情符號(沿用使用者 `libre-chat-sep` 的慣例)。類型:`docs`(`docs/`、README、CLAUDE.md 等文件)、`feat`(帶入官方檔案或新增功能)、`fix`(修正錯誤)、`chore`(設定、整理)、`ci`、`refactor`。結尾照常附上 Co-Authored-By。
+- 提交訊息與官方 LibreChat 對齊(依官方最近 300 筆提交統計,295 筆符合):`<表情> <type>: <首字大寫的英文標題>`,例如 `📦 chore: Bump Packages`。表情官方沒有固定對應(144 種表情用在 176 筆 `fix`),依內容挑一個貼切的即可。類型:`docs`(`docs/`、README、CLAUDE.md 等文件)、`feat`(帶入官方檔案或新增功能)、`fix`、`chore`(設定、整理)、`refactor`、`ci`、`test`、`style`、`perf`。官方結尾的 `(#PR編號)` 來自 PR 合併,我們沒有 PR,省略。結尾照常附上 Co-Authored-By。使用者 `libre-chat-sep` 的無表情寫法不採用,以官方為準。
 - 提交時逐檔指定要加入的檔案,不用 `git add -A`。
 
 ## 內容來源規則
