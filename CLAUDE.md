@@ -109,7 +109,7 @@ Helm 為 Kubernetes,本機不用,略過。
 
 #### 進度清單
 - [x] A. 固定 `v0.8.8-rc4`,並已重新對齊已帶入的檔案
-- [ ] B. 暫存區實驗(已大幅縮減:對照專案已證實 Windows 主機上 npm 安裝與建置可行,不再做基線實驗)。(a) 【已完成:缺少工作區資料夾時 `npm install` 不報錯、結束代碼 0;lockfile 只含根的 700 個套件,不含工作區;因此可逐階段增加工作區並重新安裝】;(b) 後端靜態分析【已完成:api/ 排除測試共 393 檔,從 server/index.js 可達 356 檔;所有路由共用約 184 檔的核心;MVP 候選路由(config、endpoints、models、auth、user、convos、messages、balance、roles)約 236 檔,加 agents 路由(聊天走 /api/agents/chat)約 266 檔;其餘功能路由多半只多 1–4 檔,assistants +23、files +27;為靜態估計,動態 require 會漏】;(c) 前端靜態分析(待做,不安裝、不執行)
+- [x] B. 暫存區實驗(已大幅縮減:對照專案已證實 Windows 主機上 npm 安裝與建置可行,不再做基線實驗)。(a) 【已完成:缺少工作區資料夾時 `npm install` 不報錯、結束代碼 0;lockfile 只含根的 700 個套件,不含工作區;因此可逐階段增加工作區並重新安裝】;(b) 後端靜態分析【已完成:api/ 排除測試共 393 檔,從 server/index.js 可達 356 檔;所有路由共用約 184 檔的核心;MVP 候選路由(config、endpoints、models、auth、user、convos、messages、balance、roles)約 236 檔,加 agents 路由(聊天走 /api/agents/chat)約 266 檔;其餘功能路由多半只多 1–4 檔,assistants +23、files +27;為靜態估計,動態 require 會漏】;(c) 前端靜態分析【已完成:client/src 排除測試共 1421 個程式碼檔,從 main.jsx 可達約 94%(1329);單獨對話頁 ChatRoute 就可達 928 檔;對話頁加外層版面聯集 1254 檔(88%);無法用「只刪路由」精簡。結論:前端採後備方案,client 完整帶入(待使用者確認這個例外),功能隱藏改用官方 librechat.yaml 的 interface 開關(對照實例已如此使用),不改程式碼】
 - [ ] C. 修正 `docs/build-order.md`:加入功能時間軸(以 release 為骨幹),取代過時的「兩種切法」
 - [ ] D. MVP 設計文件:要留哪些檔案、刪哪些接線、為什麼、驗收標準;使用者讀懂
 - [ ] E. MVP 實作與驗證
