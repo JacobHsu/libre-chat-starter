@@ -45,7 +45,7 @@
 - 只用相對路徑或簡短別名,不寫本機絕對路徑。
 
 ## 進度清單(使用者確認一步,才打勾一步)
-- [ ] 0. 唯讀查看官方第一層結構(目錄與檔案),逐一講解,不下載
+- [x] 0. 唯讀查看官方第一層結構(目錄與檔案),逐一講解,不下載;說明文件見 `docs/repository-structure.md`
 - [x] 1. 查官方最早提交與第一個 package.json:第一個提交只有 .gitignore 等 3 檔(來自範本);第一份 package.json 在 2023-02-04,是 `npm init -y` 產生的 React + webpack 小專案。結論:以現在的結構為主線,歷史只當背景
 - [x] 2. 讀現在的根 package.json(workspaces、scripts);說明文件見 `docs/package-json.md`、`docs/architecture.md`
 - [ ] 3. Docker 啟動 MongoDB
