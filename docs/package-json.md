@@ -18,7 +18,7 @@
 | `workspaces` | `api`、`client`、`packages/*` | 三塊工作區,詳見[專案架構](architecture.md) |
 | `scripts` | 141 條 | 見下方[scripts 分組](#scripts-分組) |
 | `devDependencies` | 31 個 | 見下方[devDependencies 分類](#devdependencies-分類) |
-| `overrides` | 39 條 | 見下方[overrides](#overrides) |
+| `overrides` | 38 條 | 見下方[overrides](#overrides) |
 | `scarfSettings` | `{ "enabled": false }` | 關閉 Scarf 的相依套件安裝統計。Dockerfile 與 CI 也設了 `SCARF_ANALYTICS=false` |
 | `nodemonConfig` | `ignore` 5 個資料夾 | `npm run backend:dev` 使用 nodemon 監看檔案時,忽略 `api/data/`、`data/`、`client/`、`admin/`、`packages/` |
 | `repository`、`bugs`、`homepage` | GitHub 與官網連結 | 專案資訊 |
@@ -60,7 +60,7 @@
 
 `overrides` 是 npm 的功能,用來強制指定間接相依套件(套件的套件)的版本。
 
-LibreChat 的 `overrides` 共 39 條。從官方提交訊息看,主要用於修補相依套件的安全漏洞,例如:
+LibreChat 的 `overrides` 共 38 條。從官方提交訊息看,主要用於修補相依套件的安全漏洞,例如:
 
 - `Raise Vulnerable Dependency Floors`(提高有漏洞套件的最低版本)
 - `Bump @xmldom/xmldom to 0.8.13 via Root Override`(用根目錄 override 升級 `@xmldom/xmldom`)
