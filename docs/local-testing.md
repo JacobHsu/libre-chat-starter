@@ -66,7 +66,7 @@ endpoints:
 1. `POST /api/agents/chat/ollama`,本文含 `text`、`endpoint`、`endpointType: "custom"`、`model`、`conversationId: "new"`、`parentMessageId`、`messageId`。回傳 `streamId`。
 2. `GET /api/agents/chat/stream/<streamId>`,以 SSE 收串流。事件依序是:建立對話、`on_context_usage`、`on_run_step`、多個 `on_message_delta`(回覆片段)、`title`(自動標題)、`on_run_step_closed`、結束事件。
 
-這個請求本文的格式,由 `packages/data-provider/src/createPayload.ts` 組裝,見 [data-provider](data-provider.md)。
+這個請求本文的格式,由 `packages/data-provider/src/createPayload.ts` 組裝,見 [data-provider](packages/data-provider.md)。
 
 ## 踩到的坑
 

@@ -7,7 +7,7 @@
 | 項目 | 內容 |
 |---|---|
 | 套件名稱與版本 | `librechat-data-provider`,0.8.524 |
-| 誕生 | 2023-07-04,提交 `04e4259`「Move data provider to shared package」,從 `client/` 抽出來([專案建立順序](build-order.md)) |
+| 誕生 | 2023-07-04,提交 `04e4259`「Move data provider to shared package」,從 `client/` 抽出來([專案建立順序](../build-order.md)) |
 | 入口 | 兩個:`.`(主入口 `src/index.ts`)與 `./react-query`(React Query 的 hooks,`src/react-query/`) |
 | 相依套件 | `axios`、`croner`、`dayjs`、`js-yaml`、`re2js`、`zod`;peer 相依 `@tanstack/react-query` |
 | 建置 | `npm run build:data-provider`,先用 `tsdown` 打包 JS(CJS 與 ESM 兩種格式),再用 `tsc` 單獨產生型別宣告。依 `tsdown.config.mjs` 的註解,這個套件的 zod schema 不適合讓 `tsdown` 直接產生型別,所以型別用 `tsc` |
@@ -107,5 +107,5 @@
 ## References
 
 - [packages/data-provider(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/tree/v0.8.8-rc4/packages/data-provider)
-- [Project Architecture(官方文件翻譯)](official/development/architecture.md):建置順序與相依方向
-- [歷史分群](history-cohorts.md):這個套件的檔案誕生日
+- [Project Architecture(官方文件翻譯)](../official/development/architecture.md):建置順序與相依方向
+- [歷史分群](../history-cohorts.md):這個套件的檔案誕生日

@@ -156,7 +156,7 @@
 | E1 暫存區:後端精簡(2 個檔案,刪 149 行) | 完成,API 驗收 11/11、真實瀏覽器六項驗收通過 |
 | E1 暫存區:函式庫精簡 | 核對後決定整個保留,見 [MVP 設計](mvp-design.md) |
 | E1 暫存區:前端精簡 | 進行中 |
-| E2 L1 `data-provider` | 已帶入專案(77 個檔案,與官方逐檔相同),說明見 [data-provider](data-provider.md) |
+| E2 L1 `data-provider` | 已帶入專案(77 個檔案,與官方逐檔相同),說明見 [data-provider](packages/data-provider.md) |
 | E2 L2 到 L6 | 待做 |
 
 ## 風險
