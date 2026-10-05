@@ -127,7 +127,7 @@
 - [x] B. 暫存區分析(後端、前端、函式庫的靜態分析;結論見 `docs/mvp-design.md`)
 - [x] C. 改寫 `docs/build-order.md`(歷史時間軸與 release 核對)
 - [x] D. MVP 設計文件 `docs/mvp-design.md` 與 `docs/history-cohorts.md`
-- [ ] E. MVP-1 實作與驗證:暫存區的完整版基準、後端精簡已完成並通過驗收;前端精簡進行中;已驗證的層每層帶入專案(L1 `data-provider` 已帶入,待使用者確認後提交)
+- [ ] E. MVP-1 實作與驗證:暫存區的完整版基準、後端精簡已完成並通過驗收;前端精簡進行中;已驗證的層每層帶入專案(L0 根設定、L1 `data-provider` 已提交;L2 `data-schemas` 已帶入,待使用者確認後提交)
 - [ ] F. 其餘功能依誕生日逐階段補回
 - [ ] G. MVP-2(深切中樞)評估
 
