@@ -78,7 +78,7 @@ methods/  用資料模型寫成「存對話、查訊息、刪使用者…」的�
 
 後端只有兩個很小的檔案接上這一層:
 
-- `api/db/models.js`(4 行):`const { createModels } = require('@librechat/data-schemas'); module.exports = { ...createModels(mongoose) };`,取得所有資料模型。
+- `api/db/index.js`:啟動時呼叫 `createModels(mongoose)`,註冊所有資料模型。檔案內的註解特別寫明它必須先於 `indexSync` 執行,因為 `indexSync.js` 在載入時就會取用 `mongoose.models.Message` 與 `mongoose.models.Conversation`,模型沒先註冊,Meilisearch 的同步每次啟動都會無聲失敗。
 - `api/models/index.js`:呼叫 `createMethods(mongoose, 相依函式)` 取得所有資料庫方法。`createMethods` 接收的相依函式(`matchModelName`、`findMatchingPattern`、`getCache` 等)由 `packages/api` 與 `api/` 提供,所以這一層不直接依賴它們。
 
 之後所有路由與控制器,都是 `require('~/models')` 然後呼叫 `saveConvo(...)`、`getMessages(...)` 這類方法。

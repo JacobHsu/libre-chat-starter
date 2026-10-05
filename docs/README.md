@@ -15,5 +15,7 @@
 | 9 | [data-provider](packages/data-provider.md) | `packages/data-provider`:最底層的函式庫,前後端共用的型別、端點與請求,以及該讀哪些檔案 |
 | 10 | [local-testing](local-testing.md) | 本機驗證筆記:`.env`、Ollama 設定、驗收流程,以及 curl 被封鎖等踩到的坑 |
 | 11 | [data-schemas](packages/data-schemas.md) | `packages/data-schemas`:資料庫層,Mongoose 的 schema、model 與所有讀寫方法,以及對話與訊息怎麼存 |
-| 12 | [api](packages/api.md) | `packages/api`:後端的新版業務邏輯,Agents、串流、MCP、檔案、驗證等 48 個資料夾的分工,以及訊息送出後該讀哪些檔案 |
-| 13 | [client](packages/client.md) | `packages/client`:前端共用的 React UI 元件庫(按鈕、對話框、圖示、主題),與應用 `client/` 的分工 |
+| 12 | [packages/api](packages/api.md) | `packages/api`:後端的新版業務邏輯,Agents、串流、MCP、檔案、驗證等 48 個資料夾的分工,以及訊息送出後該讀哪些檔案 |
+| 13 | [packages/client](packages/client.md) | `packages/client`:前端共用的 React UI 元件庫(按鈕、對話框、圖示、主題),與應用 `client/` 的分工 |
+| 14 | [api(後端)](api/index.md) | `api/`:Express 後端的資料夾分工、啟動流程、路由,以及聊天請求從 `POST /api/agents/chat/ollama` 到串流的路徑 |
+| 15 | [後端精簡清單](api/mvp-trim.md) | MVP-1 後端的精簡:2 個檔案刪 149 行、沒帶入的 64 個檔案、`initializeMCPs` 不能刪的實測,以及驗證結果 |
