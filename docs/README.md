@@ -14,3 +14,4 @@
 | 8 | [mvp-implementation](mvp-implementation.md) | MVP-1 的實作計畫:先在暫存區做出並驗證,再逐層帶入專案 |
 | 9 | [data-provider](packages/data-provider.md) | `packages/data-provider`:最底層的函式庫,前後端共用的型別、端點與請求,以及該讀哪些檔案 |
 | 10 | [local-testing](local-testing.md) | 本機驗證筆記:`.env`、Ollama 設定、驗收流程,以及 curl 被封鎖等踩到的坑 |
+| 11 | [data-schemas](packages/data-schemas.md) | `packages/data-schemas`:資料庫層,Mongoose 的 schema、model 與所有讀寫方法,以及對話與訊息怎麼存 |
