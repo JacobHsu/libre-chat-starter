@@ -12,3 +12,5 @@
 | 6 | [history-cohorts](history-cohorts.md) | 依 git 歷史算出 rc4 每個檔案的誕生日,把現在的程式碼分成 9 個時期,以及為什麼不能直接拿早期檔案當 MVP |
 | 7 | [mvp-design](mvp-design.md) | 最小可用版本的設計:MVP 定義與驗收、23 個功能與誕生時期、後端與前端與函式庫的取捨、驗證方式 |
 | 8 | [mvp-implementation](mvp-implementation.md) | MVP-1 的實作計畫:先在暫存區做出並驗證,再逐層帶入專案 |
+| 9 | [data-provider](data-provider.md) | `packages/data-provider`:最底層的函式庫,前後端共用的型別、端點與請求,以及該讀哪些檔案 |
+| 10 | [local-testing](local-testing.md) | 本機驗證筆記:`.env`、Ollama 設定、驗收流程,以及 curl 被封鎖等踩到的坑 |

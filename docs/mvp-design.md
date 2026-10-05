@@ -60,7 +60,7 @@ MVP 是**功能上的最小**:畫面上只有登入、對話、對話歷史。�
 
 ## 兩輪切法:MVP-1 與 MVP-2
 
-**MVP-1(已量測,是第一個要做的目標)**:依功能延後零成本與低成本的功能,糾纏在聊天核心的功能(MCP、Skills、程式碼環境、OAuth、Langfuse)保留程式碼但不開啟。規模約 2404 / 2930 個程式碼檔(約 82%)。細節見下面三節。
+**MVP-1(已量測,是第一個要做的目標)**:依功能延後零成本與低成本的功能,糾纏在聊天核心的功能(MCP、Skills、程式碼環境、OAuth、Langfuse)保留程式碼但不開啟。規模約 2585 / 2930 個程式碼檔(約 88%):後端 307(實測)、前端 1033(預估)、函式庫 1245(整個保留)。細節見下面三節。
 
 **MVP-2(待定,尚未納入做法)**:若要更小,必須切共用基礎的「中樞」(許多檔案只透過它才被引用的檔案)。用貪心演算法試算:前端約 40 處移除可從 1329 降到約 700,後端約 30 處移除可從 274 降到約 94。但**演算法不懂什麼是核心**,它會把對話列表、模型選擇器、資料庫連線、認證策略這類核心也砍掉,所以這些數字不可信,只能說方向可行。要走這條路,必須先有人工確認過的核心清單。推估整體約可降到 60% 到 70%,屬於推估,不是量測。
 
@@ -107,7 +107,7 @@ let indexHTML = fs.readFileSync(indexPath, 'utf8');
 | 安全標頭、租戶警告 | 204–223 | | 保留 | |
 | 資料庫初始資料 | 225–232 | `seedDatabase`、`sweepOrphanedPreviews` | `seedDatabase` 保留(建立預設角色);`sweepOrphanedPreviews` 待實測 | 後者與檔案預覽有關 |
 | 應用程式設定 | 233–236 | `getAppConfig`、Agent 事件執行環境、檔案儲存 | `getAppConfig` 保留;其餘待實測 | Agents 聊天可能需要 Agent 事件執行環境 |
-| 部署外掛與技能 | 237–266 | `initializeDeploymentPlugins`、`initializeDeploymentSkills`、`initializeGitHubSkillSync`、`loadToolApprovalHooks` | **刪除** | Plugins 與 Skills 是後來才有的功能(待實測 `setPluginHookSource` 是否必須) |
+| 部署外掛與技能 | 237–266 | `initializeDeploymentPlugins`、`initializeDeploymentSkills`、`initializeGitHubSkillSync`、`loadToolApprovalHooks` | **刪除** | Plugins 與 Skills 是後來才有的功能(實測:`setPluginHookSource` 也可以刪,聊天正常) |
 | 過期檔案清理 | 256 | `startExpiredFileSweep` | **刪除** | 檔案階段再補回 |
 | 啟動檢查與權限 | 267–270 | `performStartupChecks`、`updateInterfacePermissions` | 保留 | |
 | 前端 `index.html` | 272–319 | 讀取並處理 | **保留** | MVP 需要前端 |
@@ -116,7 +116,7 @@ let indexHTML = fs.readFileSync(indexPath, 'utf8');
 | 認證 | 376–388 | `jwtLogin`、`passportLogin` | 保留 | 註冊與登入的核心。LDAP 與社群登入是條件式,未設定環境變數就不會啟用,不動 |
 | 路由註冊 | 395–451 | 40 多行 `app.use(...)` | 見下表 | |
 | 404、SPA 後備、錯誤處理 | 453–464 | | 保留 | |
-| 監聽之後的初始化 | 490–523 | `initializeMCPs`、`initializeOAuthReconnectManager`、`checkMigrations`、`initializeAgentTriggerService`、`initializeScheduleEngine` | `checkMigrations` 保留;MCP、OAuth 重新連線、排程**刪除**;Agent 觸發服務待實測 | MCP 是第 9 階段;排程是後期功能 |
+| 監聽之後的初始化 | 490–523 | `initializeMCPs`、`initializeOAuthReconnectManager`、`checkMigrations`、`initializeAgentTriggerService`、`initializeScheduleEngine` | `checkMigrations` 保留;**`initializeMCPs` 不能刪**(實測:沒有它 Agent 一執行就報 `MCPManager has not been initialized`);OAuth 重新連線、排程已刪除,實測通過;Agent 觸發服務保留 | MCP 是第 9 階段;排程是後期功能 |
 | 錯誤處理 | 550–631 | | 保留 | |
 
 排程相關的 `rejectScheduleWritesUntilReady`、`scheduleEngineState` 一併刪除,但 `serverReady = true` 的流程要保留。
@@ -252,8 +252,6 @@ MVP 兩者並用:元件裡的接線刪掉,是為了讓這些功能的程式碼�
 
 ### 函式庫:`packages/*`
 
-#### 它們是什麼
-
 四個函式庫,先編譯成 `dist/`,再被 `api/` 與 `client/` 使用:
 
 | 函式庫 | 套件名稱 | 用途 | 非測試 TS 檔 |
@@ -265,106 +263,64 @@ MVP 兩者並用:元件裡的接線刪掉,是為了讓這些功能的程式碼�
 
 相依方向與建置順序見[專案架構](official/development/architecture.md)。
 
-#### 怎麼切:按功能,引用只用來估成本
+**結論:MVP-1 整個保留四個函式庫。** 逐項核對之後,可以乾淨延後的只有約 22 個檔案(占 1%),決定不刪。
 
-函式庫的目錄與檔案本身就是按功能組織的。MVP 的切法是:**哪些功能放在 MVP、哪些功能延後到後面的階段**,再用「引用分析」估算:把一個功能延後,要在別處切斷多少處對它的引用(**切斷處**)。
+#### 先前的估計為什麼作廢
 
-切斷處 = 函式庫內部引用該功能目錄的處數,加上後端 `api/` 直接引用到它的檔案數(前端的引用另算)。這是靜態估計,動態載入與改名匯出會漏。
+最初的靜態分析是用名稱比對,估計函式庫可以延後約 180 個檔案(`packages/api` 117 個、`data-schemas` 63 個)。實作時改用更嚴格的「方法名稱與匯出名稱雙重核對」,結果是:
 
-#### `packages/api`(後端函式庫):每個目錄是一個功能
+- 靠名稱比對會**低估核心用到多少**。`createPayload`(`data-provider`)就是誤判:分析說可刪,實際前端的 `useSSE.ts` 與 `useResumableSSE.ts` 在用,因為它是 `export { default as createPayload } from` 這種改名匯出。
+- 每次改用更嚴格的檢查,可刪的數量就更少。
 
-**核心,MVP 保留:** `agents`(聊天管線,所有對話都走它,174 檔)、`auth`、`middleware`、`stream`(串流)、`endpoints`(模型端點)、`app`、`cache`、`storage`、`utils`、`types`、`conversations`、`acl`、`flow`、`crypto`、`user`、`cluster`、`protection`、`cdn`、`modelSpecs`、`files`(55 檔,前端會呼叫檔案設定)等。
+#### `data-schemas`:資料表實體的方法,都有核心檔案在用
 
-**第一層:零成本延後(沒有任何引用,整個目錄不帶入,共 45 檔)**
+核對的是每個延後候選實體的**方法**,被哪些其他檔案使用(排除它自己的檔案與註冊檔)。
 
-| 功能 | 檔案 |
-|---|---|
-| `plugins` | 12 |
-| `openapi` | 8 |
-| `memory` | 5 |
-| `security` | 5 |
-| `traces` | 4 |
-| `html` | 4 |
-| `insights` | 3 |
-| `projects`、`assistants` | 各 2 |
+| 實體 | 方法數 | 被使用的方法數 | 使用它們的檔案數 | 核心使用者的例子 |
+|---|---|---|---|---|
+| `schedule` | 50 | 48 | 11 | `UserController.js`、`routes/agents/index.js` |
+| `triggerDelivery` | 47 | 47 | 18 | `controllers/agents/request.js`、`resume.js`、`UserController.js` |
+| `queuedTurn` | 26 | 21 | 5 | `controllers/agents/queuedTurns.js`、`packages/api` 的 `queuedTurnHttp.ts` |
+| `systemGrant` | 11 | 11 | 19 | `middleware/roles/capabilities.js`、`validateImageRequest.js` |
+| `assistant` | 6 | 5 | 13 | `controllers/assistants/`、`UserController.js` |
+| `memory` | 9 | 9 | 10 | `controllers/agents/client.js`、`openai.js` |
+| `auditLog` | 6 | 5 | 10 | `PermissionsController.js`、`routes/admin/` |
+| `prompt` | 20 | 14 | 9 | `UserController.js`、`middleware/accessResources/` |
+| `agentApiKey` | 6 | 6 | 6 | `UserController.js`、`routes/agents/middleware.js` |
+| `chatProject` | 7 | 6 | 5 | `routes/projects.js`、`services/Schedules/` |
+| `conversationTag` | 7 | 7 | 3 | `UserController.js`、`utils/import/importBatchBuilder.js` |
+| `share`、`favorite`、`agentCategory`、`categories`、`insights` | | | 1 到 2 | 各自的路由 |
 
-**第二層:低成本延後(切斷處不多,共 72 檔、約 40 處)**
+`UserController.js`(刪除使用者時連帶清除排程、提示詞、API 金鑰、Assistants、標籤)、`agents/request.js` 與 `resume.js`(Agent 請求路徑)、`capabilities.js`(角色權限)都是核心檔案。要延後這些實體,得在核心檔案裡刪掉大量程式碼,卻只省每個實體約 4 個檔案。**`data-schemas` 整個保留。**
 
-| 功能 | 檔案 | 切斷處 |
+#### `packages/api`:功能目錄
+
+核對每個候選目錄匯出的名稱,有沒有被目錄之外的檔案使用。扣掉 MVP-1 本來就要刪的路由檔(它們的使用不算阻礙)之後:
+
+| 目錄 | 檔案 | 核對結果 |
 |---|---|---|
-| `schedules` 排程 | 14 | 7 |
-| `admin` 管理 | 13 | 9 |
-| `prompts` 提示詞 | 8 | 2 |
-| `telemetry` 遙測 | 8 | 2 |
-| `actions` | 6 | 5 |
-| `shared-links` 分享連結 | 6 | 3 |
-| `apiKeys` | 5 | 5 |
-| `web` 網頁搜尋 | 3 | 3 |
-| `images`、`favorites`、`artifacts`、`rum` | 共 9 | 各 1 |
+| `memory` | 5 | 只有 `routes/memories.js` 在用,可刪 |
+| `insights` | 3 | 只有 `routes/insights.js` 在用,可刪 |
+| `projects` | 2 | 只有 `routes/projects.js` 在用,可刪 |
+| `plugins` | 12 | 被 `server/index.js` 與 `initializeMCPs.js` 使用,前者的使用處已刪,另 5 個檔案未核對 |
+| `security`、`html`、`telemetry` | 17 | `server/index.js` 用它們處理安全標頭與前端首頁,核心 |
+| `schedules` | 14 | `agents/request.js`、`resume.js` 使用,核心 |
+| `shared-links`、`apiKeys`、`actions`、`web`、`admin`、`prompts` | | 都有核心檔案在用 |
 
-**第三層:高成本,MVP 保留(糾纏在聊天核心,共 117 檔、約 114 處)**
+可能可刪的合計約 22 個檔案,占整體約 1%。省 1% 卻要多一處風險,**決定先不刪**。
 
-| 功能 | 檔案 | 切斷處 | 糾纏在哪 |
+### MVP-1 的整體規模
+
+非測試的程式碼檔。後端是實測值,前端是預估(尚未精簡),函式庫整個保留:
+
+| 層 | 完整 | MVP-1 | 備註 |
 |---|---|---|---|
-| `mcp` | 61 | 47 | `agents`、`schedules`、`tools`、`stream`,以及後端的 `Config/app.js`、`getCachedTools.js` |
-| `skills` | 20 | 17 | `agents`、`files`,後端的 `models`、`Endpoints/agents/initialize.js` |
-| `code`(Code Interpreter) | 14 | 21 | `agents`、`tools`,後端的 `Endpoints/agents/initialize.js` |
-| `oauth` | 8 | 17 | 後端的 `openidStrategy.js`、`oauthNavigation.js` |
-| `langfuse` | 14 | 12 | `agents`、後端的 `BaseClient.js` |
+| 後端 `api/` | 356 | **307**(實測) | 只改 2 個檔案:`server/index.js`、`server/routes/index.js` |
+| 前端 `client/` | 1329 | 1033(預估) | 砍 14 個功能目錄,尚未精簡 |
+| 函式庫 `packages/*` | 1245 | 1245 | 整個保留 |
+| **合計** | **約 2930** | **約 2585(88%)** | |
 
-這五個功能的程式碼 MVP 先保留,但**功能本身不開啟**。對應的階段(例如階段 9 MCP)做的是「開啟、設定與講解」,不是補回檔案。
-
-#### `packages/data-schemas`(資料庫模型):按資料表實體
-
-每個資料表實體(例如 skill、schedule)通常有 `schema`、`models`、`methods`、`types` 各一個檔案,共約 4 個檔案。所有模型由 `models/index.ts` 的 `createModels` 一次註冊,所有方法由 `methods/index.ts` 的 `createMethods` 組合(後者本來就按功能分區塊,有 `/* Memories */`、`/* Tool Favorites */` 這類註解)。所以延後一個實體,就是在這兩個檔案(以及 `index.ts`、`types/index.ts`)刪掉它的註冊與組合。
-
-**一致性規則:** `packages/api` 保留的功能,它的資料表也要保留,否則函式庫無法編譯。所以 Skill、MCP、程式碼環境、OpenID 這幾個家族的實體都保留。
-
-**可延後的實體(共約 63 檔):**
-
-| 功能 | 實體 | 檔案 | 對應 `packages/api` |
-|---|---|---|---|
-| 排程與 Agent 觸發 | `schedule`、`scheduleRun`、`triggerDelivery`、`triggerLaneSequence`、`triggerUserPurge`、`queuedTurn`、`queuedTurnSequence` | 18 | `schedules`(第二層) |
-| 提示詞 | `prompt`、`promptGroup`、`categories`、`prompts` | 8 | `prompts`(第二層) |
-| Agent API 金鑰與分類 | `agentApiKey`、`agentCategory` | 8 | `apiKeys`(第二層) |
-| 管理與稽核 | `auditLog`、`systemGrant`、`admin` | 9 | `admin`(第二層) |
-| 專案 | `chatProject` | 4 | `projects`(第一層) |
-| 分享 | `sharedLink`、`share` | 4 | `shared-links`(第二層) |
-| Assistants | `assistant` | 4 | `assistants`(第一層) |
-| 記憶 | `memory` | 4 | `memory`(第一層) |
-| 書籤 | `conversationTag` | 3 | |
-| 洞察 | `insights` | 1 | `insights`(第一層) |
-
-**保留:** `user`、`session`、`token`、`role`、`accessRole`、`aclEntry`、`group`、`conversation`、`message`、`file`、`agent`、`key`、`transaction`、`balance`、`banner`、`config`、`toolCall`、`preset`、`action`,以及上述一致性規則保留的 Skill、MCP、程式碼環境、OpenID 家族。
-
-後端引用某實體方法名稱的檔案數(粗估上界,含通用名稱的雜訊):`skill` 11、`assistant` 11、`triggerDelivery` 9、`memory` 6、`prompt` 5、`schedule` 3、`systemGrant` 3,其餘多在 0 到 2 之間。真正的切斷成本要實作時逐項確認。
-
-#### `packages/data-provider` 與 `packages/client`
-
-- `data-provider`(65 檔)是平面檔案,每個檔案一個主題(`bedrock.ts`、`azure.ts`、`roles.ts` 等),MVP 需要 62 個,前端有 16 個檔案整包匯入它,**全部保留**。
-- `client`(205 檔)是共用的前端元件。MVP 至少用到 35%(分析低估,改名匯出沒有處理),**暫時全部保留**,待前端修剪完成後再檢視。
-
-#### MVP 整體規模(依功能分層重算)
-
-非測試的程式碼檔,靜態估計。前提是第一、二層的功能與對應的資料表實體都延後,第三層保留:
-
-| 層 | 完整 | MVP | 備註 |
-|---|---|---|---|
-| 後端 `api/` | 356 | 306 | 啟動層 121 + MVP 路由 294 的聯集 |
-| 前端 `client/` | 1329 | 1033 | 砍 14 個功能目錄 |
-| `packages/api` | 732 | 約 615 | 延後第一、二層的 117 檔 |
-| `packages/data-schemas` | 243 | 約 180 | 延後 63 檔 |
-| `packages/data-provider` | 65 | 65 | 全部保留 |
-| `packages/client` | 205 | 205 | 暫時全部保留 |
-| **合計** | **約 2930** | **約 2404(82%)** | |
-
-**以檔案數而言,MVP 並不小,它是功能上的最小。** LibreChat 的核心很大,功能疊在核心上,有些功能(MCP、Skills、程式碼環境)和聊天核心糾纏很深,延後的成本高於收益,所以 MVP 保留它們的程式碼、但不開啟功能。
-
-#### 注意事項
-
-- 延後的功能,要在 `index.ts` 入口、`models/index.ts`、`methods/index.ts` 這類組合檔刪掉對應行。入口 `package.json` 宣告了 `./credentials`、`./telemetry`(`@librechat/api`)、`./capabilities`(`@librechat/data-schemas`)、`./react-query`(`librechat-data-provider`)等子路徑匯出,不經過入口 `index.ts`,刪除前要先確認沒有被它們使用。
-- 精簡後的函式庫仍要完整建置(`tsdown`、`rollup`),以建置成功與否驗證。
-- 本節的「後端 MVP 集合」包含啟動層,但排除要刪的啟動項目(Skills 同步、Agent 觸發、排程、MCP 初始化、OAuth 重新連線)。
+**以檔案數而言,MVP-1 只比完整版小約一成。** 它是功能與畫面上的最小,不是檔案數上的最小。LibreChat 的核心很大,功能疊在核心上,而且核心檔案大量使用各功能的程式碼,延後的成本高於收益。更小的做法是 MVP-2(切共用基礎的中樞),風險高,等 MVP-1 做完、跑得起來之後,再以實測評估值不值得。
 
 ## 驗證
 
@@ -377,14 +333,22 @@ MVP 兩者並用:元件裡的接線刪掉,是為了讓這些功能的程式碼�
 5. **對照本機的 `LibreChat-sep`**:行為與畫面是否一致。它是官方 rc4 加上使用者自己的客製,可當對照,但不是完全相同。
 6. **打 git 標籤**(例如 `stage-mvp`),方便回頭看與退回。
 
-### 已知待實測的項目
+### 實測結果
 
-靜態分析無法確定這些項目能不能刪,要在實作時逐項以啟動與聊天驗證:
+靜態分析無法確定能不能刪的項目,已在暫存區逐項實測(完整記錄見[本機驗證筆記](local-testing.md)):
 
-- 後端:`sweepOrphanedPreviews`、Agent 事件執行環境、Agent 觸發服務、`files` 路由、`accessPermissions`、`setPluginHookSource`。
-- 前端:對應被刪功能的牽連型 8 個檔案是否要保留目錄內的個別檔案、前端對 404 的反應(例如刪除路由後的請求)。
-- 函式庫:`./credentials` 這類候選行是否被子路徑匯入使用。
-- 後端啟動時一定要讀取前端的 `client/dist/index.html`,所以**後端與前端必須一起建置才能驗證**。
+| 項目 | 結果 |
+|---|---|
+| 刪除 28 個路由與 6 個啟動項目 | 後端 API 驗收 11/11 通過,真實瀏覽器六項驗收通過 |
+| `initializeMCPs` | **不能刪**。沒有它,Agent 一執行就失敗,日誌是 `MCPManager has not been initialized` |
+| `setPluginHookSource` | 可以刪 |
+| 前端對被刪路由的 404 | 前端啟動的 32 個請求中有 6 個 404(`projects`、`skills`、`admin/roles`、`tags`、`prompts/groups`、`mcp/servers`),**沒有任何 JS 錯誤**。前端精簡後這 6 個請求應該消失 |
+| 函式庫入口的 `createPayload` | 靜態分析判定可刪,**實際是誤判**,前端在用 |
+
+仍待實測的項目:
+
+- 前端:牽連型 8 個檔案是否要保留目錄內的個別檔案。
+- 後端啟動時一定要讀取前端的 `client/dist/index.html`,所以後端與前端必須一起建置才能驗證。
 
 ### 失敗時
 
