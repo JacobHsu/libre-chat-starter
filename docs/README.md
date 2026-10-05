@@ -9,4 +9,5 @@
 | 3 | [architecture](architecture.md) | Monorepo 工作區結構、關鍵原則、建置與安裝指令 |
 | 4 | [mongodb](mongodb.md) | 為什麼使用 MongoDB,以及用 Docker 啟動學習專用的 MongoDB |
 | 5 | [build-order](build-order.md) | 專案從空白長成現在結構的時間軸與建立邏輯,以及我們的做法與功能階段 |
-| 6 | [mvp-design](mvp-design.md) | 最小可用版本的設計:後端入口與路由、前端砍除範圍與修剪點(函式庫、驗證待續) |
+| 6 | [history-cohorts](history-cohorts.md) | 依 git 歷史算出 rc4 每個檔案的誕生日,把現在的程式碼分成 9 個時期,以及為什麼不能直接拿早期檔案當 MVP |
+| 7 | [mvp-design](mvp-design.md) | 最小可用版本的設計:後端入口與路由、前端砍除範圍與修剪點(函式庫、驗證待續) |
