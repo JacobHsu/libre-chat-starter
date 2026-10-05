@@ -82,7 +82,7 @@
 - 精簡的差異以「與官方快照自動比對」列出:暫存區放固定版本的官方快照,每階段結束比對一次,最終階段差異必須為零。
 - **每層帶入時以官方 `package-lock.json` 為基礎安裝**:先把官方 rc4 的 lockfile 複製到專案根目錄,再執行 `npm install --ignore-scripts`,npm 會自動**刪除**尚未帶入的工作區條目(不新增條目,版本、`resolved`、`integrity` 不變;只重算衍生標記 `dev`、`peer`、`optional`),提交這份刪減後的 lockfile。每帶入一層重做一次(從官方完整版開始刪,不在上一次刪減後的版本上累加),所有工作區到齊時與官方完全相同。
   - 原因:沒有 lockfile 時 npm 會把 `^0.22.2` 解析成最新版,`tsdown` 0.22.14 搭配 `rolldown-plugin-dts` 0.27.14 對官方原始碼報 `TS9010`(`packages/api` 建置失敗);官方 lockfile 鎖定 `tsdown` 0.22.2 與 `rolldown-plugin-dts` 0.25.2,建置成功。官方程式碼不能改,所以只能鎖版本。
-  - 已實驗確認:`workspaces` 列出的資料夾不存在時,`npm install` 不報錯;用官方 lockfile 安裝時,npm 3172 條 → 1984 條,新增 0 條、版本變動 0 條(另有 756 條的 `dev`/`peer`/`optional` 標記被重算)。三層 `dist/` 與暫存區位元組大小完全一致。
+  - 已實驗確認:`workspaces` 列出的資料夾不存在時,`npm install` 不報錯;用官方 lockfile 安裝時,npm 3172 條 → 1984 條,新增 0 條、版本變動 0 條(另有 756 條的 `dev`/`peer`/`optional` 標記被重算)。四層(`data-provider`、`data-schemas`、`api`、`client-package`)建置成功,`dist/` 與暫存區位元組大小完全一致(四層時 lockfile 為 2324 條)。
   - 安裝一律加 `--ignore-scripts`,避免 `prepare` 的 husky 修改 git 的 `core.hooksPath`。
 - 前端依階段精簡,不整包帶入:砍 14 個功能目錄,在 13 個檔案刪 29 條 import。`Chat/Subagents`、`Share`、`SidePanel/Parameters` 是聊天核心,不能砍。
 - **不使用 `npm run reinstall` 與 `config/update.js`**:它會執行 `git fetch`、`git checkout main`、`git pull origin main`、`npm cache clean --force`、`npm ci`,依參數還會執行 `docker rmi`,在本專案可能破壞我們的 git 與環境。改為手動執行安裝與建置步驟,每步先講解。
@@ -130,7 +130,7 @@
 - [x] B. 暫存區分析(後端、前端、函式庫的靜態分析;結論見 `docs/mvp-design.md`)
 - [x] C. 改寫 `docs/build-order.md`(歷史時間軸與 release 核對)
 - [x] D. MVP 設計文件 `docs/mvp-design.md` 與 `docs/history-cohorts.md`
-- [ ] E. MVP-1 實作與驗證:暫存區的完整版基準、後端精簡已完成並通過驗收;前端精簡進行中;已驗證的層每層帶入專案(L0 根設定、L1 `data-provider` 已提交;L2 `data-schemas` 已帶入,待使用者確認後提交)
+- [ ] E. MVP-1 實作與驗證:暫存區的完整版基準、後端精簡已完成並通過驗收;前端精簡進行中;已驗證的層每層帶入專案(L0 根設定、L1 `data-provider`、L2 `data-schemas`、L3 `packages/api` 已提交;L4 `packages/client` 已帶入,待使用者確認後提交)
 - [ ] F. 其餘功能依誕生日逐階段補回
 - [ ] G. MVP-2(深切中樞)評估
 

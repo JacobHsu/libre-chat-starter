@@ -158,8 +158,10 @@
 | E1 暫存區:前端精簡 | 進行中 |
 | E2 L0 根目錄設定 | 已提交:官方 `.gitignore`(加 2 條本專案例外)、`.nvmrc`、`.npmrc`、`turbo.json`,說明見 [package-json](package-json.md) |
 | E2 L1 `data-provider` | 已提交,在專案內安裝並建置成功(77 個檔案,與官方逐檔相同),說明見 [data-provider](packages/data-provider.md) |
-| E2 L2 `data-schemas` | 已帶入專案(254 個檔案,與官方逐檔相同),在專案內建置成功,說明見 [data-schemas](packages/data-schemas.md) |
-| E2 L3 到 L6 | 待做 |
+| E2 L2 `data-schemas` | 已提交,在專案內建置成功(254 個檔案,與官方逐檔相同),說明見 [data-schemas](packages/data-schemas.md) |
+| E2 L3 `packages/api` | 已提交,在專案內建置成功(752 個檔案,與官方逐檔相同),說明見 [api](packages/api.md) |
+| E2 L4 `packages/client` | 已帶入專案(270 個檔案,與官方逐檔相同),在專案內建置成功;四層 `dist/` 與暫存區位元組大小一致,說明見 [client](packages/client.md) |
+| E2 L5 到 L6 | 待做 |
 
 ## 風險
 
