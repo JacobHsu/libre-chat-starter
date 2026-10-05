@@ -160,8 +160,9 @@
 | E2 L1 `data-provider` | 已提交,在專案內安裝並建置成功(77 個檔案,與官方逐檔相同),說明見 [data-provider](packages/data-provider.md) |
 | E2 L2 `data-schemas` | 已提交,在專案內建置成功(254 個檔案,與官方逐檔相同),說明見 [data-schemas](packages/data-schemas.md) |
 | E2 L3 `packages/api` | 已提交,在專案內建置成功(752 個檔案,與官方逐檔相同),說明見 [api](packages/api.md) |
-| E2 L4 `packages/client` | 已帶入專案(270 個檔案,與官方逐檔相同),在專案內建置成功;四層 `dist/` 與暫存區位元組大小一致,說明見 [client](packages/client.md) |
-| E2 L5 到 L6 | 待做 |
+| E2 L4 `packages/client` | 已提交,在專案內建置成功(270 個檔案,與官方逐檔相同);四層 `dist/` 與暫存區位元組大小一致,說明見 [client](packages/client.md) |
+| E2 L5 後端 `api/` | 已帶入專案(315 個檔案:313 個與官方逐檔相同,2 個精簡版與暫存區一致);在暫存區裁成這 315 個檔案實測,API 驗收 11/11、瀏覽器聊天通過。專案內:55 個外部套件全部可解析。說明見 [api](api/index.md)、[精簡清單](api/mvp-trim.md) |
+| E2 L6 前端 `client/` | 待做:前端精簡(暫存區)尚未開始 |
 
 ## 風險
 
