@@ -155,13 +155,43 @@ npm 依序讀四個位置,後面的蓋掉前面的:
 
 LibreChat 設成 `root`。`api/package.json` 與 `packages/api/package.json` 都有一個網址型相依:`xlsx`(`https://cdn.sheetjs.com/...tgz`),它是專案自己宣告的,所以可以裝;第三方套件若偷偷帶入別的網址相依,就會被擋下。
 
+## 鎖定版本:`package-lock.json`
+
+`package.json` 裡的版本寫的是範圍,例如 `"tsdown": "^0.22.2"`,意思是「0.22.2 以上、0.23 以下都可以」。`package-lock.json` 把每個套件**實際安裝的版本**(包含間接相依的套件)連同下載網址與雜湊值記錄下來。有它,每個人安裝到的版本都一樣;沒有它,npm 每次都挑符合範圍的最新版。
+
+LibreChat 的 lockfile 有 3172 條,涵蓋 `api/`、`client/` 與 `packages/*` 全部工作區。
+
+### 為什麼我們從一開始就用它
+
+只裝 `data-provider`、`data-schemas`、`packages/api` 時,不用 lockfile 會出問題:
+
+| | 用官方 lockfile | 不用 lockfile |
+|---|---|---|
+| `tsdown` | 0.22.2 | 0.22.14 |
+| `rolldown-plugin-dts` | 0.25.2 | 0.27.14 |
+| 建置 `packages/api` | 成功 | 失敗:`TS9010: Variable must have an explicit type annotation with --isolatedDeclarations` |
+
+新版的型別宣告外掛檢查更嚴格,官方原始碼 `src/stream/jobStoreCapabilities.ts` 的 `export const JOB_STORE_V2_REQUIRED_METHODS = [...]` 沒有型別標註,就過不了。這是「範圍版本」的典型風險:程式碼沒變,工具升級就壞了。
+
+### 我們怎麼用
+
+每帶入一層,就把官方 lockfile 複製到專案根目錄,再執行 `npm install --ignore-scripts`。還沒帶入的工作區(例如 `client/`),npm 會自動把它的條目刪掉,其餘條目的版本、下載網址與雜湊值都不變:
+
+| | 官方 | 帶入三層之後 |
+|---|---|---|
+| 條目數 | 3172 | 1984 |
+| 新增的條目 | | 0 |
+| 版本變動的條目 | | 0 |
+
+另有 756 條的 `dev`、`peer`、`optional` 標記被 npm 重新計算(這些是依「誰依賴誰」推導出來的標記,工作區變少後結果會變)。所有工作區到齊時,lockfile 就與官方完全相同。
+
 ## 建置排程:`turbo.json`
 
 Turborepo 是 monorepo 的建置排程工具:知道哪個套件要先建、輸入沒變就直接用快取。根 `package.json` 只有兩個指令用到它:`build` 與 `build:safe`(`npx turbo run build`)。誕生於 2026-02-13,提交 `e50f590`「Smart Reinstall with Turborepo Caching」(#11785)。
 
 | 設定 | 內容 | 意思 |
 |---|---|---|
-| `globalDependencies` | `package-lock.json` | 這個檔案變了,所有任務的快取都失效。**我們精簡階段沒有 `package-lock.json`**,這條目前沒有作用 |
+| `globalDependencies` | `package-lock.json` | 這個檔案變了,所有任務的快取都失效 |
 | `tasks.build.dependsOn` | `["^build"]` | 先建「它所依賴的套件」,再建自己。`^` 表示依賴的套件 |
 | `tasks.build.inputs` | `src/**`、設定檔(`tsdown.config.mjs`、`tsconfig*.json`、`vite.config.ts`、`package.json` 等),排除 `__tests__`、`__mocks__`、`*.test.*`、`*.spec.*` | 決定「有沒有變」的檔案。輸入沒變,就取回快取的輸出而不重新建置;改測試檔不會讓建置失效 |
 | `tasks.build.outputs` | `["dist/**"]` | 建置完要快取的輸出 |
@@ -178,6 +208,8 @@ Turborepo 是 monorepo 的建置排程工具:知道哪個套件要先建、輸�
 - [.husky/pre-commit 與 lint-staged.config.js(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/tree/v0.8.8-rc4/.husky)
 - [husky](https://typicode.github.io/husky/)
 - [Browserslist](https://github.com/browserslist/browserslist)
+- [package-lock.json(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/package-lock.json)
+- [npm package-lock.json 說明](https://docs.npmjs.com/cli/configuring-npm/package-lock-json)
 - [turbo.json(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/turbo.json)
 - [Turborepo 設定參考:turbo.json](https://turborepo.dev/docs/reference/configuration)
 - [package.json(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/package.json)

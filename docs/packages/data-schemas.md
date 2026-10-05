@@ -13,7 +13,7 @@
 | peer 相依 | `mongoose`、`librechat-data-provider`、`jsonwebtoken`、`klona`、`lodash`、`meilisearch`、`nanoid`、`winston`、`winston-daily-rotate-file`,由使用它的專案提供 |
 | 建置 | `npm run build`,用 `tsdown` 輸出 CJS 與 ESM 到 `dist/`。依 `turbo.json`,要先建好 `data-provider` |
 | 路徑別名 | 原始碼裡的 `~/` 指向 `src/`,例如 `import logger from '~/config/winston'` |
-| `dotenv` | `crypto/index.ts` 第一行是 `import 'dotenv/config'`(載入 `.env`),`tsdown.config.mjs` 也設定把 `dotenv` 打包進輸出。但這個套件的 `package.json` 沒有宣告它,宣告在 `api/package.json`。所以建置時 `dotenv` 要靠工作區安裝後的 `node_modules/` 提供:`api/` 還沒帶入前建置,`tsdown` 會警告 `UNRESOLVED_IMPORT`,輸出裡留下一行 `require("dotenv/config")`(`dist/index.cjs` 比有 `dotenv` 時小約 34 KB),`api/` 帶入並重新安裝後再建置就會打包進去 |
+| `dotenv` | `crypto/index.ts` 第一行是 `import 'dotenv/config'`(載入 `.env`),`tsdown.config.mjs` 也設定把 `dotenv` 打包進輸出。但這個套件的 `package.json` 沒有宣告它,宣告在 `api/package.json`。所以建置時 `dotenv` 要靠工作區安裝後根目錄的 `node_modules/` 提供:沒有任何套件帶進 `dotenv` 時(例如只有 `data-provider` 與 `data-schemas`),`tsdown` 會警告 `UNRESOLVED_IMPORT`,輸出裡留下一行 `require("dotenv/config")`(`dist/index.cjs` 比有 `dotenv` 時小約 34 KB)。`packages/api` 的相依 `@librechat/agents` 帶有 `dotenv`,有它之後重新建置就會打包進去 |
 
 ## 為什麼 MVP-1 整層保留
 

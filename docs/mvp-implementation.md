@@ -18,7 +18,7 @@
 | 1 | 複製固定版本 rc4 的官方快照成為工作樹 | 一份可隨意修改的副本 |
 | 2 | 依 [MVP 設計](mvp-design.md) 套用精簡:函式庫入口與資料庫模型註冊、後端 `server/index.js` 與 `routes/index.js`、前端 13 個檔案 29 條 import | 精簡清單(與官方快照比對的差異檔案) |
 | 3 | 設定:複製 `.env.example` 為 `.env`(`PORT=3090`、`MONGO_URI` 指向 27018、`DOMAIN_CLIENT` 與 `DOMAIN_SERVER` 指向 3090);`librechat.yaml` 用官方範本加上 Ollama 自訂端點 | 可啟動的設定 |
-| 4 | 安裝相依套件:`npm install`,不使用 `npm run reinstall`。不使用官方 `package-lock.json`,會產生新的 lockfile | `node_modules`(對照專案的是約 1.9 GB) |
+| 4 | 安裝相依套件:以官方 `package-lock.json` 為基礎執行 `npm install --ignore-scripts`(npm 自動刪除尚未帶入的工作區條目),不使用 `npm run reinstall` | `node_modules`(對照專案的是約 1.9 GB) |
 | 5 | 依序建置:`data-provider` → `data-schemas` → `packages/api` → `packages/client` → 前端(Vite) | 各層的建置產物 |
 | 6 | 啟動後端(port 3090,連 MongoDB 27018) | 後端執行中 |
 | 7 | 走一遍驗收流程(註冊 → 登入 → 對話 → 串流 → 重新整理後歷史還在) | 驗收結果 |
