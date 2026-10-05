@@ -3,7 +3,7 @@
 目標:理解 LibreChat 是怎麼依序建立出來的。使用 npm(原始碼)版,MongoDB 用 Docker 跑,只當依賴。
 
 ## 學習主線
-- 方向:**現行架構 × 官方開發史**。以現在的結構為準,功能依官方加入的先後順序,一段一段引入。
+- 方向:**現行架構 × 官方開發史**。以現在的結構為準,功能依檔案誕生日(官方加入的先後)排順序,一段一段引入。
 - **中間要有最小可用版本(MVP)**,不是全部完成才能用。
 - 不回到早期歷史版本的程式碼(已被使用者否決);歷史用來講「為什麼加、何時加」。
 - 大原則:**官方程式碼能不改就不改**。唯一允許的例外:檔案暫時是精簡版,之後換回完整官方版,最終必須和官方完全一致。
@@ -66,22 +66,26 @@
 
 ### 第 4 步起:現行架構 × 開發史,先有最小可用
 
+詳細設計見 `docs/mvp-design.md`(MVP 與驗證)、`docs/history-cohorts.md`(檔案誕生日分群)、`docs/build-order.md`(歷史時間軸與 release 核對)。
+
 #### 固定版本
 - 唯一來源:官方 release `v0.8.8-rc4`(提交 `361553f`,2026-09-23)。所有階段都從這個版本取檔案,不從會移動的 `main` 取。
 - 選 rc4 的理由:使用者本機的對照實例 `LibreChat-sep` 就是 rc4(官方 rc4 加上使用者自己的 19 個提交),版本一致才能放心比對。官方最新的 `v0.8.8`(2026-10-01)與 rc4 相差 117 個提交,暫不使用。
-- 已對照 rc4 標籤驗證:logo 一致;根 package.json 原取自較晚的 `main`,已換成 rc4 版(含 `danny-avila` 組織網址,官方 2026-09-24 才改為 `LibreChat-AI`);README 內容來源只有組織網址不同。
+- 已對照 rc4 標籤驗證:logo 一致;根 package.json 已換成 rc4 版(含 `danny-avila` 組織網址,官方 2026-09-24 才改為 `LibreChat-AI`);README 內容來源只有組織網址不同。
 - README 的連結(資源、更新日誌)保留 `LibreChat-AI` 新網址,因為它是目前的正確位置,也是使用者指定的來源;不屬版本相關內容。
 
 #### 帶入規則
-- 所有層(`packages/*`、`api/`、`client/`)都**依需求帶入**,不整個工作區照單全收。
-- 精簡規則:**只刪不寫**。精簡只能刪除程式碼(例如某個 `require` 與對應的 `app.use`),不得新增自己寫的邏輯。
-- 精簡帳本改為**自動比對**:暫存區放固定版本的官方快照,用比對指令列出我們與官方的差異檔案。每階段結束跑一次,最終階段差異必須為零。
-- 精簡階段不使用官方 `package-lock.json`,最終階段才換回(待實驗確認 npm 遇到缺少的工作區資料夾會怎樣)。
-- 前端 `client/` 能否精簡,待實驗後再決定。後備方案是前端完整帶入、由後端關閉功能,這個例外需使用者同意。
+- 所有層(`packages/*`、`api/`、`client/`)都**依功能帶入**,不整個工作區照單全收。
+- 精簡規則:**只刪不寫**。精簡只能刪除程式碼(例如某個 `require` 與對應的 `app.use`),不得新增自己寫的邏輯。精簡過的檔案之後換回完整官方版。
+- 精簡的差異以「與官方快照自動比對」列出:暫存區放固定版本的官方快照,每階段結束比對一次,最終階段差異必須為零。
+- 精簡階段不使用官方 `package-lock.json`,最終階段才換回。已實驗確認:`workspaces` 列出的資料夾不存在時,`npm install` 不報錯。
+- 前端依階段精簡,不整包帶入:砍 14 個功能目錄,在 13 個檔案刪 29 條 import。`Chat/Subagents`、`Share`、`SidePanel/Parameters` 是聊天核心,不能砍。
 - **不使用 `npm run reinstall` 與 `config/update.js`**:它會執行 `git fetch`、`git checkout main`、`git pull origin main`、`npm cache clean --force`、`npm ci`,依參數還會執行 `docker rmi`,在本專案可能破壞我們的 git 與環境。改為手動執行安裝與建置步驟,每步先講解。
+- 後端啟動時會讀取 `client/dist/index.html`,所以後端與前端必須一起建置才能驗證。
 
 #### 暫存區
 - 暫存資料夾放固定版本的官方快照,只供分析、實驗與比對。不放在專案內、不進 git、用完丟棄。
+- 含反引號或反斜線的內容,用寫檔工具寫成檔案,不要經過 Shell 字串(heredoc 會吃掉反斜線,雙引號內的反引號會被當成指令執行)。
 
 #### `.env` 注意事項
 - 設定 `PORT=3090`、`MONGO_URI` 指向 27018、`DOMAIN_CLIENT` 與 `DOMAIN_SERVER` 指向 3090(官方預設是 3080)。
@@ -92,29 +96,27 @@
 #### MVP 驗收標準
 註冊 → 登入 → 新對話 → 送出訊息 → 回覆串流顯示 → 重新整理後歷史仍在。
 
-#### 功能階段(順序依官方開發史)
-完整表格與核對方式見 `docs/build-order.md`。日期以官方 release 說明核對;標示近似者只有提交紀錄,階段開始前需再確認。
-1. MVP:註冊、登入、對話、保存、一個模型端點(2023-03 起:`api/` 拆出、多使用者登入)
-2. Meilisearch 搜尋(2023-03-16,release v0.0.4)
-3. 預設 presets(2023-04-05,release v0.3.0)
-4. Redis(2023-10-22,release v0.6.0)
-5. 圖片與檔案上傳 Vision(2023-11-16,release v0.6.1)
-6. 自訂端點與 `librechat.yaml`(2024-01-19,release v0.6.6;MVP 為接 Ollama 會提前使用)
-7. RAG 跟檔案對話(約 2024-03,提交紀錄,未核對 release)
-8. Agents(約 2024-08 至 10,提交紀錄;MVP 因聊天走 agents 路由會提前使用)
-9. MCP(2024-12-20,release v0.7.6)
-Helm 為 Kubernetes,本機不用,略過。
+#### 功能階段(順序依檔案誕生日)
+23 個功能,依最早誕生日排序,表格與每個功能在 MVP-1 的處理見 `docs/mvp-design.md`;release 核對見 `docs/build-order.md`。順序:對話與訊息、提示詞、登入與驗證、搜尋、外掛、預設、檔案與圖片、OAuth 與 OpenID、自訂端點與設定檔(MVP 為接 Ollama 會提前使用)、Redis 與快取、分享、語音、管理面板、Trace 與可觀測、書籤與標籤、Artifacts 與 Mermaid、Agents(MVP 因聊天走 agents 管線會保留)、程式碼環境、MCP、記憶、Skills、專案、排程與觸發。
+- 「最早誕生」依路徑名稱比對,有雜訊(提示詞、管理面板、Trace 尤其明顯),以中位數與分布為準。
+- 階段開始前逐一核對該功能的檔案清單,再確認順序。
+- Helm 為 Kubernetes,本機不用,略過。
 
 #### 每個階段的固定節奏
 文件先行(該功能的歷史故事、為什麼加、涉及檔案以表格列出檔名與用途、設定、驗證、精簡清單)→ 使用者讀懂 → 取得檔案(新增的,以及把精簡版換回完整版)→ 驗證 → 使用者確認 → 打 git 標籤(如 `stage-mvp`)→ 下一階段。
 
+#### MVP 的兩輪
+- MVP-1(第一個目標):後端約 306、前端約 1033、函式庫約 1065,合計約 2404 / 2930 個程式碼檔(約 82%),靜態估計。
+- MVP-2(待定,尚未納入做法):深切共用基礎的中樞,推估約 60% 到 70%,需先有人工確認的核心清單。
+
 #### 進度清單
 - [x] A. 固定 `v0.8.8-rc4`,並已重新對齊已帶入的檔案
-- [x] B. 暫存區實驗(已大幅縮減:對照專案已證實 Windows 主機上 npm 安裝與建置可行,不再做基線實驗)。(a) 【已完成:缺少工作區資料夾時 `npm install` 不報錯、結束代碼 0;lockfile 只含根的 700 個套件,不含工作區;因此可逐階段增加工作區並重新安裝】;(b) 後端靜態分析【已完成:api/ 排除測試共 393 檔,從 server/index.js 可達 356 檔;所有路由共用約 184 檔的核心;MVP 候選路由(config、endpoints、models、auth、user、convos、messages、balance、roles)約 236 檔,加 agents 路由(聊天走 /api/agents/chat)約 266 檔;其餘功能路由多半只多 1–4 檔,assistants +23、files +27;為靜態估計,動態 require 會漏】;(c) 前端靜態分析【已完成:client/src 排除測試共 1421 個程式碼檔,從 main.jsx 可達約 94%(1329);單獨對話頁 ChatRoute 就可達 928 檔;對話頁加外層版面聯集 1254 檔(88%);無法只刪路由,但可在元件內刪除對功能目錄的 import 與其使用處(只刪不寫,符合規則)。砍掉功能目錄(SidePanel 各面板、Prompts、Skills、Agents、Trace 等)後剩 (經逐項檢查引用,Chat/Subagents、Share、SidePanel/Parameters 是聊天核心,不能砍,最終砍 14 個功能目錄)後剩 1033 檔(78%),需在 13 個檔案刪 29 條 import,集中在 useSideNavLinks.ts(9)與 routes/index.tsx(7)。結論:前端同樣依階段精簡,不整包帶入;精簡後以 vite build、啟動與 MVP 驗收確認;功能隱藏另可搭配官方 librechat.yaml 的 interface 開關】 (d) 函式庫靜態分析【已完成:非測試 TS 檔 data-provider 65、data-schemas 243、packages/api 732、packages/client 205;MVP 約需 data-provider 95%、data-schemas 50%、packages/api 76%、client 至少 35%(低估,改名匯出未處理);前端有 16 個檔案整包匯入 data-provider。MVP 合計約 2109 / 2930 個程式碼檔(約 72%),結構高度整合,精簡幅度有限;階段的學習價值在功能說明而非檔案增量】
-- [x] C. 修正 `docs/build-order.md`:已加入功能時間軸(以 release 為骨幹)與做法說明,取代過時的「兩種切法」
-- [ ] D. MVP 設計文件:要留哪些檔案、刪哪些接線、為什麼、驗收標準;使用者讀懂
-- [ ] E. MVP 實作與驗證
-- [ ] F. 階段 2–9 依序進行
+- [x] B. 暫存區分析(後端、前端、函式庫的靜態分析;結論見 `docs/mvp-design.md`)
+- [x] C. 改寫 `docs/build-order.md`(歷史時間軸與 release 核對)
+- [x] D. MVP 設計文件 `docs/mvp-design.md` 與 `docs/history-cohorts.md`
+- [ ] E. MVP-1 實作與驗證
+- [ ] F. 其餘功能依誕生日逐階段補回
+- [ ] G. MVP-2(深切中樞)評估
 
 #### 模型端點(MVP 用本機 Ollama,不需要雲端金鑰)
 - 使用者本機 Ollama 在主機 port 11434 執行,有多個模型(含 `qwen2.5:7b-instruct`、`gemma4`、`qwen3:14b` 等)。
