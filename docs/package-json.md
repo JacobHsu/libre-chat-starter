@@ -54,7 +54,7 @@
 | 格式與檢查 | `eslint` 與其外掛(`import`、`react`、`react-hooks`、`jsx-a11y`、`i18next`、`jest`、`prettier`、`simple-import-sort` 等)、`@eslint/*`、`typescript-eslint`、`globals`、`prettier`、`prettier-plugin-tailwindcss` |
 | 測試 | `jest`、`@playwright/test`、`@axe-core/playwright`、`@antithesishq/bombadil`、`lighthouse` |
 | 提交前檢查 | `husky`、`lint-staged` |
-| 其他 | `@types/react-virtualized`、`brace-expansion`、`caniuse-lite`、`elliptic`(官方沒有說明放在這裡的原因) |
+| 其他 | `@types/react-virtualized`、`brace-expansion`、`caniuse-lite`、`elliptic` |
 
 ## overrides
 
@@ -104,10 +104,28 @@ npm 依序讀四個位置,後面的蓋掉前面的:
 
 LibreChat 設成 `root`。`api/package.json` 與 `packages/api/package.json` 都有一個網址型相依:`xlsx`(`https://cdn.sheetjs.com/...tgz`),它是專案自己宣告的,所以可以裝;第三方套件若偷偷帶入別的網址相依,就會被擋下。
 
-官方提交訊息沒有說明為什麼加入這個設定,與它同一次提交的是「Tool Approvals」的安全修正與相依套件升級。上面的「用途是防止第三方間接帶入網址型相依套件」是依 npm 官方文件的定義推論,不是官方對這次提交的說明。
+## 建置排程:`turbo.json`
+
+Turborepo 是 monorepo 的建置排程工具:知道哪個套件要先建、輸入沒變就直接用快取。根 `package.json` 只有兩個指令用到它:`build` 與 `build:safe`(`npx turbo run build`)。誕生於 2026-02-13,提交 `e50f590`「Smart Reinstall with Turborepo Caching」(#11785)。
+
+| 設定 | 內容 | 意思 |
+|---|---|---|
+| `globalDependencies` | `package-lock.json` | 這個檔案變了,所有任務的快取都失效。**我們精簡階段沒有 `package-lock.json`**,這條目前沒有作用 |
+| `tasks.build.dependsOn` | `["^build"]` | 先建「它所依賴的套件」,再建自己。`^` 表示依賴的套件 |
+| `tasks.build.inputs` | `src/**`、設定檔(`tsdown.config.mjs`、`tsconfig*.json`、`vite.config.ts`、`package.json` 等),排除 `__tests__`、`__mocks__`、`*.test.*`、`*.spec.*` | 決定「有沒有變」的檔案。輸入沒變,就取回快取的輸出而不重新建置;改測試檔不會讓建置失效 |
+| `tasks.build.outputs` | `["dist/**"]` | 建置完要快取的輸出 |
+| `@librechat/data-schemas#build` | 依賴 `^build`、`librechat-data-provider#build` | `套件#任務` 的寫法,指定某個套件的任務要等哪些任務 |
+| `@librechat/api#build` | 依賴 `^build`、`data-provider`、`data-schemas` | 同上 |
+| `@librechat/client#build` | 依賴 `^build`、`data-provider` | 同上,**不依賴 `api`** |
+
+這三條 `套件#build` 就是[建置順序](build-order.md)文件講的「data-provider → data-schemas → api → client」的機器可讀版本。`data-provider` 沒有自己的條目,因為它不依賴任何工作區。
+
+目前專案只有 `data-provider` 一層,現在執行 `npx turbo run build` 只會建它;其他層帶入後才會依順序建置。
 
 ## References
 
+- [turbo.json(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/turbo.json)
+- [Turborepo 設定參考:turbo.json](https://turborepo.dev/docs/reference/configuration)
 - [package.json(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/package.json)
 - [.nvmrc(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/.nvmrc)
 - [.npmrc(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/.npmrc)
