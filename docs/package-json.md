@@ -48,13 +48,64 @@
 
 ## devDependencies 分類
 
-| 類別 | 套件 |
+根目錄的 31 個開發套件,都是「開發這個專案用的工具」,不是執行聊天功能需要的。`npm install` 會全部下載。建置會用到 `turbo`,其餘是程式碼檢查、測試與提交前檢查工具。
+
+### 建置
+
+| 套件 | 做什麼 |
 |---|---|
-| 建置 | `turbo`、`cross-env` |
-| 格式與檢查 | `eslint` 與其外掛(`import`、`react`、`react-hooks`、`jsx-a11y`、`i18next`、`jest`、`prettier`、`simple-import-sort` 等)、`@eslint/*`、`typescript-eslint`、`globals`、`prettier`、`prettier-plugin-tailwindcss` |
-| 測試 | `jest`、`@playwright/test`、`@axe-core/playwright`、`@antithesishq/bombadil`、`lighthouse` |
-| 提交前檢查 | `husky`、`lint-staged` |
-| 其他 | `@types/react-virtualized`、`brace-expansion`、`caniuse-lite`、`elliptic` |
+| `turbo` | Turborepo,monorepo 的建置排程工具,見[turbo.json](#建置排程turbojson) |
+| `cross-env` | 讓 `NODE_ENV=production 指令` 這種「設定環境變數再執行」的寫法,在 Windows 與 macOS、Linux 都能用 |
+
+### 程式碼檢查與排版(ESLint 與 Prettier)
+
+ESLint 檢查程式碼寫法有沒有問題,Prettier 負責排版(縮排、換行、引號)。ESLint 本身只有核心,各種規則靠「外掛」增加。
+
+| 套件 | 做什麼 |
+|---|---|
+| `eslint` | 程式碼檢查工具本體 |
+| `@eslint/js` | ESLint 官方的推薦規則集 |
+| `@eslint/compat`、`@eslint/eslintrc` | 讓舊格式的設定與外掛,能在新的設定格式(flat config)裡使用 |
+| `typescript-eslint` | 讓 ESLint 看懂並檢查 TypeScript |
+| `globals` | 各執行環境(瀏覽器、Node、Jest)有哪些全域變數的清單,避免被誤報「變數未定義」 |
+| `eslint-plugin-react`、`eslint-plugin-react-hooks` | React 元件與 Hooks 的規則 |
+| `eslint-plugin-jsx-a11y` | JSX 的無障礙(a11y)規則,例如圖片要有替代文字 |
+| `eslint-plugin-import`、`eslint-import-resolver-typescript` | 檢查 `import` 與 `export` 是否正確;後者讓它看懂 TypeScript 的路徑 |
+| `eslint-plugin-simple-import-sort` | 自動排序 `import` |
+| `eslint-plugin-i18next` | 檢查介面文字有沒有寫死,而不是走多語言 key |
+| `eslint-plugin-jest` | Jest 測試檔的規則 |
+| `prettier` | 排版工具本體 |
+| `prettier-plugin-tailwindcss` | 自動排序 Tailwind CSS 的 class 名稱 |
+| `eslint-config-prettier` | 關掉會和 Prettier 衝突的 ESLint 排版規則 |
+| `eslint-plugin-prettier` | 把 Prettier 當成 ESLint 規則執行 |
+
+### 測試
+
+| 套件 | 做什麼 |
+|---|---|
+| `jest` | 單元測試的執行器 |
+| `@playwright/test` | Playwright,用真實瀏覽器跑的端對端(e2e)測試 |
+| `@axe-core/playwright` | 在 Playwright 測試裡檢查頁面的無障礙問題 |
+| `@antithesishq/bombadil` | `e2e:bombadil` 指令使用的瀏覽器探索式測試工具 |
+| `lighthouse` | Google 的網頁效能檢查工具,`lighthouse*` 指令使用 |
+
+### 提交前檢查
+
+| 套件 | 做什麼 |
+|---|---|
+| `husky` | 管理 git hooks。`npm install` 時由 `prepare` 啟動,把 git 的 hooks 目錄指向 `.husky/_` |
+| `lint-staged` | 只對「這次要提交的檔案」執行檢查與排版。官方 `.husky/pre-commit` 與 `.husky/lint-staged.config.js` 就是用它們:提交前自動整理 `import`、Prettier、ESLint |
+
+### 型別與間接相依的版本鎖定
+
+這四個放在根目錄,不是因為根目錄要用,而是為了控制版本。
+
+| 套件 | 做什麼 | 為什麼在這裡 |
+|---|---|---|
+| `@types/react-virtualized` | `react-virtualized`(長清單只畫看得到的項目)的 TypeScript 型別定義 | `client/` 使用 `react-virtualized`(例如 `Mention.tsx`、`PromptsCommand.tsx`)。2025-02-07 隨「Temporary Chat」功能的修正加入根目錄 |
+| `caniuse-lite` | 瀏覽器功能支援度的資料庫(來自 caniuse.com)。Browserslist 讀它,再由 Autoprefixer、Babel 等工具決定要為哪些瀏覽器處理相容性 | 2025-09-09 提交「Update caniuse-lite to v1.0.30001741」把版本更新到這裡,屬於更新資料庫的維護 |
+| `brace-expansion` | 把 `{a,b}` 這種大括號寫法展開成多個字串,檔案路徑比對工具(如 minimatch)會用到 | 2026-08-11 加入;同一個套件在 `overrides` 也有一條(`^5.0.8`),2026-07-27 加入 |
+| `elliptic` | 橢圓曲線密碼學函式庫,由其他套件間接使用 | 2025-02-13 提交「patch `elliptic` to address GHSA-vjh7-7g9h-fjfh」,為了修補這個安全公告,`devDependencies` 與 `overrides` 各加一條,把版本拉到 `^6.6.1` |
 
 ## overrides
 
@@ -124,6 +175,9 @@ Turborepo 是 monorepo 的建置排程工具:知道哪個套件要先建、輸�
 
 ## References
 
+- [.husky/pre-commit 與 lint-staged.config.js(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/tree/v0.8.8-rc4/.husky)
+- [husky](https://typicode.github.io/husky/)
+- [Browserslist](https://github.com/browserslist/browserslist)
 - [turbo.json(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/turbo.json)
 - [Turborepo 設定參考:turbo.json](https://turborepo.dev/docs/reference/configuration)
 - [package.json(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/package.json)
