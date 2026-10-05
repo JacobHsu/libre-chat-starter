@@ -6,7 +6,7 @@ LibreChat 官方 repo 第一層的 19 個資料夾與 30 個檔案,依用途分�
 
 | 項目 | 說明 |
 |---|---|
-| `api/` | 後端,舊有的 Express 包裝層(詳見[專案架構](architecture.md)) |
+| `api/` | 後端,舊有的 Express 包裝層(詳見[專案架構](official/development/architecture.md)) |
 | `client/` | 前端,React 單頁應用程式 |
 | `packages/` | 共用套件,共 4 個:`api`、`client`、`data-provider`、`data-schemas` |
 | `package.json` | 根專案設定(詳見[根目錄 package.json](package-json.md)) |

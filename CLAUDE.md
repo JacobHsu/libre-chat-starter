@@ -61,7 +61,7 @@
 ## 進度清單(使用者確認一步,才打勾一步)
 - [x] 0. 唯讀查看官方第一層結構(目錄與檔案),逐一講解,不下載;說明文件見 `docs/repository-structure.md`
 - [x] 1. 查官方最早提交與第一個 package.json:第一個提交只有 .gitignore 等 3 檔(來自範本);第一份 package.json 在 2023-02-04,是 `npm init -y` 產生的 React + webpack 小專案。結論:以現在的結構為主線,歷史只當背景
-- [x] 2. 讀現在的根 package.json(workspaces、scripts);說明文件見 `docs/package-json.md`、`docs/architecture.md`
+- [x] 2. 讀現在的根 package.json(workspaces、scripts);說明文件見 `docs/package-json.md`、`docs/official/development/architecture.md`
 - [x] 3. Docker 啟動 MongoDB(學習專用容器 `learn-mongodb`,port 27018);說明文件見 `docs/mongodb.md`
 
 ### 第 4 步起:現行架構 × 開發史,先有最小可用
@@ -82,6 +82,14 @@
 - 前端依階段精簡,不整包帶入:砍 14 個功能目錄,在 13 個檔案刪 29 條 import。`Chat/Subagents`、`Share`、`SidePanel/Parameters` 是聊天核心,不能砍。
 - **不使用 `npm run reinstall` 與 `config/update.js`**:它會執行 `git fetch`、`git checkout main`、`git pull origin main`、`npm cache clean --force`、`npm ci`,依參數還會執行 `docker rmi`,在本專案可能破壞我們的 git 與環境。改為手動執行安裝與建置步驟,每步先講解。
 - 後端啟動時會讀取 `client/dist/index.html`,所以後端與前端必須一起建置才能驗證。
+- MVP-1 不帶測試檔(最終階段補回,差異列入精簡清單)。
+- 根目錄 `.gitignore` 要換成官方完整版,**帶入前先讓使用者讀過內容**(尤其 `.env.example` 的例外設定)。
+
+#### 文件與實作的順序
+- 官方文件翻譯放 `docs/official/`,**照官方目錄結構**(例如 `docs/official/features/agents.md`),以英文原文為準翻成繁中,`.mdx` 轉 `.md`,結尾放 References。我們自己寫的說明與教學放 `docs/`。不是 192 頁全翻,依階段需要才翻(對應表見 `docs/mvp-implementation.md`)。
+- 官方翻譯、歷史故事、檔案群與誕生時期:**先行**(不依賴實作結果)。
+- 精簡清單、待實測的結論、補充教學:**實作之後**才寫,必須是在暫存區真的做過並驗證的結果,不可把推測寫成事實。
+- 流程:先寫官方翻譯與歷史故事 → 在暫存區實作並驗證(安裝與建置可在背景跑,同時寫翻譯)→ 補寫精簡清單與教學 → 使用者讀完 → 才把檔案帶進專案、建置檢查、提交。
 
 #### 暫存區
 - 暫存資料夾放固定版本的官方快照,只供分析、實驗與比對。不放在專案內、不進 git、用完丟棄。

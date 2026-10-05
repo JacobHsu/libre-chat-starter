@@ -43,6 +43,6 @@ LibreChat 以 monorepo 方式組織,工作區之間有明確的邊界:
 > **注意**
 > 完整的程式碼規範與慣例,請見[程式碼規範與慣例](https://www.librechat.ai/docs/development/conventions)。
 
----
+## References
 
-來源:官方文件 `content/docs/development/architecture.mdx`(https://www.librechat.ai/docs/development/architecture),由英文原文翻譯為繁體中文。
+- [Project Architecture(官方文件)](https://www.librechat.ai/docs/development/architecture)

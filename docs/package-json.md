@@ -15,7 +15,7 @@
 |---|---|---|
 | `name`、`version` | `LibreChat`、`v0.8.8-rc4` | 專案名稱與版本。`rc` 是 release candidate(候選版) |
 | `packageManager` | `npm@11.13.0` | 宣告專案使用的套件管理器與版本。官方開發文件要求 npm `v11.16.0` |
-| `workspaces` | `api`、`client`、`packages/*` | 三塊工作區,詳見[專案架構](architecture.md) |
+| `workspaces` | `api`、`client`、`packages/*` | 三塊工作區,詳見[專案架構](official/development/architecture.md) |
 | `scripts` | 141 條 | 見下方[scripts 分組](#scripts-分組) |
 | `devDependencies` | 31 個 | 見下方[devDependencies 分類](#devdependencies-分類) |
 | `overrides` | 38 條 | 見下方[overrides](#overrides) |

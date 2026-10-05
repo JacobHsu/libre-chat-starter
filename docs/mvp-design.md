@@ -263,7 +263,7 @@ MVP 兩者並用:元件裡的接線刪掉,是為了讓這些功能的程式碼�
 | `packages/api` | `@librechat/api` | 新的後端程式碼(TypeScript) | 732 |
 | `packages/client` | `@librechat/client` | 共用的前端元件 | 205 |
 
-相依方向與建置順序見[專案架構](architecture.md)。
+相依方向與建置順序見[專案架構](official/development/architecture.md)。
 
 #### 怎麼切:按功能,引用只用來估成本
 
