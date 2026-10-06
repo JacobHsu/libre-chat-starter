@@ -69,4 +69,5 @@ MVP-1 的後端只改 2 個檔案、刪 149 行、改 1 行,**沒有新增任何
 - [server/routes/index.js(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/api/server/routes/index.js)
 - [後端說明](index.md)
 - [MVP 設計](../mvp-design.md):各功能在 MVP-1 的處理
-- [本機驗證筆記](../local-testing.md):驗收流程與踩到的坑
+- [本機執行教學](../local/npm.md):驗收流程
+- [本機驗證筆記](../local-testing.md):API 驗證與踩到的坑

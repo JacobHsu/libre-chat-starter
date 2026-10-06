@@ -315,7 +315,7 @@ let indexHTML = fs.readFileSync(indexPath, 'utf8');
 
 ### 實測結果
 
-靜態分析無法確定能不能刪的項目,已在暫存區逐項實測(完整記錄見[本機驗證筆記](local-testing.md)):
+靜態分析無法確定能不能刪的項目,已在暫存區逐項實測(實測記錄見[後端精簡清單](api/mvp-trim.md)與[前端精簡清單](client/mvp-trim.md)):
 
 | 項目 | 結果 |
 |---|---|

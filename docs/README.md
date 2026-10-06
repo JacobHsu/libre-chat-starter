@@ -13,7 +13,7 @@
 | 7 | [mvp-design](mvp-design.md) | 最小可用版本的設計:MVP 定義與驗收、23 個功能與誕生時期、後端與前端與函式庫的取捨、驗證方式 |
 | 8 | [mvp-implementation](mvp-implementation.md) | MVP-1 的實作計畫:先在暫存區做出並驗證,再逐層帶入專案 |
 | 9 | [data-provider](packages/data-provider.md) | `packages/data-provider`:最底層的函式庫,前後端共用的型別、端點與請求,以及該讀哪些檔案 |
-| 10 | [local-testing](local-testing.md) | 本機驗證筆記:`.env`、Ollama 設定、驗收流程,以及 curl 被封鎖等踩到的坑 |
+| 10 | [local-testing](local-testing.md) | 本機驗證筆記:API 驗證流程,以及 curl 被封鎖等踩到的坑 |
 | 11 | [data-schemas](packages/data-schemas.md) | `packages/data-schemas`:資料庫層,Mongoose 的 schema、model 與所有讀寫方法,以及對話與訊息怎麼存 |
 | 12 | [packages/api](packages/api.md) | `packages/api`:後端的新版業務邏輯,Agents、串流、MCP、檔案、驗證等 48 個資料夾的分工,以及訊息送出後該讀哪些檔案 |
 | 13 | [packages/client](packages/client.md) | `packages/client`:前端共用的 React UI 元件庫(按鈕、對話框、圖示、主題),與應用 `client/` 的分工 |
@@ -22,3 +22,4 @@
 | 16 | [前端說明](client/index.md) | `client/`:React 前端的進入點、1145 個檔案的分工、畫面如何長出來,以及送出訊息到顯示回覆的路徑 |
 | 17 | [前端精簡清單](client/mvp-trim.md) | MVP-1 前端的精簡:13 個檔案刪 247 行、刪掉的 14 個功能目錄、用 `librechat.yaml` 隱藏殘留入口,以及驗證結果 |
 | 18 | [npm(官方文件翻譯)](official/local/npm.md) | 官方的 npm 本機安裝流程:前置條件、`.env`、`npm run reinstall`、`npm run backend` |
+| 19 | [本機執行教學](local/npm.md) | 本專案的正式本機執行教學:前置條件、啟動 MongoDB、設定 `.env` 與 `librechat.yaml`、安裝建置、啟動、驗收,以及與官方流程的對照 |

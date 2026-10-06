@@ -107,4 +107,5 @@ GET /api/agents/chat/stream/:streamId
 - [精簡清單](mvp-trim.md):`server/index.js` 與 `server/routes/index.js` 的差異
 - [api(packages/api)](../packages/api.md):聊天邏輯所在的函式庫
 - [data-schemas](../packages/data-schemas.md):資料庫層
-- [本機驗證筆記](../local-testing.md):`uaParser` 封鎖、`.env`、啟動與驗收
+- [本機執行教學](../local/npm.md):`.env`、啟動與驗收
+- [本機驗證筆記](../local-testing.md):`uaParser` 封鎖與 API 驗證
