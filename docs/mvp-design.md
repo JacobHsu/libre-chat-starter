@@ -60,7 +60,7 @@ MVP 是**功能上的最小**:畫面上只有登入、對話、對話歷史。�
 
 ## 兩輪切法:MVP-1 與 MVP-2
 
-**MVP-1(已量測,是第一個要做的目標)**:依功能延後零成本與低成本的功能,糾纏在聊天核心的功能(MCP、Skills、程式碼環境、OAuth、Langfuse)保留程式碼但不開啟。規模約 2585 / 2930 個程式碼檔(約 88%):後端 307(實測)、前端 1033(預估)、函式庫 1245(整個保留)。細節見下面三節。
+**MVP-1(已量測,是第一個要做的目標)**:依功能延後零成本與低成本的功能,糾纏在聊天核心的功能(MCP、Skills、程式碼環境、OAuth、Langfuse)保留程式碼但不開啟。規模約 2585 / 3039 個程式碼檔(約 85%):後端 307、前端 1032、函式庫 1246(整個保留)。細節見下面三節。
 
 **MVP-2(待定,尚未納入做法)**:若要更小,必須切共用基礎的「中樞」(許多檔案只透過它才被引用的檔案)。用貪心演算法試算:前端約 40 處移除可從 1329 降到約 700,後端約 30 處移除可從 274 降到約 94。但**演算法不懂什麼是核心**,它會把對話列表、模型選擇器、資料庫連線、認證策略這類核心也砍掉,所以這些數字不可信,只能說方向可行。要走這條路,必須先有人工確認過的核心清單。推估整體約可降到 60% 到 70%,屬於推估,不是量測。
 
@@ -211,37 +211,17 @@ let indexHTML = fs.readFileSync(indexPath, 'utf8');
 | `Projects` | 9 | 專案 | 不在目前階段表 |
 | `Insights` | 4 | 洞察 | 不在目前階段表 |
 
-砍除後,程式碼檔從 1329 降到約 **1033**(約 78%)。「不在目前階段表」的功能,最終換回完整官方版時會一併回來,階段順序另議。
+砍除後,`client/src` 的程式碼檔從 1421 降到 **1032**(約 73%)。「不在目前階段表」的功能,最終換回完整官方版時會一併回來,階段順序另議。
 
-#### 要動手的檔案:13 個、29 條 import
+#### 精簡結果
 
-**接線型(5 個檔案、19 條):** 只是把功能接進畫面,刪除 import 與對應的使用區塊即可。
-
-| 檔案 | 刪除的 import | 做什麼的 |
-|---|---|---|
-| `hooks/Nav/useSideNavLinks.ts` | 9 條:MCPBuilder、Agents、Bookmarks、Builder、Schedules、Memories、Files 面板,以及 PromptsAccordion、SkillsAccordion | 組出側邊欄的面板清單 |
-| `routes/index.tsx` | 7 條:Agents 市集(2)、Prompts、Skills、Insights、Projects(2)的動態載入 | 前端路由表 |
-| `components/Chat/ChatView.tsx` | 1 條:`TraceSurface` | 對話頁 |
-| `components/Chat/Header.tsx` | 1 條:`TraceButton`、`useTraceControl` | 對話頁標題列 |
-| `components/Chat/Menus/HeaderMenu.tsx` | 1 條:型別 `TraceControl` | 標題列選單 |
-
-**牽連型(8 個檔案、10 條):** 被引用的是目錄裡的個別小元件或函式,不一定能整個目錄砍。實作時逐項決定:保留那一個檔案,或刪除使用處。
-
-| 檔案 | 引用 | 來自 |
-|---|---|---|
-| `Providers/PromptGroupsContext.tsx`、`hooks/Prompts/useCategories.tsx` | `CategoryIcon` | `Prompts` |
-| `components/Chat/Input/PromptsCommand.tsx` | `VariableDialog` | `Prompts` |
-| `components/Chat/Input/ToolDialogs.tsx` | `SearchApiKeyDialog` | `SidePanel/Agents` |
-| `hooks/Files/useSharePointPicker.ts` | 型別 `SPPickerConfig` | `SidePanel/Agents` |
-| `hooks/MCP/useRemoveMCPTool.ts` | `matchesMcpServer` | `SidePanel/Agents` |
-| `components/Chat/Landing.tsx` | `AgentContact` | `Agents` |
-| `components/Conversations/ProjectsSection.tsx` | 3 個專案對話框 | `Projects` |
+先刪掉 14 個目錄,再依 Vite 建置的錯誤逐一處理被引用的地方。實作後共改 **13 個檔案**(刪 247 行、改 1 行),帶入 **1145 個檔案**(`src/` 程式碼檔 1032 個)。5 個檔案是把功能接進畫面(`hooks/Nav/useSideNavLinks.ts`、`routes/index.tsx`、`ChatView.tsx`、`Header.tsx`、`HeaderMenu.tsx`),8 個檔案是被延後功能引用的小元件或匯出。逐檔清單見[前端精簡清單](client/mvp-trim.md)。
 
 #### 隱藏功能的另一個辦法:`librechat.yaml` 的 `interface`
 
 官方設定檔提供 `interface` 開關,可以在不改程式碼的情況下隱藏畫面功能,例如 `presets`、`prompts`、`bookmarks`、`memories`、`agents`、`skills`、`schedules`、`marketplace`、`mcpServers`、`parameters`。
 
-MVP 兩者並用:元件裡的接線刪掉,是為了讓這些功能的程式碼檔案不必一開始就存在;`interface` 開關則是補回功能之後,控制畫面是否顯示。
+兩者並用:元件裡的接線刪掉,是為了讓這些功能的程式碼檔案不必一開始就存在;`interface` 開關用來隱藏刪不掉的入口,例如側邊欄的「Agents 市場」連結(它不是 `import` 被刪的目錄,沒有建置錯誤,但點下去會到不存在的頁面)。補回功能之後,這些開關改回開啟即可。
 
 #### 風險
 
@@ -311,16 +291,16 @@ MVP 兩者並用:元件裡的接線刪掉,是為了讓這些功能的程式碼�
 
 ### MVP-1 的整體規模
 
-非測試的程式碼檔。後端是實測值,前端是預估(尚未精簡),函式庫整個保留:
+非測試的程式碼檔(後端是 JavaScript,前端與函式庫含 TypeScript):
 
 | 層 | 完整 | MVP-1 | 備註 |
 |---|---|---|---|
-| 後端 `api/` | 356 | **307**(實測) | 只改 2 個檔案:`server/index.js`、`server/routes/index.js` |
-| 前端 `client/` | 1329 | 1033(預估) | 砍 14 個功能目錄,尚未精簡 |
-| 函式庫 `packages/*` | 1245 | 1245 | 整個保留 |
-| **合計** | **約 2930** | **約 2585(88%)** | |
+| 後端 `api/` | 372 | **307** | 只改 2 個檔案:`server/index.js`、`server/routes/index.js`,見[後端精簡清單](api/mvp-trim.md) |
+| 前端 `client/src` | 1421 | **1032** | 改 13 個檔案、砍 14 個功能目錄,見[前端精簡清單](client/mvp-trim.md) |
+| 函式庫 `packages/*` | 1246 | 1246 | 整個保留:`data-provider` 65、`data-schemas` 243、`packages/api` 734、`packages/client` 204 |
+| **合計** | **3039** | **2585(85%)** | |
 
-**以檔案數而言,MVP-1 只比完整版小約一成。** 它是功能與畫面上的最小,不是檔案數上的最小。LibreChat 的核心很大,功能疊在核心上,而且核心檔案大量使用各功能的程式碼,延後的成本高於收益。更小的做法是 MVP-2(切共用基礎的中樞),風險高,等 MVP-1 做完、跑得起來之後,再以實測評估值不值得。
+**以檔案數而言,MVP-1 只比完整版小約一成半。** 它是功能與畫面上的最小,不是檔案數上的最小。LibreChat 的核心很大,功能疊在核心上,而且核心檔案大量使用各功能的程式碼,延後的成本高於收益。更小的做法是 MVP-2(切共用基礎的中樞),風險高,等 MVP-1 做完、跑得起來之後,再以實測評估值不值得。
 
 ## 驗證
 
