@@ -1,6 +1,17 @@
 # 本機驗證筆記
 
-在 Windows 主機上用 npm 跑 LibreChat,連本機的 MongoDB 與 Ollama,以及驗證時踩到的坑。這是我們實作時的紀錄,官方文件沒有涵蓋。
+在 Windows 主機上用 npm 跑 LibreChat,連本機的 MongoDB 與 Ollama,以及驗證時踩到的坑。官方的 npm 安裝流程見[官方文件翻譯](official/local/npm.md),這份筆記補充我們實作時的差異與紀錄。
+
+## 與官方 npm 安裝流程的對照
+
+| 步驟 | 官方 | 我們 |
+|---|---|---|
+| 取得原始碼 | 一次 `git clone` 整包 | 依功能一層一層帶入,固定在 `v0.8.8-rc4` |
+| 建立 `.env` | 複製 `.env.example`,改 `MONGO_URI` | 相同,另外改 `PORT` 與 `DOMAIN_*`(本機 3080 已被佔用) |
+| 安裝與建置 | `npm run reinstall` | 以官方 lockfile 為基礎執行 `npm install --ignore-scripts`,再逐層建置。`reinstall` 會執行 `git pull` 與 `npm cache clean`,不適合在這個專案使用 |
+| 啟動 | `npm run backend` | 相同 |
+| 位址 | `http://localhost:3080/` | `http://localhost:3090/` |
+| 模型 | 登入後在介面輸入雲端模型的 API 金鑰 | 用 `librechat.yaml` 把本機 Ollama 加成自訂端點,不需要金鑰 |
 
 ## 環境
 
@@ -18,7 +29,7 @@
 | 設定 | 值 | 說明 |
 |---|---|---|
 | `PORT` | `3090` | 官方預設 3080 |
-| `MONGO_URI` | `mongodb://127.0.0.1:27018/LibreChat` | 官方預設 27017 |
+| `MONGO_URI` | `mongodb://127.0.0.1:27018/LibreChatStarter` | 官方預設 27017,資料庫名稱 `LibreChatStarter` 是我們自取的 |
 | `DOMAIN_CLIENT`、`DOMAIN_SERVER` | `http://localhost:3090` | 官方預設 3080,要跟著 `PORT` 改 |
 
 `CREDS_KEY`、`CREDS_IV`、`JWT_SECRET`、`JWT_REFRESH_SECRET` 官方範本註明可留空,後端會自己產生暫時值。啟動日誌會出現警告,是正常的。`.env` 含設定,**不能進版控**,官方 `.gitignore` 的 `.env*` 規則會擋住它。
@@ -65,7 +76,7 @@ interface:
 ## 啟動與驗證
 
 1. 確認 MongoDB 容器在跑。它沒有設自動重啟,**Docker 重開後要手動** `docker start learn-mongodb`。
-2. 啟動後端:`NODE_ENV=production node api/server/index.js`。看到 `Server listening at http://localhost:3090` 就是成功。
+2. 啟動後端:`npm run backend`(等於 `cross-env NODE_ENV=production node api/server/index.js`)。看到 `Server listening at http://localhost:3090` 就是成功。後端啟動時會讀 `client/dist/index.html`,所以要先建置前端(`cd client && npm run build`)。
 3. 瀏覽器開 `http://localhost:3090`,註冊並登入。**第一個註冊的使用者自動成為管理員**。註冊後會顯示「請檢查信箱驗證」,這是通用訊息,沒有開信箱驗證,可以直接登入。
 4. 預設模型是 `gpt-6-astra`(OpenAI,需要金鑰),要在畫面上方的模型選擇器切到 Ollama 的模型。快捷鍵是 Ctrl+Shift+M。
 
@@ -104,6 +115,6 @@ db.logs.deleteMany({ key: /^(BANS|ban):/ })
 ## References
 
 - [Ollama 設定(官方文件)](https://www.librechat.ai/docs/configuration/librechat_yaml/ai_endpoints/ollama)
-- [npm 安裝(官方文件)](https://www.librechat.ai/docs/local/npm)
+- [npm 安裝(官方文件)](https://www.librechat.ai/docs/local/npm),翻譯見 [official/local/npm](official/local/npm.md)
 - [.env.example(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/.env.example)
 - [librechat.example.yaml(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/librechat.example.yaml)

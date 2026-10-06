@@ -21,3 +21,4 @@
 | 15 | [後端精簡清單](api/mvp-trim.md) | MVP-1 後端的精簡:2 個檔案刪 149 行、沒帶入的 64 個檔案、`initializeMCPs` 不能刪的實測,以及驗證結果 |
 | 16 | [前端說明](client/index.md) | `client/`:React 前端的進入點、1145 個檔案的分工、畫面如何長出來,以及送出訊息到顯示回覆的路徑 |
 | 17 | [前端精簡清單](client/mvp-trim.md) | MVP-1 前端的精簡:13 個檔案刪 247 行、刪掉的 14 個功能目錄、用 `librechat.yaml` 隱藏殘留入口,以及驗證結果 |
+| 18 | [npm(官方文件翻譯)](official/local/npm.md) | 官方的 npm 本機安裝流程:前置條件、`.env`、`npm run reinstall`、`npm run backend` |

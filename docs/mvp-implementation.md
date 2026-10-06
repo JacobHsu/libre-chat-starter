@@ -163,7 +163,7 @@
 | E2 L4 `packages/client` | 已提交,在專案內建置成功(270 個檔案,與官方逐檔相同);四層 `dist/` 與暫存區位元組大小一致,說明見 [client](packages/client.md) |
 | E2 L5 後端 `api/` | 已提交(315 個檔案:313 個與官方逐檔相同,2 個精簡版與暫存區一致);在暫存區裁成這 315 個檔案實測,API 驗收 11/11、瀏覽器聊天通過。專案內:55 個外部套件全部可解析。說明見 [api](api/index.md)、[精簡清單](api/mvp-trim.md) |
 | E2 L6 前端 `client/` | 已帶入專案(1145 個檔案:1132 個與官方逐檔相同,13 個精簡版與暫存區一致);專案內五層建置成功(含前端 Vite);說明見 [前端說明](client/index.md)、[精簡清單](client/mvp-trim.md) |
-| E3 專案內啟動與驗收 | 待做:設定 `.env` 與 `librechat.yaml`,啟動,用瀏覽器驗收,通過後打 `stage-mvp` |
+| E3 專案內啟動與驗收 | 完成(2026-10-06):專案內設定 `.env`(只改 `PORT`、`MONGO_URI`、`DOMAIN_*`)與 `librechat.yaml`,`npm run backend` 啟動;API 驗收 11/11;使用者在瀏覽器完成註冊、登入、選 Ollama、串流回覆、重新整理後歷史仍在,通過。標籤 `stage-mvp` |
 
 ## 風險
 

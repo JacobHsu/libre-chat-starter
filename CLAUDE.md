@@ -130,7 +130,7 @@
 - [x] B. 暫存區分析(後端、前端、函式庫的靜態分析;結論見 `docs/mvp-design.md`)
 - [x] C. 改寫 `docs/build-order.md`(歷史時間軸與 release 核對)
 - [x] D. MVP 設計文件 `docs/mvp-design.md` 與 `docs/history-cohorts.md`
-- [ ] E. MVP-1 實作與驗證:暫存區的完整版基準、後端精簡、前端精簡都已完成並通過驗收(暫存區的 MVP-1:後端 315 檔 + 前端 1145 檔);已驗證的層每層帶入專案(L0 根設定、L1 `data-provider`、L2 `data-schemas`、L3 `packages/api`、L4 `packages/client`、L5 後端 `api/` 已提交;L6 前端 `client/` 已帶入並建置成功,待使用者確認後提交);下一步:專案內設定 `.env` 與 `librechat.yaml`,啟動並驗收,通過後打 `stage-mvp`
+- [x] E. MVP-1 實作與驗證:暫存區的完整版基準、後端精簡、前端精簡都已完成並通過驗收(暫存區的 MVP-1:後端 315 檔 + 前端 1145 檔);已驗證的層每層帶入專案(L0 根設定、L1 `data-provider`、L2 `data-schemas`、L3 `packages/api`、L4 `packages/client`、L5 後端 `api/`、L6 前端 `client/` 都已提交);專案內以 `.env` 與 `librechat.yaml` 啟動,使用者在瀏覽器完成驗收(2026-10-06 通過),標籤 `stage-mvp`
 - [ ] F. 其餘功能依誕生日逐階段補回
 - [ ] G. MVP-2(深切中樞)評估
 
