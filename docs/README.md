@@ -23,3 +23,4 @@
 | 17 | [前端精簡清單](client/mvp-trim.md) | MVP-1 前端的精簡:13 個檔案刪 247 行、刪掉的 14 個功能目錄、用 `librechat.yaml` 隱藏殘留入口,以及驗證結果 |
 | 18 | [npm(官方文件翻譯)](official/local/npm.md) | 官方的 npm 本機安裝流程:前置條件、`.env`、`npm run reinstall`、`npm run backend` |
 | 19 | [本機執行教學](local/npm.md) | 本專案的正式本機執行教學:前置條件、啟動 MongoDB、設定 `.env` 與 `librechat.yaml`、安裝建置、啟動、驗收,以及與官方流程的對照 |
+| 20 | [路線圖](roadmap.md) | 從 MVP-1 到官方完整版的差距、19 個功能階段各補回哪些檔案與換回哪些精簡檔案、收尾階段 |
