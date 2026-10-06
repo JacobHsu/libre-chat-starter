@@ -43,7 +43,19 @@ endpoints:
       titleConvo: true
       titleModel: "current_model"
       modelDisplayLabel: "Ollama"
+
+interface:
+  marketplace:
+    use: false
+  bookmarks: false
+  memories: false
+  prompts: false
+  skills: false
+  mcpServers:
+    use: false
 ```
+
+`interface` 區段隱藏 MVP-1 還沒有的功能入口,原因見[前端精簡清單](client/mvp-trim.md)。
 
 - `baseURL` 用 `localhost`,因為我們的後端跑在主機上。跑在 Docker 容器裡才要改成 `host.docker.internal`。
 - `apiKey` 欄位必須存在,但 Ollama 不檢查,填任意字串。
