@@ -24,3 +24,4 @@
 | 18 | [npm(官方文件翻譯)](official/local/npm.md) | 官方的 npm 本機安裝流程:前置條件、`.env`、`npm run reinstall`、`npm run backend` |
 | 19 | [本機執行教學](local/npm.md) | 本專案的正式本機執行教學:前置條件、啟動 MongoDB、設定 `.env` 與 `librechat.yaml`、安裝建置、啟動、驗收,以及與官方流程的對照 |
 | 20 | [路線圖](roadmap.md) | 從 MVP-1 到官方完整版的差距、19 個功能階段各補回哪些檔案與換回哪些精簡檔案、收尾階段 |
+| 21 | [送出問題後的等待畫面與串流渲染](client/streaming-ui.md) | 送出訊息到第一個字出現之前,小圓點的 CSS、樂觀更新、SSE 串流、影格合併與淡入效果 |
