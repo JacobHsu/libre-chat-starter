@@ -26,3 +26,5 @@
 | 20 | [路線圖](roadmap.md) | 從 MVP-1 到官方完整版的差距、19 個功能階段各補回哪些檔案與換回哪些精簡檔案、收尾階段 |
 | 21 | [送出問題後的等待畫面與串流渲染](client/streaming-ui.md) | 送出訊息到第一個字出現之前,小圓點的 CSS、樂觀更新、SSE 串流、影格合併與淡入效果 |
 | 22 | [提示詞](features/prompts.md) | 階段 1:提示詞功能做什麼、`/` 指令、前後端怎麼接、權限、補回的 57 個檔案與要換回官方版的精簡內容、驗證結果 |
+| 23 | [Message Composer(官方文件翻譯)](official/features/composer.md) | 輸入框:+ 面板、檔案、工具與技能、暫存的上下文、排隊與引導、鍵盤快速鍵(`/` 插入提示詞) |
+| 24 | [Access Control(官方文件翻譯)](official/features/access_control.md) | 三層授權:功能權限、資源 ACL、系統授權;`PROMPTS` 權限與分享 |
