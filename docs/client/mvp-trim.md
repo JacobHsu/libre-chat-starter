@@ -1,6 +1,8 @@
 # 前端精簡清單(MVP-1)
 
-MVP-1 的前端改 13 個檔案、刪 247 行、改 1 行,**沒有新增任何自己寫的邏輯**。再加上不帶入只服務被延後功能的檔案,以及 `librechat.yaml` 的 `interface` 開關。最終階段這 13 個檔案會換回官方完整版,其餘檔案補回。
+MVP-1 的前端改 13 個檔案、**沒有新增任何自己寫的邏輯**。再加上不帶入只服務被延後功能的檔案,以及 `librechat.yaml` 的 `interface` 開關。最終階段這些檔案會換回官方完整版,其餘檔案補回。
+
+各階段補回功能時,會從清單拿掉對應的項目。階段 1(提示詞)換回了 4 個檔案、補回 `useSideNavLinks.ts` 與 `routes/index.tsx` 的提示詞部分,目前的狀態是**改 9 個檔案、刪 220 行、改 1 行**(MVP-1 當時是 13 個檔案、247 行)。下面的數字都是目前的狀態。
 
 ## 規則
 
@@ -8,14 +10,13 @@ MVP-1 的前端改 13 個檔案、刪 247 行、改 1 行,**沒有新增任何�
 - 唯一的修改(不是純刪除):`components/Chat/Header.tsx` 裡 `<HeaderMenu startupConfig={startupConfig} trace={trace} …/>` 刪掉 `trace={trace}` 屬性。
 - 流程:先刪掉功能目錄,用 Vite 建置,依錯誤訊息找出還被引用的地方,逐一處理,直到建置成功。
 
-## 刪掉的 14 個功能目錄
+## 還沒補回的 13 個功能目錄
 
 | 目錄 | 功能 |
 |---|---|
 | `components/SidePanel/Agents`、`Builder` | Agent 建立與建構面板 |
 | `components/SidePanel/MCPBuilder` | MCP 伺服器面板 |
 | `components/SidePanel/Memories`、`Schedules`、`Bookmarks`、`Files` | 記憶、排程、書籤、檔案面板 |
-| `components/Prompts` | 提示詞庫 |
 | `components/Skills` | Skills |
 | `components/Chat/Trace` | 對話步驟與成本檢視 |
 | `components/Plugins` | 外掛 |
@@ -25,14 +26,14 @@ MVP-1 的前端改 13 個檔案、刪 247 行、改 1 行,**沒有新增任何�
 
 `SidePanel/Parameters`、`Chat/Subagents`、`Share` 不能刪,聊天畫面直接用到。
 
-## 13 個精簡檔案
+## 9 個精簡檔案
 
 ### 接線型(把功能接進畫面)
 
 | 檔案 | 刪除 |
 |---|---|
-| `hooks/Nav/useSideNavLinks.ts`(-124) | 9 條面板 `import`(MCPBuilder、Agents、Bookmarks、Builder、Schedules、Memories、Files、Prompts、Skills)與對應的 9 個 `links.push` 區塊,只剩 `parameters` 與 `hide-panel` |
-| `routes/index.tsx`(-75) | Agent 市集的 2 條 `import`、5 個動態載入函式(Prompts、Skills、Insights、Projects 兩個),以及 10 個路由項目(`prompts/:promptId`、`skills*` 4 個、`insights`、`projects*` 2 個、`agents*` 2 個) |
+| `hooks/Nav/useSideNavLinks.ts`(-113) | 8 條面板 `import`(MCPBuilder、Agents、Bookmarks、Builder、Schedules、Memories、Files、Skills)與對應的 8 個 `links.push` 區塊,只剩 `prompts`、`parameters` 與 `hide-panel` |
+| `routes/index.tsx`(-66) | Agent 市集的 2 條 `import`、4 個動態載入函式(Skills、Insights、Projects 兩個),以及 9 個路由項目(`skills*` 4 個、`insights`、`projects*` 2 個、`agents*` 2 個) |
 | `components/Chat/ChatView.tsx`(-3) | `TraceSurface` 的 `import` 與外層的開閉標籤(裡面的內容不動) |
 | `components/Chat/Header.tsx`(-11,+1) | `Trace` 的 `import`、`useTraceControl` 區塊、`<TraceButton />`,以及 `trace={trace}` 屬性 |
 | `components/Chat/Menus/HeaderMenu.tsx`(-13) | `TraceControl` 型別 `import`、`trace` 屬性與型別、「檢視 Trace」選單項目 |
@@ -43,19 +44,15 @@ MVP-1 的前端改 13 個檔案、刪 247 行、改 1 行,**沒有新增任何�
 |---|---|---|
 | `components/Chat/Landing.tsx`(-7) | `AgentContact` 的 `import` 與使用處 | Agent 的聯絡資訊,屬於 Agent 市集 |
 | `components/UnifiedSidebar/ConversationsSection.tsx`(-4) | `ProjectsSection` 的 `import` 與使用處 | 側邊欄的專案區塊 |
-| `hooks/index.ts`(-1) | `export * from './Prompts'` | 提示詞的 hooks |
-| `Providers/index.ts`(-1) | `export * from './PromptGroupsContext'` | 提示詞的 context |
-| `routes/Root.tsx`(-3) | `PromptGroupsProvider` 的 `import` 與外層的開閉標籤 | 只服務提示詞 |
-| `components/Chat/Input/ChatForm.tsx`(-2) | `PromptsCommand` 的 `import` 與使用處 | 輸入框的 `/` 提示詞指令 |
 | `components/Chat/Input/BadgeRow.tsx`(-2) | `ToolDialogs` 的 `import` 與使用處 | 網頁搜尋金鑰對話框,引用 `SidePanel/Agents` 的元件 |
 | `hooks/MCP/index.ts`(-1) | `useRemoveMCPTool` 的匯出 | 只供 Agent 表單使用 |
 
 ## 為什麼不帶某些檔案
 
-只被延後功能使用的檔案,刪掉引用處之後就沒有人用了,不帶入(共 392 個非測試檔),例如:
+只被延後功能使用的檔案,刪掉引用處之後就沒有人用了,不帶入(MVP-1 當時共 392 個非測試檔,階段 1 補回 55 個,目前 337 個),例如:
 
 - `components/Conversations/ProjectsSection.tsx`(只服務專案區塊)
-- `Providers/PromptGroupsContext.tsx`、`components/Chat/Input/PromptsCommand.tsx`、`ToolDialogs.tsx`、`hooks/MCP/useRemoveMCPTool.ts`、`hooks/Prompts/`(3 個)
+- `ToolDialogs.tsx`、`hooks/MCP/useRemoveMCPTool.ts`
 - 這些功能的其他元件,例如 `components/Files/`(24 個)、`components/Input/`(13 個)
 
 **唯一一個從被刪目錄保留的檔案**:`components/SidePanel/Agents/config.ts`。`hooks/Files/useSharePointPicker.ts` 用 `import type` 引用它的型別 `SPPickerConfig`。型別在建置時會被抹掉,不保留也能建置,但保留才能通過 TypeScript 檢查,而且不必改動 `useSharePointPicker.ts`。
@@ -70,7 +67,6 @@ interface:
     use: false
   bookmarks: false
   memories: false
-  prompts: false
   skills: false
   mcpServers:
     use: false
@@ -79,12 +75,14 @@ interface:
 | 開關 | 隱藏的入口 |
 |---|---|
 | `marketplace.use: false` | 側邊欄的「Agents 市場」連結(指向已不存在的 `/agents`),以及模型選擇器裡的市集項目 |
-| `bookmarks`、`memories`、`prompts`、`skills: false` | 關閉對應功能的介面權限 |
+| `bookmarks`、`memories`、`skills: false` | 關閉對應功能的介面權限 |
 | `mcpServers.use: false` | 前端不再請求 `/api/mcp/servers` |
 
-## 驗證結果
+MVP-1 當時還有一行 `prompts: false`。階段 1 補回提示詞後,這一行要改成 `prompts: true`,**不能只是刪掉**:`false` 在啟動時已經把 `USER` 角色的 `PROMPTS` 使用權限寫進資料庫,拿掉設定並不會改回來,必須明確寫 `true` 才會重新開啟。其餘的開關,等各自的階段補回功能時,同樣改成 `true`。
 
-在暫存區:後端 315 個檔案、前端 1145 個檔案、四個函式庫,加上上面的 `interface` 設定。
+## 驗證結果(MVP-1 當時)
+
+在暫存區:後端 315 個檔案、前端 1145 個檔案、四個函式庫,加上上面的 `interface` 設定(階段 1 之後的驗證結果見[提示詞](../features/prompts.md))。
 
 | 項目 | 結果 |
 |---|---|

@@ -108,7 +108,7 @@ interface:
     use: false
   bookmarks: false
   memories: false
-  prompts: false
+  prompts: true
   skills: false
   mcpServers:
     use: false

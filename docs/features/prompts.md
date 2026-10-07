@@ -21,7 +21,7 @@
 2. 回到新對話,輸入框打 `/`,**稍等清單載入**,選「摘要」。
 3. 在跳出的對話框填 `topic`,按「送出」。文字帶入輸入框,「自動傳送提示」開啟時直接送出。
 
-清單資料(`/api/prompts/all`)在第一次打 `/` 時才開始載入,連續快速輸入 `/su` 可能看不到清單;先打 `/`、停一下再繼續就會正常。
+清單資料(`/api/prompts/all`)在第一次打 `/` 時才開始載入,連續快速輸入 `/su` 可能看不到清單;先打 `/`、停一下再繼續就會正常。剛建立提示詞之後,如果 `/` 的清單沒有出現,重新整理頁面再試。
 
 ## 歷史
 
@@ -35,26 +35,48 @@
 
 ## 前後端怎麼接
 
+```mermaid
+flowchart TD
+    subgraph FE["前端 client/src"]
+        A["側邊欄 PromptsAccordion<br/>(建立、編輯、列表)"]
+        B["輸入框 PromptsCommand<br/>(打 / 選提示詞)"]
+        C["React Query hooks<br/>data-provider/prompts.ts"]
+        A --> C
+        B --> C
+    end
+
+    subgraph BE["後端 api/server"]
+        D["routes/prompts.js<br/>路由與權限檢查"]
+        E["routes/categories.js<br/>類別清單"]
+    end
+
+    subgraph LIB["函式庫 packages"]
+        F["@librechat/api 的 prompts<br/>格式化、驗證、遷移"]
+        G["@librechat/data-schemas<br/>prompt 方法與模型"]
+        F --> G
+    end
+
+    H[("MongoDB<br/>Prompt、PromptGroup")]
+
+    C -- "HTTP /api/prompts/*" --> D
+    C -- "HTTP /api/categories" --> E
+    D --> F
+    G --> H
 ```
-側邊欄 PromptsAccordion / 輸入框 PromptsCommand
-        │  (React Query hooks:client/src/data-provider/prompts.ts)
-        ▼
-GET  /api/prompts/groups           提示詞群組清單(側邊欄)
-GET  /api/prompts/all              全部群組(`/` 指令用)
-GET  /api/categories               類別清單
-POST /api/prompts                  建立(同時建立群組與第一個版本)
-POST /api/prompts/groups/:groupId/prompts   在群組裡新增版本
-PATCH /api/prompts/groups/:groupId           更新群組(名稱、指令、描述…)
-PATCH /api/prompts/:promptId/tags/production 把某個版本標為正式版
-POST /api/prompts/groups/:groupId/use        記錄使用次數
-DELETE /api/prompts/:promptId、/groups/:groupId 刪除版本與群組
-        ▼
-api/server/routes/prompts.js   路由與權限檢查
-        ▼
-@librechat/api 的 prompts(格式化、驗證、遷移)與 @librechat/data-schemas 的 prompt 方法
-        ▼
-MongoDB:Prompt、PromptGroup
-```
+
+前端的 hooks 呼叫下列 API:
+
+| 方法與路徑 | 用途 |
+|---|---|
+| `GET /api/prompts/groups` | 提示詞群組清單(側邊欄) |
+| `GET /api/prompts/all` | 全部群組(`/` 指令用) |
+| `GET /api/categories` | 類別清單 |
+| `POST /api/prompts` | 建立(同時建立群組與第一個版本) |
+| `POST /api/prompts/groups/:groupId/prompts` | 在群組裡新增版本 |
+| `PATCH /api/prompts/groups/:groupId` | 更新群組(名稱、指令、描述…) |
+| `PATCH /api/prompts/:promptId/tags/production` | 把某個版本標為正式版 |
+| `POST /api/prompts/groups/:groupId/use` | 記錄使用次數 |
+| `DELETE /api/prompts/:promptId`、`DELETE /api/prompts/groups/:groupId` | 刪除版本與群組 |
 
 一則提示詞由「**群組**」與「**版本**」組成:群組放名稱、類別、指令、描述;文字放在版本裡。編輯文字時,表單(`PromptForm`)呼叫 `useAddPromptToGroup` 在群組裡新增版本,`useMakePromptProduction` 把某個版本標為正式版。這就是為什麼路由有 `groups/:groupId/prompts`(新增版本)與 `:promptId/tags/production`(標記正式版)。
 
@@ -65,6 +87,8 @@ MongoDB:Prompt、PromptGroup
 | 功能權限(依角色) | `PROMPTS` 有四項:`USE`(使用)、`CREATE`(建立)、`SHARE`(分享給特定對象)、`SHARE_PUBLIC`(公開分享)。路由用 `checkPromptCreate`、`checkPromptAccess`、`checkGlobalPromptShare` 檢查 |
 | 資源權限(依單一提示詞) | 誰能檢視、編輯、刪除某一則提示詞,路由用 `canAccessPromptGroupResource`、`canAccessPromptViaGroup` 檢查 |
 | `librechat.yaml` 的 `interface.prompts` | 啟動時為內建的 `USER` 角色寫入 `PROMPTS` 權限。設成 `false` 就沒有人能使用;設成 `true` 只更新 `use`;設成物件可分別設 `use`、`create`、`share`、`public` |
+
+權限是**寫進資料庫**的:啟動時依設定檔更新 `roles` 集合,沒有寫的欄位就保持資料庫裡原本的值。所以如果曾經設過 `prompts: false`,之後只把那一行刪掉,資料庫裡的 `USE` 仍然是 `false`,側邊欄不會出現提示詞。要明確設成 `prompts: true`,重啟後 `USE` 才會改回 `true`。
 
 ## 這個階段補回的檔案
 
@@ -108,7 +132,7 @@ MongoDB:Prompt、PromptGroup
 | 前端 `routes/index.tsx` | `loadInlinePromptsView` 與 `prompts/:promptId` 路由項目 |
 | 後端 `routes/index.js` | `categories`、`prompts` 的 `require` 與匯出(4 行) |
 | 後端 `server/index.js` | `app.use('/api/prompts', routes.prompts)`、`app.use('/api/categories', routes.categories)` |
-| `librechat.yaml` | 拿掉 `interface.prompts: false` |
+| `librechat.yaml` | `interface.prompts: false` 改成 `true`(見上面「權限」,只刪掉那一行不會恢復) |
 
 這些檔案的其他功能(Skills、Agents、MCP…)仍然保持精簡,留給各自的階段。
 
@@ -124,6 +148,15 @@ MongoDB:Prompt、PromptGroup
 | 建立提示詞 | 輸入 `{{topic}}` 自動偵測出變數 |
 | 提示詞頁面 | 建立後跳到 `/prompts/<id>`,顯示內容、變數、指令、分享與刪除 |
 | `/` 指令 | 清單出現、選取後跳出變數對話框、填值後文字正確帶入並送出 |
+
+接著在專案內(後端 317 個檔案、前端 1200 個檔案,`npm run frontend` 建置通過)再驗收一次:
+
+| 項目 | 結果 |
+|---|---|
+| 側邊欄 | 設定檔改成 `prompts: true` 並重啟後,多了「提示詞」圖示 |
+| 建立「摘要」 | 文字 `請用一句繁體中文摘要:{{topic}}`、指令 `sum`,自動偵測出變數 `topic`,建立後跳到提示詞頁面 |
+| `/` 指令 | 清單出現「摘要」,選取後跳出變數對話框,填 `topic` 送出 |
+| 回覆 | 「自動傳送提示」開啟,直接送出,Ollama 串流回覆 |
 
 ## References
 

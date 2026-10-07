@@ -1,24 +1,24 @@
 # 路線圖
 
-從目前的最小可用版本(MVP-1,標籤 `stage-mvp`)到官方完整版(`v0.8.8-rc4`),還差什麼、依什麼順序補回、每個階段要動哪些檔案。
+從最小可用版本(MVP-1,標籤 `stage-mvp`)到官方完整版(`v0.8.8-rc4`),還差什麼、依什麼順序補回、每個階段要動哪些檔案。
 
 ## 現況與最終版的差距
 
-最終版就是官方 `v0.8.8-rc4`:所有檔案與官方完全相同,包含測試與根目錄的工具與部署檔。
+最終版就是官方 `v0.8.8-rc4`:所有檔案與官方完全相同,包含測試與根目錄的工具與部署檔。下表是階段 1(提示詞)完成後的狀態。
 
 | 項目 | 官方 rc4 | 現在 | 差距 |
 |---|---|---|---|
-| 全部檔案 | 5492 | 2821 | 少 2671 個 |
-| 程式碼檔(非測試) | 3039(後端 372、前端 1421、函式庫 1246) | 2585(85%) | 少 **454 個**(後端 65、前端 389) |
+| 全部檔案 | 5492 | 2878 | 少 2614 個 |
+| 程式碼檔(非測試) | 3039(後端 372、前端 1421、函式庫 1246) | 2642(87%) | 少 **397 個**(後端 63、前端 334) |
 | 測試檔 | 1723 | 0 | 最終階段補回 |
-| 精簡過的檔案 | | 15 個(後端 2、前端 13) | 各階段逐步換回官方版 |
+| 精簡過的檔案 | | 11 個(後端 2、前端 9) | 各階段逐步換回官方版 |
 | 根目錄 | `.github`(44)、`config`(52)、`e2e`(229)、`helm`(35)、`scripts`(16)、`redis-config`(12)、`otel`(9)、`Dockerfile`、`docker-compose.yml`、`eslint.config.mjs`、`LICENSE` 等 | 都還沒有 | 最終階段(或用到它的功能階段)帶入 |
 
-少的 454 個程式碼檔,分成兩種:
+少的 397 個程式碼檔,分成兩種:
 
 | 種類 | 檔案數 | 意思 |
 |---|---|---|
-| 完整版會載入,屬於某個功能 | **351**(前端 303、後端 48) | 隨功能階段補回,下面的階段表就是它們的分配 |
+| 完整版會載入,屬於某個功能 | **294**(前端 248、後端 46) | 隨功能階段補回,下面的階段表就是它們的分配 |
 | 完整版也不會載入 | **103**(前端 87、後端 16) | 官方 rc4 裡沒有任何入口引用它們(舊版元件、測試用的假資料、效能測試檔等)。放在最後的收尾階段 |
 
 ## 每個階段怎麼做
@@ -41,7 +41,7 @@
 
 | 階段 | 功能 | 最早誕生 | 補回的檔案(前端 / 後端) | 要換回官方版的精簡檔案 | 設定 |
 |---|---|---|---|---|---|
-| 1 | **提示詞** | 2023-02 | 55 / 2 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`hooks/index.ts`、`Providers/index.ts`、`routes/Root.tsx`、`ChatForm.tsx`。後端:`routes/index.js`、`server/index.js` | `interface.prompts` 改回開啟 |
+| 1(已完成,`stage-prompts`) | **提示詞** | 2023-02 | 55 / 2 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`hooks/index.ts`、`Providers/index.ts`、`routes/Root.tsx`、`ChatForm.tsx`。後端:`routes/index.js`、`server/index.js` | `interface.prompts` 改成 `true`(只刪掉不會恢復,見[提示詞](features/prompts.md)) |
 | 2 | 搜尋(Meilisearch) | 2023-03 | 0 / 0 | 無 | 路由與函式庫已在專案內,階段內容是啟動 Meilisearch,設定 `MEILI_HOST`、`MEILI_MASTER_KEY` 並驗證 |
 | 3 | 外掛 | 2023-03 | 6 / 0 | 後端:`server/index.js`(部署外掛的初始化) | |
 | 4 | 預設 | 2023-04 | 0 / 0 | 無 | 路由與函式庫已在專案內,階段內容是啟用並驗證 |
@@ -61,9 +61,9 @@
 | 18 | 專案 | 2026-06 | 10 / 1 | 前端:`routes/index.tsx`、`ConversationsSection.tsx`。後端:`routes/index.js`、`server/index.js` | |
 | 19 | 排程與觸發 | 2026-06 | 11 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js`(排程引擎) | `interface.schedules` |
 
-階段表合計:前端 302、後端 47;另有 `hooks/useInfiniteScroll.ts` 與 `app/clients/index.js` 兩個沒有歸屬的檔案,放進收尾階段。
+階段表合計:前端 302、後端 47(階段 1 已補回 55 與 2,剩前端 247、後端 45);另有 `hooks/useInfiniteScroll.ts` 與 `app/clients/index.js` 兩個沒有歸屬的檔案,放進收尾階段。
 
-「精簡檔案」欄的 15 個檔案,有幾個被多個階段共用。例如前端的 `useSideNavLinks.ts` 在提示詞、檔案、書籤、Agents、Assistants、MCP、記憶、Skills、排程各階段都會再補回一段。做法是每個階段把**該功能那一段**從官方完整版補回,最後一個階段做完,整個檔案就與官方完全相同。後端的 `server/index.js` 與 `routes/index.js` 同理。精簡的細節見[後端精簡清單](api/mvp-trim.md)與[前端精簡清單](client/mvp-trim.md)。
+「精簡檔案」欄原本有 15 個檔案(階段 1 之後剩 11 個),有幾個被多個階段共用。例如前端的 `useSideNavLinks.ts` 在提示詞、檔案、書籤、Agents、Assistants、MCP、記憶、Skills、排程各階段都會再補回一段。做法是每個階段把**該功能那一段**從官方完整版補回,最後一個階段做完,整個檔案就與官方完全相同。後端的 `server/index.js` 與 `routes/index.js` 同理。精簡的細節見[後端精簡清單](api/mvp-trim.md)與[前端精簡清單](client/mvp-trim.md)。
 
 ## MVP-1 已經包含的功能
 
@@ -103,5 +103,6 @@
 - [歷史分群](history-cohorts.md):檔案誕生日分群
 - [專案建立順序](build-order.md):官方的歷史時間軸與 release 核對
 - [MVP 實作計畫](mvp-implementation.md):階段節奏與已完成的進度
-- [後端精簡清單](api/mvp-trim.md)、[前端精簡清單](client/mvp-trim.md):15 個精簡檔案
+- [後端精簡清單](api/mvp-trim.md)、[前端精簡清單](client/mvp-trim.md):目前剩下的 11 個精簡檔案
+- [提示詞](features/prompts.md):階段 1
 - [Project Architecture(官方文件翻譯)](official/development/architecture.md)
