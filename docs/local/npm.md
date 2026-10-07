@@ -154,7 +154,7 @@ Server listening at http://localhost:3090
 後端啟動時會讀取 `client/dist/index.html`,所以一定要先執行 `npm run frontend`。
 
 > **提示:**
-> - 下次要啟動,先確認 MongoDB 與 Ollama 在跑,再執行 `npm run backend`。
+> - 下次要啟動,先確認 MongoDB 與 Ollama 在跑,再執行 `npm run backend`;或直接用[一鍵啟動](#一鍵啟動)。
 > - 停止 LibreChat:在執行它的終端機按 `Ctrl+C`。
 
 ## 驗收
@@ -166,6 +166,27 @@ Server listening at http://localhost:3090
 5. **重新整理**頁面,左側的對話列表與內容仍在。
 
 這個版本的畫面很精簡,側邊欄只有:新對話、對話紀錄、參數、帳號設定。
+
+## 一鍵啟動
+
+第一次設定完成後,日常啟動不用再一步步打指令。在專案根目錄的 PowerShell 執行:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/start.ps1
+```
+
+[tools/start.ps1](../../tools/start.ps1) 會依序做四件事:
+
+| 步驟 | 做什麼 |
+|---|---|
+| 1 | 啟動 MongoDB 容器 `learn-mongodb`(已在跑也沒關係) |
+| 2 | 等 MongoDB 真的能回應(最多 30 秒)。這一步是必要的:MongoDB 還沒準備好就啟動 LibreChat,後端會卡在連線,瀏覽器連不上 |
+| 3 | 檢查 Ollama(`http://localhost:11434`)有沒有回應,沒有就提醒,但不中斷 |
+| 4 | 啟動 LibreChat(`npm run backend`),看到 `Server listening at http://localhost:3090` 就可以開瀏覽器 |
+
+停止:在執行腳本的視窗按 `Ctrl+C`。MongoDB 容器會繼續跑,不用管它;要關閉時 `docker stop learn-mongodb`。
+
+腳本啟動前會先檢查三件事,不符合就說明原因並結束:`client/dist/index.html` 不存在(要先 `npm run frontend`)、`.env` 不存在、3090 已被佔用(LibreChat 可能已經在跑)。
 
 ## 更新專案
 
