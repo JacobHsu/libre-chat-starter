@@ -27,6 +27,7 @@ import {
   useHasAccess,
 } from '~/hooks';
 import Parameters from '~/components/SidePanel/Parameters/Panel';
+import { PromptsAccordion } from '~/components/Prompts';
 
 export default function useSideNavLinks({
   hidePanel,
@@ -92,6 +93,16 @@ export default function useSideNavLinks({
 
   const Links = useMemo(() => {
     const links: NavLink[] = [];
+
+    if (hasAccessToPrompts) {
+      links.push({
+        title: 'com_ui_prompts',
+        label: '',
+        icon: NotebookPen,
+        id: 'prompts',
+        Component: PromptsAccordion,
+      });
+    }
 
     if (
       interfaceConfig.parameters === true &&

@@ -29,6 +29,11 @@ const AuthLayout = () => (
   </AuthContextProvider>
 );
 
+const loadInlinePromptsView = () =>
+  import('~/components/Prompts/layouts/InlinePromptsView').then((m) => ({
+    Component: m.default,
+  }));
+
 const baseEl = document.querySelector('base');
 const baseHref = baseEl?.getAttribute('href') || '/';
 
@@ -120,6 +125,10 @@ export const router = createBrowserRouter(
               /** Prompts are created from a dialog, so there is no "new" page to land on */
               path: 'prompts/new',
               element: <Navigate to="/c/new" replace={true} />,
+            },
+            {
+              path: 'prompts/:promptId',
+              lazy: loadInlinePromptsView,
             },
           ],
         },

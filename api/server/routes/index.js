@@ -1,8 +1,10 @@
 const accessPermissions = require('./accessPermissions');
+const categories = require('./categories');
 const endpoints = require('./endpoints');
 const staticRoute = require('./static');
 const messages = require('./messages');
 const presets = require('./presets');
+const prompts = require('./prompts');
 const balance = require('./balance');
 const banner = require('./banner');
 const search = require('./search');
@@ -28,10 +30,12 @@ module.exports = {
   search,
   config,
   models,
+  prompts,
   presets,
   balance,
   messages,
   endpoints,
+  categories,
   staticRoute,
   accessPermissions,
 };

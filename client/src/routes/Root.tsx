@@ -15,6 +15,7 @@ import {
   normalizeCodeHighlightThrottleMs,
 } from '~/components/Chat/Messages/Content/Parts/useLazyHighlight';
 import {
+  PromptGroupsProvider,
   AssistantsMapContext,
   AgentsMapContext,
   SetConvoProvider,
@@ -148,6 +149,7 @@ export default function Root() {
         <FileMapContext.Provider value={fileMap}>
           <AssistantsMapContext.Provider value={assistantsMap}>
             <AgentsMapContext.Provider value={agentsMap}>
+              <PromptGroupsProvider>
                 <Banner onHeightChange={setBannerHeight} />
                 <div className="flex" style={{ height: `calc(100dvh - ${bannerHeight}px)` }}>
                   <div
@@ -203,6 +205,7 @@ export default function Root() {
                     )}
                   </div>
                 </div>
+              </PromptGroupsProvider>
               <KeyboardShortcutsProvider />
             </AgentsMapContext.Provider>
             {config?.interface?.termsOfService?.modalAcceptance === true && (
