@@ -101,6 +101,9 @@ endpoints:
       modelDisplayLabel: "Ollama"
 
 interface:
+  modelSelect: true
+  parameters: true
+  presets: true
   marketplace:
     use: false
   bookmarks: false
@@ -109,6 +112,15 @@ interface:
   skills: false
   mcpServers:
     use: false
+
+modelSpecs:
+  list:
+    - name: "ollama-qwen"
+      label: "Ollama qwen2.5:7b"
+      softDefault: true
+      preset:
+        endpoint: "Ollama"
+        model: "qwen2.5:7b-instruct"
 ```
 
 | 設定 | 意思 |
@@ -119,6 +131,8 @@ interface:
 | `models.fetch: true` | 即時從 Ollama 取得你已下載的模型清單。端點名稱必須以 `ollama` 開頭(不分大小寫) |
 | `titleConvo`、`titleModel` | 用目前選的模型替對話自動命名 |
 | `interface` | 隱藏這個版本還沒有的功能入口,原因見[前端精簡清單](../client/mvp-trim.md)。之後補回功能時,對應的開關改回開啟 |
+| `modelSpecs`、`softDefault: true` | 預設模型。沒有設定時,新的使用者預設是 OpenAI 的模型,需要金鑰;設了之後,**第一次使用**(這個瀏覽器還沒記住選過哪個模型)預設就是這個 Ollama 模型。使用者之後自己換模型,系統會記住新的選擇。`preset.model` 要填 `ollama list` 看得到的模型名稱 |
+| `interface.modelSelect`、`parameters`、`presets` | 設了 `modelSpecs` 之後,官方預設會關掉模型選擇器、參數面板與預設,所以要明確設成 `true` 讓它們保持開啟 |
 
 官方的 [Ollama 設定頁](https://www.librechat.ai/docs/configuration/librechat_yaml/ai_endpoints/ollama)有完整範例與其他選項。
 
@@ -161,7 +175,7 @@ Server listening at http://localhost:3090
 
 1. 開啟 `http://localhost:3090/`,**註冊**一個帳號。第一個註冊的使用者會自動成為管理員。註冊後會顯示「請檢查信箱驗證」,這是通用訊息,沒有開信箱驗證,可以直接登入。
 2. **登入**。
-3. 預設的模型是 `gpt-6-astra`(OpenAI,需要金鑰),不用管它。在畫面上方的模型選擇器(快捷鍵 `Ctrl+Shift+M`)切到 **Ollama** 的模型。
+3. 第一次使用時,畫面上方的模型選擇器預設就是 **Ollama qwen2.5:7b**(`librechat.yaml` 的 `modelSpecs`)。如果這個瀏覽器以前選過別的模型,會記住上一次的選擇;想換模型,點上方的模型選擇器。OpenAI、Google、Anthropic 等端點仍然列在選單裡,但需要金鑰才能用。
 4. 送出一則訊息,回覆會以**串流**逐字出現。
 5. **重新整理**頁面,左側的對話列表與內容仍在。
 
