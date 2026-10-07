@@ -179,7 +179,7 @@ Server listening at http://localhost:3090
 4. 送出一則訊息,回覆會以**串流**逐字出現。
 5. **重新整理**頁面,左側的對話列表與內容仍在。
 
-這個版本的畫面很精簡,側邊欄只有:新對話、對話紀錄、參數、帳號設定。
+這個版本的畫面還很精簡,側邊欄有:新對話、對話紀錄、提示詞、參數、帳號設定。要加上對話搜尋,見[搜尋](../features/search.md)。
 
 ## 一鍵啟動
 
@@ -189,16 +189,17 @@ Server listening at http://localhost:3090
 powershell -ExecutionPolicy Bypass -File tools/start.ps1
 ```
 
-[tools/start.ps1](../../tools/start.ps1) 會依序做四件事:
+[tools/start.ps1](../../tools/start.ps1) 會依序做五件事:
 
 | 步驟 | 做什麼 |
 |---|---|
 | 1 | 啟動 MongoDB 容器 `learn-mongodb`(已在跑也沒關係) |
 | 2 | 等 MongoDB 真的能回應(最多 30 秒)。這一步是必要的:MongoDB 還沒準備好就啟動 LibreChat,後端會卡在連線,瀏覽器連不上 |
-| 3 | 檢查 Ollama(`http://localhost:11434`)有沒有回應,沒有就提醒,但不中斷 |
-| 4 | 啟動 LibreChat(`npm run backend`),看到 `Server listening at http://localhost:3090` 就可以開瀏覽器 |
+| 3 | 選用:如果有 `learn-meilisearch` 容器(見[搜尋](../features/search.md)),就啟動它並等它回應(最多 15 秒);沒有這個容器就略過 |
+| 4 | 檢查 Ollama(`http://localhost:11434`)有沒有回應,沒有就提醒,但不中斷 |
+| 5 | 啟動 LibreChat(`npm run backend`),看到 `Server listening at http://localhost:3090` 就可以開瀏覽器 |
 
-停止:在執行腳本的視窗按 `Ctrl+C`。MongoDB 容器會繼續跑,不用管它;要關閉時 `docker stop learn-mongodb`。
+停止:在執行腳本的視窗按 `Ctrl+C`。MongoDB 與 Meilisearch 容器會繼續跑,不用管它們;要關閉時 `docker stop learn-mongodb learn-meilisearch`。
 
 腳本啟動前會先檢查三件事,不符合就說明原因並結束:`client/dist/index.html` 不存在(要先 `npm run frontend`)、`.env` 不存在、3090 已被佔用(LibreChat 可能已經在跑)。
 

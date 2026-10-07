@@ -42,7 +42,7 @@
 | 階段 | 功能 | 最早誕生 | 補回的檔案(前端 / 後端) | 要換回官方版的精簡檔案 | 設定 |
 |---|---|---|---|---|---|
 | 1(已完成,`stage-prompts`) | **提示詞** | 2023-02 | 55 / 2 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`hooks/index.ts`、`Providers/index.ts`、`routes/Root.tsx`、`ChatForm.tsx`。後端:`routes/index.js`、`server/index.js` | `interface.prompts` 改成 `true`(只刪掉不會恢復,見[提示詞](features/prompts.md)) |
-| 2 | 搜尋(Meilisearch) | 2023-03 | 0 / 0 | 無 | 路由與函式庫已在專案內,階段內容是啟動 Meilisearch,設定 `MEILI_HOST`、`MEILI_MASTER_KEY` 並驗證 |
+| 2(已完成,`stage-search`) | 搜尋(Meilisearch) | 2023-03 | 0 / 0 | 無 | 路由與函式庫已在專案內,階段內容是啟動 Meilisearch 容器,設定 `SEARCH`、`MEILI_HOST`、`MEILI_MASTER_KEY` 並驗證(見[搜尋](features/search.md)) |
 | 3 | 外掛 | 2023-03 | 6 / 0 | 後端:`server/index.js`(部署外掛的初始化) | |
 | 4 | 預設 | 2023-04 | 0 / 0 | 無 | 路由與函式庫已在專案內,階段內容是啟用並驗證 |
 | 5 | 檔案與圖片 | 2023-04 | 4 / 0 | 前端:`useSideNavLinks.ts`。後端:`server/index.js`(過期檔案清理) | |

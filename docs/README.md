@@ -28,3 +28,6 @@
 | 22 | [提示詞](features/prompts.md) | 階段 1:提示詞功能做什麼、`/` 指令、前後端怎麼接、權限、補回的 57 個檔案與要換回官方版的精簡內容、驗證結果 |
 | 23 | [Message Composer(官方文件翻譯)](official/features/composer.md) | 輸入框:+ 面板、檔案、工具與技能、暫存的上下文、排隊與引導、鍵盤快速鍵(`/` 插入提示詞) |
 | 24 | [Access Control(官方文件翻譯)](official/features/access_control.md) | 三層授權:功能權限、資源 ACL、系統授權;`PROMPTS` 權限與分享 |
+| 25 | [Message Search(官方文件翻譯)](official/features/search.md) | 訊息搜尋:側邊欄搜尋、錯字容忍、關鍵字搜尋不是語意搜尋 |
+| 26 | [Meilisearch(官方文件翻譯)](official/configuration/meilisearch.md) | 設定 Meilisearch:Docker 與 npm 兩種方式、環境變數、多節點停用同步、重設同步 |
+| 27 | [搜尋](features/search.md) | 階段 2:搜尋怎麼運作(索引同步、`/api/search/enable`)、本機用 Docker 啟用 Meilisearch、驗證結果 |
