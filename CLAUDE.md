@@ -58,6 +58,7 @@
 ## 文件規則
 - 學習筆記放 `docs/`,使用繁體中文。
 - 只用相對路徑或簡短別名,不寫本機絕對路徑。
+- 各功能階段的說明(功能做什麼、涉及的檔案、前後端怎麼接、要換回官方版的精簡內容、驗證結果)放 `docs/features/`,檔名用功能的英文名(如 `docs/features/prompts.md`);對應的官方頁面翻譯放 `docs/official/features/`。
 - 對應原始碼目錄的說明,依原始碼位置放子資料夾:`packages/*` 的說明放 `docs/packages/`(如 `docs/packages/data-provider.md`),之後 `api/`、`client/` 同理放 `docs/api/`、`docs/client/`。不對應單一目錄的專案層級文件(`package-json`、`mvp-design`、`local-testing` 等)平放在 `docs/`。本專案的正式本機執行教學放 `docs/local/`(比照官方 `docs/official/local/`),寫法以「從 GitHub 全新 clone 照著做能跑通」為準,且必須實際驗證過。
 - 文件只寫學習內容,不寫「作者的查證過程」:例如「官方文件沒有說明這個」「這是我的推論」「沒有驗證」「依檔名判斷」這類備註不放進文件。官方有沒有講,Claude 自己知道就好;說明內容本身要寫對,拿不準的主張就不寫,不要寫了再加免責聲明。查證結果與不確定處,在對話中告訴使用者。
 

@@ -41,18 +41,18 @@
 
 | 階段 | 功能 | 最早誕生 | 補回的檔案(前端 / 後端) | 要換回官方版的精簡檔案 | 設定 |
 |---|---|---|---|---|---|
-| 1 | **提示詞** | 2023-02 | 56 / 2 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`hooks/index.ts`、`Providers/index.ts`、`routes/Root.tsx`、`ChatForm.tsx`。後端:`routes/index.js`、`server/index.js` | `interface.prompts` 改回開啟 |
+| 1 | **提示詞** | 2023-02 | 55 / 2 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`hooks/index.ts`、`Providers/index.ts`、`routes/Root.tsx`、`ChatForm.tsx`。後端:`routes/index.js`、`server/index.js` | `interface.prompts` 改回開啟 |
 | 2 | 搜尋(Meilisearch) | 2023-03 | 0 / 0 | 無 | 路由與函式庫已在專案內,階段內容是啟動 Meilisearch,設定 `MEILI_HOST`、`MEILI_MASTER_KEY` 並驗證 |
 | 3 | 外掛 | 2023-03 | 6 / 0 | 後端:`server/index.js`(部署外掛的初始化) | |
 | 4 | 預設 | 2023-04 | 0 / 0 | 無 | 路由與函式庫已在專案內,階段內容是啟用並驗證 |
 | 5 | 檔案與圖片 | 2023-04 | 4 / 0 | 前端:`useSideNavLinks.ts`。後端:`server/index.js`(過期檔案清理) | |
 | 6 | OAuth 與 OpenID | 2023-05 | 0 / 2 | 後端:`routes/index.js`、`server/index.js`(`/oauth` 路由) | 設定社群登入或 OpenID 的環境變數 |
 | 7 | Redis 與快取 | 2023-09 | 0 / 0 | 無 | 程式碼已在專案內,階段內容是啟動 Redis 並設定連線 |
-| 8 | 分享 | 2024-05 | 1 / 3 | 後端:`routes/index.js`、`server/index.js`(`/api/share`) | |
+| 8 | 分享 | 2024-05 | 0 / 3 | 後端:`routes/index.js`、`server/index.js`(`/api/share`) | |
 | 9 | 管理面板 | 2024-06 | 0 / 10 | 後端:`routes/index.js`、`server/index.js`(`/api/admin/*`) | |
 | 10 | Trace 與可觀測(含洞察) | 2024-06 | 21 / 3 | 前端:`ChatView.tsx`、`Header.tsx`、`HeaderMenu.tsx`、`routes/index.tsx`。後端:`routes/index.js`、`server/index.js` | `interface.traceViewer` |
 | 11 | 書籤與標籤 | 2024-07 | 7 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | `interface.bookmarks` 改回開啟 |
-| 12 | Agents(建構器與市集) | 2024-08 | 94 / 3 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`Landing.tsx`、`BadgeRow.tsx`、`hooks/MCP/index.ts`。後端:`routes/index.js`、`server/index.js`(工具核准 hooks) | `interface.marketplace` 改回開啟 |
+| 12 | Agents(建構器與市集) | 2024-08 | 96 / 3 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`Landing.tsx`、`BadgeRow.tsx`、`hooks/MCP/index.ts`。後端:`routes/index.js`、`server/index.js`(工具核准 hooks) | `interface.marketplace` 改回開啟 |
 | 13 | Assistants(OpenAI) | 功能表未列,階段開始前確認順序 | 23 / 15 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | |
 | 14 | 程式碼環境 | 2024-08 | 0 / 1 | 後端:`routes/index.js`、`server/index.js`(生命週期協調器) | |
 | 15 | MCP | 2024-12 | 19 / 3 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js`(OAuth 重新連線) | `interface.mcpServers` 改回開啟 |
