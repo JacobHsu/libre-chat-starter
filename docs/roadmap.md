@@ -43,23 +43,22 @@
 |---|---|---|---|---|---|
 | 1(已完成,`stage-prompts`) | **提示詞** | 2023-02 | 55 / 2 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`hooks/index.ts`、`Providers/index.ts`、`routes/Root.tsx`、`ChatForm.tsx`。後端:`routes/index.js`、`server/index.js` | `interface.prompts` 改成 `true`(只刪掉不會恢復,見[提示詞](features/prompts.md)) |
 | 2(已完成,`stage-search`) | 搜尋(Meilisearch) | 2023-03 | 0 / 0 | 無 | 路由與函式庫已在專案內,階段內容是啟動 Meilisearch 容器,設定 `SEARCH`、`MEILI_HOST`、`MEILI_MASTER_KEY` 並驗證(見[搜尋](features/search.md)) |
-| 3 | 外掛 | 2023-03 | 6 / 0 | 後端:`server/index.js`(部署外掛的初始化) | |
-| 4 | 預設 | 2023-04 | 0 / 0 | 無 | 路由與函式庫已在專案內,階段內容是啟用並驗證 |
-| 5 | 檔案與圖片 | 2023-04 | 4 / 0 | 前端:`useSideNavLinks.ts`。後端:`server/index.js`(過期檔案清理) | |
-| 6 | OAuth 與 OpenID | 2023-05 | 0 / 2 | 後端:`routes/index.js`、`server/index.js`(`/oauth` 路由) | 設定社群登入或 OpenID 的環境變數 |
-| 7 | Redis 與快取 | 2023-09 | 0 / 0 | 無 | 程式碼已在專案內,階段內容是啟動 Redis 並設定連線 |
-| 8 | 分享 | 2024-05 | 0 / 3 | 後端:`routes/index.js`、`server/index.js`(`/api/share`) | |
-| 9 | 管理面板 | 2024-06 | 0 / 10 | 後端:`routes/index.js`、`server/index.js`(`/api/admin/*`) | |
-| 10 | Trace 與可觀測(含洞察) | 2024-06 | 21 / 3 | 前端:`ChatView.tsx`、`Header.tsx`、`HeaderMenu.tsx`、`routes/index.tsx`。後端:`routes/index.js`、`server/index.js` | `interface.traceViewer` |
-| 11 | 書籤與標籤 | 2024-07 | 7 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | `interface.bookmarks` 改回開啟 |
-| 12 | Agents(建構器與市集) | 2024-08 | 96 / 3 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`Landing.tsx`、`BadgeRow.tsx`、`hooks/MCP/index.ts`。後端:`routes/index.js`、`server/index.js`(工具核准 hooks) | `interface.marketplace` 改回開啟 |
-| 13 | Assistants(OpenAI) | 功能表未列,階段開始前確認順序 | 23 / 15 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | |
-| 14 | 程式碼環境 | 2024-08 | 0 / 1 | 後端:`routes/index.js`、`server/index.js`(生命週期協調器) | |
-| 15 | MCP | 2024-12 | 19 / 3 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js`(OAuth 重新連線) | `interface.mcpServers` 改回開啟 |
-| 16 | 記憶 | 2025-06 | 12 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | `interface.memories` 改回開啟 |
-| 17 | Skills | 2026-04 | 38 / 1 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`。後端:`routes/index.js`、`server/index.js`(部署技能) | `interface.skills` 改回開啟 |
-| 18 | 專案 | 2026-06 | 10 / 1 | 前端:`routes/index.tsx`、`ConversationsSection.tsx`。後端:`routes/index.js`、`server/index.js` | |
-| 19 | 排程與觸發 | 2026-06 | 11 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js`(排程引擎) | `interface.schedules` |
+| 3 | 預設 | 2023-04 | 0 / 0 | 無 | 路由與函式庫已在專案內,階段內容是啟用並驗證 |
+| 4 | 檔案與圖片 | 2023-04 | 4 / 0 | 前端:`useSideNavLinks.ts`。後端:`server/index.js`(過期檔案清理) | |
+| 5 | OAuth 與 OpenID | 2023-05 | 0 / 2 | 後端:`routes/index.js`、`server/index.js`(`/oauth` 路由) | 設定社群登入或 OpenID 的環境變數 |
+| 6 | Redis 與快取 | 2023-09 | 0 / 0 | 無 | 程式碼已在專案內,階段內容是啟動 Redis 並設定連線 |
+| 7 | 分享 | 2024-05 | 0 / 3 | 後端:`routes/index.js`、`server/index.js`(`/api/share`) | |
+| 8 | 管理面板 | 2024-06 | 0 / 10 | 後端:`routes/index.js`、`server/index.js`(`/api/admin/*`) | |
+| 9 | Trace 與可觀測(含洞察) | 2024-06 | 21 / 3 | 前端:`ChatView.tsx`、`Header.tsx`、`HeaderMenu.tsx`、`routes/index.tsx`。後端:`routes/index.js`、`server/index.js` | `interface.traceViewer` |
+| 10 | 書籤與標籤 | 2024-07 | 7 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | `interface.bookmarks` 改回開啟 |
+| 11 | Agents(建構器與市集) | 2024-08 | 100 / 3 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`Landing.tsx`、`BadgeRow.tsx`、`hooks/MCP/index.ts`。後端:`routes/index.js`、`server/index.js`(工具核准 hooks) | `interface.marketplace` 改回開啟 |
+| 12 | Assistants(OpenAI) | 功能表未列,階段開始前確認順序 | 25 / 15 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | |
+| 13 | 程式碼環境 | 2024-08 | 0 / 1 | 後端:`routes/index.js`、`server/index.js`(生命週期協調器) | |
+| 14 | MCP | 2024-12 | 19 / 3 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js`(OAuth 重新連線) | `interface.mcpServers` 改回開啟 |
+| 15 | 記憶 | 2025-06 | 12 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | `interface.memories` 改回開啟 |
+| 16 | Skills | 2026-04 | 38 / 1 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`。後端:`routes/index.js`、`server/index.js`(部署外掛與技能) | `interface.skills` 改回開啟;Agent Plugins 的 `DEPLOYMENT_PLUGINS_DIR` 等變數 |
+| 17 | 專案 | 2026-06 | 10 / 1 | 前端:`routes/index.tsx`、`ConversationsSection.tsx`。後端:`routes/index.js`、`server/index.js` | |
+| 18 | 排程與觸發 | 2026-06 | 11 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js`(排程引擎) | `interface.schedules` |
 
 階段表合計:前端 302、後端 47(階段 1 已補回 55 與 2,剩前端 247、後端 45);另有 `hooks/useInfiniteScroll.ts` 與 `app/clients/index.js` 兩個沒有歸屬的檔案,放進收尾階段。
 
@@ -76,7 +75,7 @@
 | 自訂端點與設定檔 | 提前使用,用來接 Ollama |
 | 語音 | 程式碼保留 |
 | Artifacts 與 Mermaid | 程式碼保留 |
-| Agents 的聊天管線 | 聊天本身就走這條管線,所以保留(建構器與市集才是階段 12) |
+| Agents 的聊天管線 | 聊天本身就走這條管線,所以保留(建構器與市集才是階段 11) |
 
 ## 收尾階段
 
@@ -93,7 +92,8 @@
 
 ## 注意事項
 
-- **順序是計畫,不是承諾。** 各功能依檔案誕生日排序,每個階段開始前會核對實際的檔案清單與相依關係,順序可能調整。
+- **順序是計畫,不是承諾。** 各功能依檔案誕生日排序,每個階段開始前會核對實際的檔案清單與相依關係,順序可能調整。階段數目因此從 19 個變成 18 個。
+- **外掛不是獨立階段。** 「外掛」是依路徑名稱 `Plugin` 歸出來的:`components/Plugins/Store` 的 4 個檔案是 Agent 工具對話框用的授權表單與分頁(併入階段 11),`Tools/AssistantToolsDialog.tsx` 與 `ToolItem.tsx` 屬於 Assistants 建構器(階段 12),後端的部署外掛初始化是 Agent Plugins,與 Skills 同一段程式(階段 16)。
 - **誕生日有雜訊。** 提示詞、管理面板、Trace 的「最早誕生」比中位數早很多,多半是名稱剛好相符的零星檔案,不是功能主體的時間。
 - 階段表的檔案數,是用「官方完整版從入口(前端 `main.jsx`、後端 `server/index.js`)追蹤引用得到、MVP-1 沒帶入」的檔案,依路徑歸到功能。實作該階段時會再逐一核對。
 

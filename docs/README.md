@@ -23,7 +23,7 @@
 | 17 | [前端精簡清單](client/mvp-trim.md) | MVP-1 前端的精簡:13 個檔案刪 247 行、刪掉的 14 個功能目錄、用 `librechat.yaml` 隱藏殘留入口,以及驗證結果 |
 | 18 | [npm(官方文件翻譯)](official/local/npm.md) | 官方的 npm 本機安裝流程:前置條件、`.env`、`npm run reinstall`、`npm run backend` |
 | 19 | [本機執行教學](local/npm.md) | 本專案的正式本機執行教學:前置條件、啟動 MongoDB、設定 `.env` 與 `librechat.yaml`、安裝建置、啟動、驗收、一鍵啟動(`tools/start.ps1`),以及與官方流程的對照 |
-| 20 | [路線圖](roadmap.md) | 從 MVP-1 到官方完整版的差距、19 個功能階段各補回哪些檔案與換回哪些精簡檔案、收尾階段 |
+| 20 | [路線圖](roadmap.md) | 從 MVP-1 到官方完整版的差距、18 個功能階段各補回哪些檔案與換回哪些精簡檔案、收尾階段 |
 | 21 | [送出問題後的等待畫面與串流渲染](client/streaming-ui.md) | 送出訊息到第一個字出現之前,小圓點的 CSS、樂觀更新、SSE 串流、影格合併與淡入效果 |
 | 22 | [提示詞](features/prompts.md) | 階段 1:提示詞功能做什麼、`/` 指令、前後端怎麼接、權限、補回的 57 個檔案與要換回官方版的精簡內容、驗證結果 |
 | 23 | [Message Composer(官方文件翻譯)](official/features/composer.md) | 輸入框:+ 面板、檔案、工具與技能、暫存的上下文、排隊與引導、鍵盤快速鍵(`/` 插入提示詞) |
