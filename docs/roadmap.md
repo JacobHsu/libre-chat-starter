@@ -43,7 +43,7 @@
 |---|---|---|---|---|---|
 | 1(已完成,`stage-prompts`) | **提示詞** | 2023-02 | 55 / 2 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`hooks/index.ts`、`Providers/index.ts`、`routes/Root.tsx`、`ChatForm.tsx`。後端:`routes/index.js`、`server/index.js` | `interface.prompts` 改成 `true`(只刪掉不會恢復,見[提示詞](features/prompts.md)) |
 | 2(已完成,`stage-search`) | 搜尋(Meilisearch) | 2023-03 | 0 / 0 | 無 | 路由與函式庫已在專案內,階段內容是啟動 Meilisearch 容器,設定 `SEARCH`、`MEILI_HOST`、`MEILI_MASTER_KEY` 並驗證(見[搜尋](features/search.md)) |
-| 3 | 預設 | 2023-04 | 0 / 0 | 無 | 路由與函式庫已在專案內,階段內容是啟用並驗證 |
+| 3(已完成,`stage-presets`) | 預設 | 2023-04 | 0 / 0 | 無 | 路由、函式庫與前端選單都已在專案內,`interface.presets` 早已開啟,階段內容是說明與驗證(見[預設設定](features/presets.md)) |
 | 4 | 檔案與圖片 | 2023-04 | 4 / 0 | 前端:`useSideNavLinks.ts`。後端:`server/index.js`(過期檔案清理) | |
 | 5 | OAuth 與 OpenID | 2023-05 | 0 / 2 | 後端:`routes/index.js`、`server/index.js`(`/oauth` 路由) | 設定社群登入或 OpenID 的環境變數 |
 | 6 | Redis 與快取 | 2023-09 | 0 / 0 | 無 | 程式碼已在專案內,階段內容是啟動 Redis 並設定連線 |

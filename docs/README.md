@@ -43,3 +43,4 @@ powershell -ExecutionPolicy Bypass -File tools/start.ps1
 | 25 | [Message Search(官方文件翻譯)](official/features/search.md) | 訊息搜尋:側邊欄搜尋、錯字容忍、關鍵字搜尋不是語意搜尋 |
 | 26 | [Meilisearch(官方文件翻譯)](official/configuration/meilisearch.md) | 設定 Meilisearch:Docker 與 npm 兩種方式、環境變數、多節點停用同步、重設同步 |
 | 27 | [搜尋](features/search.md) | 階段 2:搜尋怎麼運作(索引同步、`/api/search/enable`)、本機用 Docker 啟用 Meilisearch、驗證結果 |
+| 28 | [預設設定](features/presets.md) | 階段 3:預設設定做什麼、前後端怎麼接、`/api/presets` 的新增即更新與預設的預設設定、和 `modelSpecs` 的差別、驗證結果 |
