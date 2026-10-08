@@ -35,11 +35,19 @@ git clone https://github.com/JacobHsu/libre-chat-starter.git
 cd libre-chat-starter
 ```
 
-想要固定在「最小可用版本」這個階段(標籤 `stage-mvp`):
+預設是最新的階段。想固定在某個階段,切到對應的標籤:
+
+| 標籤 | 階段 |
+|---|---|
+| `stage-mvp` | 最小可用版本 |
+| `stage-prompts` | 階段 1:提示詞 |
+| `stage-search` | 階段 2:搜尋 |
 
 ```bash
 git checkout stage-mvp
 ```
+
+切到不同的標籤後,要重新執行 `npm ci --ignore-scripts` 與 `npm run frontend`。
 
 ### 啟動 MongoDB
 

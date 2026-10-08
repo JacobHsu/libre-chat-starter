@@ -1,5 +1,17 @@
 # 學習文件
 
+## 本機啟動
+
+第一次使用,先照[本機執行教學](local/npm.md)做完設定(取得專案、MongoDB、`.env`、`librechat.yaml`、安裝與建置)。設定完成後,日常啟動只要在專案根目錄的 PowerShell 執行一行:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/start.ps1
+```
+
+腳本會啟動 MongoDB(與選用的 Meilisearch)、檢查 Ollama,再啟動 LibreChat。看到 `Server listening at http://localhost:3090` 後,開啟 http://localhost:3090/ ;在腳本視窗按 `Ctrl+C` 停止。每個步驟的說明見教學的[一鍵啟動](local/npm.md#一鍵啟動)。
+
+## 閱讀順序
+
 依建議的閱讀順序列出。
 
 | 順序 | 文件 | 說明 |
@@ -18,9 +30,9 @@
 | 12 | [packages/api](packages/api.md) | `packages/api`:後端的新版業務邏輯,Agents、串流、MCP、檔案、驗證等 48 個資料夾的分工,以及訊息送出後該讀哪些檔案 |
 | 13 | [packages/client](packages/client.md) | `packages/client`:前端共用的 React UI 元件庫(按鈕、對話框、圖示、主題),與應用 `client/` 的分工 |
 | 14 | [api(後端)](api/index.md) | `api/`:Express 後端的資料夾分工、啟動流程、路由,以及聊天請求從 `POST /api/agents/chat/ollama` 到串流的路徑 |
-| 15 | [後端精簡清單](api/mvp-trim.md) | MVP-1 後端的精簡:2 個檔案刪 149 行、沒帶入的 64 個檔案、`initializeMCPs` 不能刪的實測,以及驗證結果 |
+| 15 | [後端精簡清單](api/mvp-trim.md) | 後端的精簡:2 個檔案(階段 1 之後刪 143 行)、沒帶入的 62 個檔案、`initializeMCPs` 不能刪的實測,以及驗證結果 |
 | 16 | [前端說明](client/index.md) | `client/`:React 前端的進入點、1145 個檔案的分工、畫面如何長出來,以及送出訊息到顯示回覆的路徑 |
-| 17 | [前端精簡清單](client/mvp-trim.md) | MVP-1 前端的精簡:13 個檔案刪 247 行、刪掉的 14 個功能目錄、用 `librechat.yaml` 隱藏殘留入口,以及驗證結果 |
+| 17 | [前端精簡清單](client/mvp-trim.md) | 前端的精簡:9 個檔案(階段 1 之後刪 220 行)、還沒補回的 13 個功能目錄、用 `librechat.yaml` 隱藏殘留入口,以及驗證結果 |
 | 18 | [npm(官方文件翻譯)](official/local/npm.md) | 官方的 npm 本機安裝流程:前置條件、`.env`、`npm run reinstall`、`npm run backend` |
 | 19 | [本機執行教學](local/npm.md) | 本專案的正式本機執行教學:前置條件、啟動 MongoDB、設定 `.env` 與 `librechat.yaml`、安裝建置、啟動、驗收、一鍵啟動(`tools/start.ps1`),以及與官方流程的對照 |
 | 20 | [路線圖](roadmap.md) | 從 MVP-1 到官方完整版的差距、18 個功能階段各補回哪些檔案與換回哪些精簡檔案、收尾階段 |
