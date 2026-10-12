@@ -27,6 +27,7 @@ import {
   useHasAccess,
 } from '~/hooks';
 import Parameters from '~/components/SidePanel/Parameters/Panel';
+import FilesPanel from '~/components/SidePanel/Files/Panel';
 import { PromptsAccordion } from '~/components/Prompts';
 
 export default function useSideNavLinks({
@@ -103,6 +104,14 @@ export default function useSideNavLinks({
         Component: PromptsAccordion,
       });
     }
+
+    links.push({
+      title: 'com_sidepanel_attach_files',
+      label: '',
+      icon: AttachmentIcon,
+      id: 'files',
+      Component: FilesPanel,
+    });
 
     if (
       interfaceConfig.parameters === true &&
