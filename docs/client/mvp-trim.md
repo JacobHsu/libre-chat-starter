@@ -2,7 +2,7 @@
 
 MVP-1 的前端改 13 個檔案、**沒有新增任何自己寫的邏輯**。再加上不帶入只服務被延後功能的檔案,以及 `librechat.yaml` 的 `interface` 開關。最終階段這些檔案會換回官方完整版,其餘檔案補回。
 
-各階段補回功能時,會從清單拿掉對應的項目。階段 1(提示詞)換回了 4 個檔案、補回 `useSideNavLinks.ts` 與 `routes/index.tsx` 的提示詞部分,目前的狀態是**改 9 個檔案、刪 220 行、改 1 行**(MVP-1 當時是 13 個檔案、247 行)。下面的數字都是目前的狀態。
+各階段補回功能時,會從清單拿掉對應的項目。階段 1(提示詞)換回了 4 個檔案、補回 `useSideNavLinks.ts` 與 `routes/index.tsx` 的提示詞部分,階段 4(檔案與圖片)又補回 `useSideNavLinks.ts` 的檔案面板與 `SidePanel/Files` 目錄,目前的狀態是**改 9 個檔案、刪 211 行、改 1 行**(MVP-1 當時是 13 個檔案、247 行)。下面的數字都是目前的狀態。
 
 ## 規則
 
@@ -10,13 +10,13 @@ MVP-1 的前端改 13 個檔案、**沒有新增任何自己寫的邏輯**。再
 - 唯一的修改(不是純刪除):`components/Chat/Header.tsx` 裡 `<HeaderMenu startupConfig={startupConfig} trace={trace} …/>` 刪掉 `trace={trace}` 屬性。
 - 流程:先刪掉功能目錄,用 Vite 建置,依錯誤訊息找出還被引用的地方,逐一處理,直到建置成功。
 
-## 還沒補回的 13 個功能目錄
+## 還沒補回的 12 個功能目錄
 
 | 目錄 | 功能 |
 |---|---|
 | `components/SidePanel/Agents`、`Builder` | Agent 建立與建構面板 |
 | `components/SidePanel/MCPBuilder` | MCP 伺服器面板 |
-| `components/SidePanel/Memories`、`Schedules`、`Bookmarks`、`Files` | 記憶、排程、書籤、檔案面板 |
+| `components/SidePanel/Memories`、`Schedules`、`Bookmarks` | 記憶、排程、書籤面板 |
 | `components/Skills` | Skills |
 | `components/Chat/Trace` | 對話步驟與成本檢視 |
 | `components/Plugins` | 外掛 |
@@ -32,7 +32,7 @@ MVP-1 的前端改 13 個檔案、**沒有新增任何自己寫的邏輯**。再
 
 | 檔案 | 刪除 |
 |---|---|
-| `hooks/Nav/useSideNavLinks.ts`(-113) | 8 條面板 `import`(MCPBuilder、Agents、Bookmarks、Builder、Schedules、Memories、Files、Skills)與對應的 8 個 `links.push` 區塊,只剩 `prompts`、`parameters` 與 `hide-panel` |
+| `hooks/Nav/useSideNavLinks.ts`(-104) | 7 條面板 `import`(MCPBuilder、Agents、Bookmarks、Builder、Schedules、Memories、Skills)與對應的 7 個 `links.push` 區塊,只剩 `prompts`、`files`、`parameters` 與 `hide-panel` |
 | `routes/index.tsx`(-66) | Agent 市集的 2 條 `import`、4 個動態載入函式(Skills、Insights、Projects 兩個),以及 9 個路由項目(`skills*` 4 個、`insights`、`projects*` 2 個、`agents*` 2 個) |
 | `components/Chat/ChatView.tsx`(-3) | `TraceSurface` 的 `import` 與外層的開閉標籤(裡面的內容不動) |
 | `components/Chat/Header.tsx`(-11,+1) | `Trace` 的 `import`、`useTraceControl` 區塊、`<TraceButton />`,以及 `trace={trace}` 屬性 |
@@ -49,7 +49,7 @@ MVP-1 的前端改 13 個檔案、**沒有新增任何自己寫的邏輯**。再
 
 ## 為什麼不帶某些檔案
 
-只被延後功能使用的檔案,刪掉引用處之後就沒有人用了,不帶入(MVP-1 當時共 392 個非測試檔,階段 1 補回 55 個,目前 337 個),例如:
+只被延後功能使用的檔案,刪掉引用處之後就沒有人用了,不帶入(MVP-1 當時共 392 個非測試檔,階段 1 補回 55 個,階段 4 補回 4 個,目前 333 個),例如:
 
 - `components/Conversations/ProjectsSection.tsx`(只服務專案區塊)
 - `ToolDialogs.tsx`、`hooks/MCP/useRemoveMCPTool.ts`

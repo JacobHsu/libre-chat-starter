@@ -2,7 +2,7 @@
 
 MVP-1 的後端只改 2 個檔案、**沒有新增任何自己寫的邏輯**。這份清單列出每一處,最終階段這 2 個檔案會換回官方完整版。
 
-各階段補回功能時,會從清單拿掉對應的項目。階段 1(提示詞)補回了 `prompts`、`categories` 兩條路由,目前的狀態是**刪 143 行、改 1 行**(MVP-1 當時是刪 149 行)。下面的數字都是目前的狀態。
+各階段補回功能時,會從清單拿掉對應的項目。階段 1(提示詞)補回了 `prompts`、`categories` 兩條路由,階段 4(檔案與圖片)補回了過期檔案清理,目前的狀態是**刪 141 行、改 1 行**(MVP-1 當時是刪 149 行)。下面的數字都是目前的狀態。
 
 ## 規則
 
@@ -17,19 +17,18 @@ MVP-1 的後端只改 2 個檔案、**沒有新增任何自己寫的邏輯**。�
 |---|---|
 | 刪除(26) | `oauth`、`insights`、`adminAuth`、`adminConfig`、`adminCodeEnvironments`、`adminLangfuse`、`adminGrants`、`adminGroups`、`adminRoles`、`adminSkills`、`adminUsers`、`adminAuditLog`、`codeEnvironments`、`actions`、`apiKeys`、`traces`、`projects`、`skills`、`assistants`、`share`、`memories`、`schedules`、`tags`、`mcp`、`rum`、`openapi` |
 
-## `server/index.js`(官方 634 行 → 544 行)
+## `server/index.js`(官方 634 行 → 546 行)
 
 ### 路由掛載:刪 26 行 `app.use`
 
 與上面 26 條路由一一對應,例如 `app.use('/api/mcp', routes.mcp)`、`app.use('/oauth', preAuthTenantMiddleware, routes.oauth)`。其中排程路由多了一個寫入閘門:`app.use('/api/schedules', rejectScheduleWritesUntilReady, routes.schedules)`。
 
-### 啟動項目:刪 6 項
+### 啟動項目:刪 5 項
 
 | 刪除的項目 | 它做什麼 |
 |---|---|
 | `startCodeEnvironmentLifecycleReconciler({ mongoose })` | 啟動時協調程式碼環境的生命週期 |
 | 部署外掛與技能區塊:`initializeDeploymentPlugins`、`setPluginHookSource`、`initializeDeploymentSkills`、`initializeGitHubSkillSync` | 載入部署時宣告的外掛、技能與 GitHub 技能同步 |
-| `startExpiredFileSweep` | 定期清理過期檔案 |
 | `loadToolApprovalHooks` | 載入工具核准的政策 hooks |
 | `initializeOAuthReconnectManager`(監聽之後) | 重新連線 MCP 的 OAuth |
 | 排程引擎(監聽之後):`initializeScheduleEngine`、`scheduleEngineState`、`createScheduleWriteGate`、`rejectScheduleWritesUntilReady` | 排程聊天的引擎與狀態 |

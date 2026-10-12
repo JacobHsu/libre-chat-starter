@@ -4,21 +4,21 @@
 
 ## 現況與最終版的差距
 
-最終版就是官方 `v0.8.8-rc4`:所有檔案與官方完全相同,包含測試與根目錄的工具與部署檔。下表是階段 1(提示詞)完成後的狀態。
+最終版就是官方 `v0.8.8-rc4`:所有檔案與官方完全相同,包含測試與根目錄的工具與部署檔。下表是階段 4(檔案與圖片)完成後的狀態。
 
 | 項目 | 官方 rc4 | 現在 | 差距 |
 |---|---|---|---|
-| 全部檔案 | 5492 | 2878 | 少 2614 個 |
-| 程式碼檔(非測試) | 3039(後端 372、前端 1421、函式庫 1246) | 2642(87%) | 少 **397 個**(後端 63、前端 334) |
+| 全部檔案 | 5492 | 2882 | 少 2610 個 |
+| 程式碼檔(非測試) | 3039(後端 372、前端 1421、函式庫 1246) | 2646(87%) | 少 **393 個**(後端 63、前端 330) |
 | 測試檔 | 1723 | 0 | 最終階段補回 |
 | 精簡過的檔案 | | 11 個(後端 2、前端 9) | 各階段逐步換回官方版 |
 | 根目錄 | `.github`(44)、`config`(52)、`e2e`(229)、`helm`(35)、`scripts`(16)、`redis-config`(12)、`otel`(9)、`Dockerfile`、`docker-compose.yml`、`eslint.config.mjs`、`LICENSE` 等 | 都還沒有 | 最終階段(或用到它的功能階段)帶入 |
 
-少的 397 個程式碼檔,分成兩種:
+少的 393 個程式碼檔,分成兩種:
 
 | 種類 | 檔案數 | 意思 |
 |---|---|---|
-| 完整版會載入,屬於某個功能 | **294**(前端 248、後端 46) | 隨功能階段補回,下面的階段表就是它們的分配 |
+| 完整版會載入,屬於某個功能 | **290**(前端 244、後端 46) | 隨功能階段補回,下面的階段表就是它們的分配 |
 | 完整版也不會載入 | **103**(前端 87、後端 16) | 官方 rc4 裡沒有任何入口引用它們(舊版元件、測試用的假資料、效能測試檔等)。放在最後的收尾階段 |
 
 ## 每個階段怎麼做
@@ -44,7 +44,7 @@
 | 1(已完成,`stage-prompts`) | **提示詞** | 2023-02 | 55 / 2 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`hooks/index.ts`、`Providers/index.ts`、`routes/Root.tsx`、`ChatForm.tsx`。後端:`routes/index.js`、`server/index.js` | `interface.prompts` 改成 `true`(只刪掉不會恢復,見[提示詞](features/prompts.md)) |
 | 2(已完成,`stage-search`) | 搜尋(Meilisearch) | 2023-03 | 0 / 0 | 無 | 路由與函式庫已在專案內,階段內容是啟動 Meilisearch 容器,設定 `SEARCH`、`MEILI_HOST`、`MEILI_MASTER_KEY` 並驗證(見[搜尋](features/search.md)) |
 | 3(已完成,`stage-presets`) | 預設 | 2023-04 | 0 / 0 | 無 | 路由、函式庫與前端選單都已在專案內,`interface.presets` 早已開啟,階段內容是說明與驗證(見[預設設定](features/presets.md)) |
-| 4 | 檔案與圖片 | 2023-04 | 4 / 0 | 前端:`useSideNavLinks.ts`。後端:`server/index.js`(過期檔案清理) | |
+| 4(已完成,`stage-files`) | 檔案與圖片 | 2023-04 | 4 / 0 | 前端:`useSideNavLinks.ts`。後端:`server/index.js`(過期檔案清理) | 無設定要改;上傳與管理的程式碼早在 MVP-1 就在專案內(見[檔案與圖片](features/files.md)) |
 | 5 | OAuth 與 OpenID | 2023-05 | 0 / 2 | 後端:`routes/index.js`、`server/index.js`(`/oauth` 路由) | 設定社群登入或 OpenID 的環境變數 |
 | 6 | Redis 與快取 | 2023-09 | 0 / 0 | 無 | 程式碼已在專案內,階段內容是啟動 Redis 並設定連線 |
 | 7 | 分享 | 2024-05 | 0 / 3 | 後端:`routes/index.js`、`server/index.js`(`/api/share`) | |
@@ -60,7 +60,7 @@
 | 17 | 專案 | 2026-06 | 10 / 1 | 前端:`routes/index.tsx`、`ConversationsSection.tsx`。後端:`routes/index.js`、`server/index.js` | |
 | 18 | 排程與觸發 | 2026-06 | 11 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js`(排程引擎) | `interface.schedules` |
 
-階段表合計:前端 302、後端 47(階段 1 已補回 55 與 2,剩前端 247、後端 45);另有 `hooks/useInfiniteScroll.ts` 與 `app/clients/index.js` 兩個沒有歸屬的檔案,放進收尾階段。
+階段表合計:前端 302、後端 47(階段 1 已補回 55 與 2、階段 4 已補回 4,剩前端 243、後端 45);另有 `hooks/useInfiniteScroll.ts` 與 `app/clients/index.js` 兩個沒有歸屬的檔案,放進收尾階段。
 
 「精簡檔案」欄原本有 15 個檔案(階段 1 之後剩 11 個),有幾個被多個階段共用。例如前端的 `useSideNavLinks.ts` 在提示詞、檔案、書籤、Agents、Assistants、MCP、記憶、Skills、排程各階段都會再補回一段。做法是每個階段把**該功能那一段**從官方完整版補回,最後一個階段做完,整個檔案就與官方完全相同。後端的 `server/index.js` 與 `routes/index.js` 同理。精簡的細節見[後端精簡清單](api/mvp-trim.md)與[前端精簡清單](client/mvp-trim.md)。
 
