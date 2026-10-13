@@ -4,7 +4,7 @@
 
 ## 現況與最終版的差距
 
-最終版就是官方 `v0.8.8-rc4`:所有檔案與官方完全相同,包含測試與根目錄的工具與部署檔。下表是階段 5(OAuth 與 OpenID)完成後的狀態。
+最終版就是官方 `v0.8.8-rc4`:所有檔案與官方完全相同,包含測試與根目錄的工具與部署檔。下表是階段 6(Redis 與快取)完成後的狀態。
 
 | 項目 | 官方 rc4 | 現在 | 差距 |
 |---|---|---|---|
@@ -46,7 +46,7 @@
 | 3(已完成,`stage-presets`) | 預設 | 2023-04 | 0 / 0 | 無 | 路由、函式庫與前端選單都已在專案內,`interface.presets` 早已開啟,階段內容是說明與驗證(見[預設設定](features/presets.md)) |
 | 4(已完成,`stage-files`) | 檔案與圖片 | 2023-04 | 4 / 0 | 前端:`useSideNavLinks.ts`。後端:`server/index.js`(過期檔案清理) | 無設定要改;上傳與管理的程式碼早在 MVP-1 就在專案內(見[檔案與圖片](features/files.md)) |
 | 5(已完成,`stage-oauth`) | OAuth 與 OpenID | 2023-05 | 0 / 2 | 後端:`routes/index.js`、`server/index.js`(`/oauth` 路由) | 維持關閉,和官方範本一致;要開啟時設定社群登入或 OpenID 的環境變數(見[OAuth 與 OpenID](features/oauth.md)) |
-| 6 | Redis 與快取 | 2023-09 | 0 / 0 | 無 | 程式碼已在專案內,階段內容是啟動 Redis 並設定連線 |
+| 6(已完成,`stage-redis`) | Redis 與快取 | 2023-09 | 0 / 0 | 無 | 程式碼已在專案內;單一後端不需要 Redis,維持官方預設不開,階段內容是說明它的作用(見[Redis 與快取](features/redis.md)) |
 | 7 | 分享 | 2024-05 | 0 / 3 | 後端:`routes/index.js`、`server/index.js`(`/api/share`) | |
 | 8 | 管理面板 | 2024-06 | 0 / 10 | 後端:`routes/index.js`、`server/index.js`(`/api/admin/*`) | |
 | 9 | Trace 與可觀測(含洞察) | 2024-06 | 21 / 3 | 前端:`ChatView.tsx`、`Header.tsx`、`HeaderMenu.tsx`、`routes/index.tsx`。後端:`routes/index.js`、`server/index.js` | `interface.traceViewer` |

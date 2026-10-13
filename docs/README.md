@@ -48,3 +48,4 @@ powershell -ExecutionPolicy Bypass -File tools/start.ps1
 | 30 | [檔案與圖片](features/files.md) | 階段 4:檔案上傳怎麼走、存在哪裡、前後端怎麼接、側邊欄「附加檔案」面板、過期清理 |
 | 31 | [檔案上傳的實作](features/file-upload.md) | 跟著一次真實上傳追完整條路徑:前端三個入口與 `useFileHandling`、multer 與授權預檢、送達路徑解析、文字擷取與儲存、紀錄與回應、送出訊息時內容怎麼進到模型的輸入 |
 | 32 | [OAuth 與 OpenID](features/oauth.md) | 階段 5:用外部帳號登入怎麼走、三層開關、`/oauth` 路由與中介層、前端按鈕、為什麼現在維持關閉、驗證結果 |
+| 33 | [Redis 與快取](features/redis.md) | 階段 6:Redis 的作用(多個後端共用暫存資料)、每類資料有沒有 Redis 時放哪裡、涉及的檔案、開關 |
