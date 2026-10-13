@@ -13,6 +13,7 @@ const convos = require('./convos');
 const config = require('./config');
 const agents = require('./agents');
 const roles = require('./roles');
+const oauth = require('./oauth');
 const files = require('./files');
 const auth = require('./auth');
 const keys = require('./keys');
@@ -23,6 +24,7 @@ module.exports = {
   keys,
   user,
   roles,
+  oauth,
   files,
   banner,
   agents,
