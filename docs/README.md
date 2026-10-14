@@ -51,3 +51,5 @@ powershell -ExecutionPolicy Bypass -File tools/start.ps1
 | 33 | [Redis 與快取](features/redis.md) | 階段 6:Redis 的作用(多個後端共用暫存資料)、每類資料有沒有 Redis 時放哪裡、涉及的檔案、開關 |
 | 34 | [分享連結(官方文件翻譯)](official/features/shareable_links.md) | 分享對話:QR code、分支、Artifacts、檔案快照、以副本接續、連結管理、`ALLOW_SHARED_LINKS` 等設定、常見問題 |
 | 35 | [分享](features/share.md) | 階段 7:補回的 `/api/share` 與兩個中介層、API 一覽、誰能看、前端三個入口、驗證結果 |
+| 36 | [管理面板(官方文件翻譯)](official/features/admin_panel.md) | 獨立的管理介面:架構、管理 API、部署方式、環境變數、管理員驗證、設定覆寫與委派、儲存的機密 |
+| 37 | [管理面板](features/admin-panel.md) | 階段 8:補回的 7 個管理 API、留到之後的 3 個、誰是管理員、稽核紀錄記什麼、本機接上管理面板容器與 `HOST=0.0.0.0`、驗證結果 |
