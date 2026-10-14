@@ -345,6 +345,13 @@ const startServer = async () => {
   app.use('/oauth', preAuthTenantMiddleware, routes.oauth);
   /* API Endpoints */
   app.use('/api/auth', preAuthTenantMiddleware, routes.auth);
+  app.use('/api/admin', routes.adminAuth);
+  app.use('/api/admin/config', routes.adminConfig);
+  app.use('/api/admin/grants', routes.adminGrants);
+  app.use('/api/admin/groups', routes.adminGroups);
+  app.use('/api/admin/roles', routes.adminRoles);
+  app.use('/api/admin/users', routes.adminUsers);
+  app.use('/api/admin/audit-log', routes.adminAuditLog);
   app.use('/api/keys', routes.keys);
   app.use('/api/user', routes.user);
   app.use('/api/search', routes.search);

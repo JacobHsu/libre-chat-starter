@@ -1,5 +1,12 @@
 const accessPermissions = require('./accessPermissions');
 const categories = require('./categories');
+const adminAuth = require('./admin/auth');
+const adminConfig = require('./admin/config');
+const adminGrants = require('./admin/grants');
+const adminGroups = require('./admin/groups');
+const adminRoles = require('./admin/roles');
+const adminUsers = require('./admin/users');
+const adminAuditLog = require('./admin/audit');
 const endpoints = require('./endpoints');
 const staticRoute = require('./static');
 const messages = require('./messages');
@@ -22,6 +29,13 @@ const user = require('./user');
 
 module.exports = {
   auth,
+  adminAuth,
+  adminConfig,
+  adminGrants,
+  adminGroups,
+  adminRoles,
+  adminUsers,
+  adminAuditLog,
   keys,
   user,
   roles,
