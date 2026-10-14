@@ -2,15 +2,15 @@
 
 MVP-1 的前端改 13 個檔案、**沒有新增任何自己寫的邏輯**。再加上不帶入只服務被延後功能的檔案,以及 `librechat.yaml` 的 `interface` 開關。最終階段這些檔案會換回官方完整版,其餘檔案補回。
 
-各階段補回功能時,會從清單拿掉對應的項目。階段 1(提示詞)換回了 4 個檔案、補回 `useSideNavLinks.ts` 與 `routes/index.tsx` 的提示詞部分,階段 4(檔案與圖片)又補回 `useSideNavLinks.ts` 的檔案面板與 `SidePanel/Files` 目錄,目前的狀態是**改 9 個檔案、刪 211 行、改 1 行**(MVP-1 當時是 13 個檔案、247 行)。下面的數字都是目前的狀態。
+各階段補回功能時,會從清單拿掉對應的項目。階段 1(提示詞)換回了 4 個檔案、補回 `useSideNavLinks.ts` 與 `routes/index.tsx` 的提示詞部分,階段 4(檔案與圖片)又補回 `useSideNavLinks.ts` 的檔案面板與 `SidePanel/Files` 目錄,階段 9(Trace 與可觀測)換回了 `ChatView.tsx`、`Header.tsx`、`HeaderMenu.tsx`,並補回 `routes/index.tsx` 的 Insights 部分與 `Chat/Trace`、`Insights` 兩個目錄,目前的狀態是**改 6 個檔案、刪 175 行**(MVP-1 當時是 13 個檔案、刪 247 行、改 1 行)。下面的數字都是目前的狀態。
 
 ## 規則
 
 - 只刪不寫:刪掉對延後功能的 `import`,以及使用它的那一個區塊(陣列項目、JSX 元素、路由項目)。
-- 唯一的修改(不是純刪除):`components/Chat/Header.tsx` 裡 `<HeaderMenu startupConfig={startupConfig} trace={trace} …/>` 刪掉 `trace={trace}` 屬性。
+- MVP-1 唯一的修改(不是純刪除)是 `components/Chat/Header.tsx` 刪掉 `trace={trace}` 屬性,階段 9 已換回官方版。現在全部是純刪除。
 - 流程:先刪掉功能目錄,用 Vite 建置,依錯誤訊息找出還被引用的地方,逐一處理,直到建置成功。
 
-## 還沒補回的 12 個功能目錄
+## 還沒補回的 10 個功能目錄
 
 | 目錄 | 功能 |
 |---|---|
@@ -18,25 +18,20 @@ MVP-1 的前端改 13 個檔案、**沒有新增任何自己寫的邏輯**。再
 | `components/SidePanel/MCPBuilder` | MCP 伺服器面板 |
 | `components/SidePanel/Memories`、`Schedules`、`Bookmarks` | 記憶、排程、書籤面板 |
 | `components/Skills` | Skills |
-| `components/Chat/Trace` | 對話步驟與成本檢視 |
 | `components/Plugins` | 外掛 |
 | `components/Agents` | Agent 市集 |
 | `components/Projects` | 專案 |
-| `components/Insights` | 洞察 |
 
 `SidePanel/Parameters`、`Chat/Subagents`、`Share` 不能刪,聊天畫面直接用到。
 
-## 9 個精簡檔案
+## 6 個精簡檔案
 
 ### 接線型(把功能接進畫面)
 
 | 檔案 | 刪除 |
 |---|---|
 | `hooks/Nav/useSideNavLinks.ts`(-104) | 7 條面板 `import`(MCPBuilder、Agents、Bookmarks、Builder、Schedules、Memories、Skills)與對應的 7 個 `links.push` 區塊,只剩 `prompts`、`files`、`parameters` 與 `hide-panel` |
-| `routes/index.tsx`(-66) | Agent 市集的 2 條 `import`、4 個動態載入函式(Skills、Insights、Projects 兩個),以及 9 個路由項目(`skills*` 4 個、`insights`、`projects*` 2 個、`agents*` 2 個) |
-| `components/Chat/ChatView.tsx`(-3) | `TraceSurface` 的 `import` 與外層的開閉標籤(裡面的內容不動) |
-| `components/Chat/Header.tsx`(-11,+1) | `Trace` 的 `import`、`useTraceControl` 區塊、`<TraceButton />`,以及 `trace={trace}` 屬性 |
-| `components/Chat/Menus/HeaderMenu.tsx`(-13) | `TraceControl` 型別 `import`、`trace` 屬性與型別、「檢視 Trace」選單項目 |
+| `routes/index.tsx`(-57) | Agent 市集的 2 條 `import`、3 個動態載入函式(Skills、Projects 兩個),以及 8 個路由項目(`skills*` 4 個、`projects*` 2 個、`agents*` 2 個) |
 
 ### 牽連型(被延後的功能引用的小元件或函式)
 
@@ -49,7 +44,7 @@ MVP-1 的前端改 13 個檔案、**沒有新增任何自己寫的邏輯**。再
 
 ## 為什麼不帶某些檔案
 
-只被延後功能使用的檔案,刪掉引用處之後就沒有人用了,不帶入(MVP-1 當時共 392 個非測試檔,階段 1 補回 55 個,階段 4 補回 4 個,目前 333 個),例如:
+只被延後功能使用的檔案,刪掉引用處之後就沒有人用了,不帶入(MVP-1 當時共 392 個非測試檔;階段 9 之後與官方 rc4 實際比對,還有 310 個),例如:
 
 - `components/Conversations/ProjectsSection.tsx`(只服務專案區塊)
 - `ToolDialogs.tsx`、`hooks/MCP/useRemoveMCPTool.ts`
