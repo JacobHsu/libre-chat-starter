@@ -15,6 +15,7 @@ const agents = require('./agents');
 const roles = require('./roles');
 const oauth = require('./oauth');
 const files = require('./files');
+const share = require('./share');
 const auth = require('./auth');
 const keys = require('./keys');
 const user = require('./user');
@@ -26,6 +27,7 @@ module.exports = {
   roles,
   oauth,
   files,
+  share,
   banner,
   agents,
   convos,
