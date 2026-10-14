@@ -10,6 +10,7 @@ import {
 import { OpenSidebar, PresetsMenu, NewChat, HeaderMenu } from './Menus';
 import { TemporaryChat, TemporaryChatIndicator } from './TemporaryChat';
 import ModelSelector from './Menus/Endpoints/ModelSelector';
+import { TraceButton, useTraceControl } from './Trace';
 import { useGetStartupConfig } from '~/data-provider';
 import ExportAndShareMenu from './ExportAndShareMenu';
 import SubagentThreadLink from './SubagentThreadLink';
@@ -65,6 +66,14 @@ function Header({
     permission: Permissions.USE,
   });
 
+  /** Child threads are view-only records of their parent's run and have no trace of their own. */
+  const trace = useTraceControl({
+    conversationId: isNewChat ? null : routeConversationId,
+    traceViewer: interfaceConfig.traceViewer,
+    isSubmitting,
+    enabled: parentConversationId == null,
+  });
+
   /** The drawer covers the header on mobile; keep its controls out of the tab order. */
   const hiddenBehindNav = navVisible === true && 'max-md:hidden';
 
@@ -102,8 +111,9 @@ function Header({
       <div className={cn('flex flex-shrink-0 items-center gap-2', hiddenBehindNav)}>
         {hasAccessToTemporaryChat === true && <TemporaryChatIndicator />}
         {!isNewChat && <NewChat className="md:hidden" />}
-        <HeaderMenu startupConfig={startupConfig} className="md:hidden" />
+        <HeaderMenu startupConfig={startupConfig} trace={trace} className="md:hidden" />
         <div className="hidden items-center gap-2 md:flex">
+          {trace.show && <TraceButton onClick={trace.open} />}
           <ExportAndShareMenu isSharedButtonEnabled={startupConfig?.sharedLinksEnabled ?? false} />
           {hasAccessToTemporaryChat === true && <TemporaryChat />}
         </div>

@@ -2,6 +2,7 @@ const accessPermissions = require('./accessPermissions');
 const categories = require('./categories');
 const adminAuth = require('./admin/auth');
 const adminConfig = require('./admin/config');
+const adminLangfuse = require('./admin/langfuse');
 const adminGrants = require('./admin/grants');
 const adminGroups = require('./admin/groups');
 const adminRoles = require('./admin/roles');
@@ -17,6 +18,7 @@ const banner = require('./banner');
 const search = require('./search');
 const models = require('./models');
 const convos = require('./convos');
+const traces = require('./traces');
 const config = require('./config');
 const agents = require('./agents');
 const roles = require('./roles');
@@ -26,11 +28,16 @@ const share = require('./share');
 const auth = require('./auth');
 const keys = require('./keys');
 const user = require('./user');
+const rum = require('./rum');
+const insights = require('./insights');
 
 module.exports = {
+  insights,
+  rum,
   auth,
   adminAuth,
   adminConfig,
+  adminLangfuse,
   adminGrants,
   adminGroups,
   adminRoles,
@@ -45,6 +52,7 @@ module.exports = {
   banner,
   agents,
   convos,
+  traces,
   search,
   config,
   models,

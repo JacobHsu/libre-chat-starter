@@ -34,6 +34,11 @@ const loadInlinePromptsView = () =>
     Component: m.default,
   }));
 
+const loadInsightsView = () =>
+  import('~/components/Insights').then((m) => ({
+    Component: m.default,
+  }));
+
 const baseEl = document.querySelector('base');
 const baseHref = baseEl?.getAttribute('href') || '/';
 
@@ -129,6 +134,10 @@ export const router = createBrowserRouter(
             {
               path: 'prompts/:promptId',
               lazy: loadInlinePromptsView,
+            },
+            {
+              path: 'insights',
+              lazy: loadInsightsView,
             },
           ],
         },
