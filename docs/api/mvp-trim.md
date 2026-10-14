@@ -2,26 +2,26 @@
 
 MVP-1 的後端只改 2 個檔案、**沒有新增任何自己寫的邏輯**。這份清單列出每一處,最終階段這 2 個檔案會換回官方完整版。
 
-各階段補回功能時,會從清單拿掉對應的項目。階段 1(提示詞)補回了 `prompts`、`categories` 兩條路由,階段 4(檔案與圖片)補回了過期檔案清理,階段 5(OAuth 與 OpenID)補回了 `oauth` 路由,目前的狀態是**刪 138 行、改 1 行**(MVP-1 當時是刪 149 行)。下面的數字都是目前的狀態。
+各階段補回功能時,會從清單拿掉對應的項目。階段 1(提示詞)補回了 `prompts`、`categories` 兩條路由,階段 4(檔案與圖片)補回了過期檔案清理,階段 5(OAuth 與 OpenID)補回了 `oauth` 路由,階段 7(分享)補回了 `share` 路由,目前的狀態是**刪 135 行、改 1 行**(MVP-1 當時是刪 149 行)。下面的數字都是目前的狀態。
 
 ## 規則
 
 - 只刪不寫:每處精簡都是刪掉一個 `require` 與對應的呼叫,或一整段只服務被刪功能的程式碼。
 - 唯一的修改(不是純刪除):`server/index.js` 裡 `const { initializeScheduleEngine, recordExpiredScheduleApproval } = require('./services/Schedules')` 改成只匯入 `recordExpiredScheduleApproval`,因為 `initializeScheduleEngine` 的呼叫整段刪了。
 
-## `server/routes/index.js`(官方 93 行 → 43 行)
+## `server/routes/index.js`(官方 93 行 → 45 行)
 
-路由聚合檔。刪掉 25 條路由的 `require` 與匯出,保留 20 條:
+路由聚合檔。刪掉 24 條路由的 `require` 與匯出,保留 21 條:
 
-| 保留(20) | `auth`、`user`、`keys`、`roles`、`files`、`banner`、`agents`、`convos`、`search`、`config`、`models`、`presets`、`balance`、`messages`、`endpoints`、`staticRoute`、`accessPermissions`、`prompts`(階段 1)、`categories`(階段 1)、`oauth`(階段 5) |
+| 保留(21) | `auth`、`user`、`keys`、`roles`、`files`、`banner`、`agents`、`convos`、`search`、`config`、`models`、`presets`、`balance`、`messages`、`endpoints`、`staticRoute`、`accessPermissions`、`prompts`(階段 1)、`categories`(階段 1)、`oauth`(階段 5)、`share`(階段 7) |
 |---|---|
-| 刪除(25) | `insights`、`adminAuth`、`adminConfig`、`adminCodeEnvironments`、`adminLangfuse`、`adminGrants`、`adminGroups`、`adminRoles`、`adminSkills`、`adminUsers`、`adminAuditLog`、`codeEnvironments`、`actions`、`apiKeys`、`traces`、`projects`、`skills`、`assistants`、`share`、`memories`、`schedules`、`tags`、`mcp`、`rum`、`openapi` |
+| 刪除(24) | `insights`、`adminAuth`、`adminConfig`、`adminCodeEnvironments`、`adminLangfuse`、`adminGrants`、`adminGroups`、`adminRoles`、`adminSkills`、`adminUsers`、`adminAuditLog`、`codeEnvironments`、`actions`、`apiKeys`、`traces`、`projects`、`skills`、`assistants`、`memories`、`schedules`、`tags`、`mcp`、`rum`、`openapi` |
 
-## `server/index.js`(官方 634 行 → 547 行)
+## `server/index.js`(官方 634 行 → 548 行)
 
-### 路由掛載:刪 25 行 `app.use`
+### 路由掛載:刪 24 行 `app.use`
 
-與上面 25 條路由一一對應,例如 `app.use('/api/mcp', routes.mcp)`、`app.use('/api/share', preAuthTenantMiddleware, routes.share)`。其中排程路由多了一個寫入閘門:`app.use('/api/schedules', rejectScheduleWritesUntilReady, routes.schedules)`。
+與上面 24 條路由一一對應,例如 `app.use('/api/mcp', routes.mcp)`、`app.use('/api/tags', routes.tags)`。其中排程路由多了一個寫入閘門:`app.use('/api/schedules', rejectScheduleWritesUntilReady, routes.schedules)`。
 
 ### 啟動項目:刪 5 項
 
@@ -41,17 +41,17 @@ MVP-1 的後端只改 2 個檔案、**沒有新增任何自己寫的邏輯**。�
 
 另一項實測:`setPluginHookSource` 可以刪,不影響聊天。
 
-## 沒帶入的 60 個檔案
+## 沒帶入的 57 個檔案
 
 只被已刪除路由使用的程式碼,不帶:
 
 | 位置 | 檔案 |
 |---|---|
-| `server/routes/`(29) | `actions.js`、`apiKeys.js`、`code-environments.js`、`insights.js`、`mcp.js`、`memories.js`、`openapi.js`、`projects.js`、`rum.js`、`schedules.js`、`share.js`、`skills.js`、`tags.js`、`traces.js`;`admin/` 10 個;`assistants/` 4 個;`types/assistants.js` |
+| `server/routes/`(28) | `actions.js`、`apiKeys.js`、`code-environments.js`、`insights.js`、`mcp.js`、`memories.js`、`openapi.js`、`projects.js`、`rum.js`、`schedules.js`、`skills.js`、`tags.js`、`traces.js`;`admin/` 10 個;`assistants/` 4 個;`types/assistants.js` |
 | `server/services/`(10) | `AssistantService.js`、`Runs/`(5)、`cleanup.js`、`createRunBody.js`、`Files/index.js`、`initializeOAuthReconnectManager.js` |
 | `server/controllers/`(5) | `mcp.js`、`agents/errors.js`、`assistants/` 3 個 |
 | `app/`(7) | `app/index.js`、`clients/OllamaClient.js`、`clients/index.js`、`clients/prompts/formatGoogleInputs.js`、`clients/specs/FakeClient.js`、`clients/tools/structured/TavilySearch.js`、`credentials.js` |
-| 其他(9) | `server/middleware/`(3)、`server/experimental.js`、`config/meiliLogger.js`、`db/models.js`、`utils/logger.js`、`utils/LoggingSystem.js`、`typedefs.js` |
+| 其他(7) | `server/middleware/assistants/validate.js`、`server/experimental.js`、`config/meiliLogger.js`、`db/models.js`、`utils/logger.js`、`utils/LoggingSystem.js`、`typedefs.js` |
 
 ## 驗證結果(MVP-1 當時)
 
