@@ -2,7 +2,7 @@
 
 在介面上建立自訂的 AI 助理：選模型、寫指示、加工具，存成一個 Agent,之後直接和它聊天。功能本身的說明見官方頁面的翻譯 [Agents](../official/features/agents.md);這份文件補充程式碼的對應，以及階段 11 做了什麼。
 
-階段 11 分三步:**11a 建構器**、11b 市集、11c Agents API。目前完成 11a。
+階段 11 分三步:**11a 建構器**、**11b 市集**、11c Agents API。目前完成 11a、11b。
 
 ## Agent 和 MVP 的關係
 
@@ -69,6 +69,36 @@ MCP、Skills 的這些檔案只是建構器引用的元件，對應的功能開�
 
 `librechat.yaml` 的 `endpoints.agents.toolApproval` 可以要求某些工具呼叫先經過使用者核准(見翻譯中的「Ask User 與工具核准」)。`toolApproval.hooks` 則是用程式寫的核准政策，後端啟動時由 `loadToolApprovalHooks` 載入。`toolApproval.enabled` 沒有開啟時不載入任何 hooks。
 
+## 11b:市集
+
+### 補回的檔案
+
+| 位置 | 檔案 | 動作 |
+|---|---|---|
+| 前端 | `client/src/components/Agents/`(11 個) | 新增：市集頁面(`Marketplace.tsx`)、Agent 卡片與格狀清單、詳細資料、分類標籤、搜尋列、管理員設定、`AgentContact`(Agent 的聯絡方式) |
+| 前端 | `client/src/hooks/useInfiniteScroll.ts` | 新增：市集清單的無限捲動 |
+| 前端 | `client/src/routes/index.tsx` | 補回市集的 2 條 `import`,以及 `/agents`、`/agents/:category` 兩條路由 |
+| 前端 | `client/src/components/Chat/Landing.tsx` | 補回 `AgentContact`:選了 Agent 時，新對話的首頁顯示它的聯絡方式(換回後與官方相同) |
+| 設定 | `librechat.yaml` | `interface.marketplace.use` 從 `false` 改成 `true` |
+
+後端不用補：市集用的都是 MVP-1 就有的 Agent 路由(`/api/agents`)與權限路由(`/api/permissions`)。
+
+### 市集顯示哪些 Agent
+
+市集呼叫 `GET /api/agents`,列出**目前使用者有檢視權限的 Agent**:自己建立的，加上別人分享給自己或公開的。可以加上這些參數:
+
+| 參數 | 作用 |
+|---|---|
+| `category` | 依分類篩選(分類清單來自 `GET /api/agents/categories`) |
+| `search` | 依名稱或描述搜尋,不分大小寫 |
+| `promoted` | `1` 只列推薦的 Agent,`0` 只列不推薦的 |
+
+分享走權限路由 `PUT /api/permissions/agent/:id`(`:id` 是 Agent 在資料庫的 `_id`)。公開分享的內容是 `{ "public": true, "publicAccessRoleId": "agent_viewer" }`,取消公開是 `{ "public": false }`。
+
+### 開關
+
+`interface.marketplace.use` 和書籤一樣，在每次啟動時寫入角色的 `MARKETPLACE.USE` 權限。前端的 `hooks/Nav/useShowMarketplace.ts`(側邊欄的市集入口，MVP-1 就有)與 `Marketplace.tsx` 都檢查這個權限。
+
 ## 歷史
 
 | 時間 | 事件 |
@@ -76,7 +106,8 @@ MCP、Skills 的這些檔案只是建構器引用的元件，對應的功能開�
 | 2024-08 | Agents 加入(`AgentPanelSwitch.tsx`、`AgentConfig.tsx`、`routes/agents/v1.js`) |
 | 2025-02 | Actions 的 OAuth(`routes/actions.js`) |
 | 2025-05 | Agent 版本歷史 |
-| 2025-06 | 各端點統一走 Agent 框架(`ToolDialogs.tsx`) |
+| 2025-06 | 各端點統一走 Agent 框架(`ToolDialogs.tsx`);Agent 市集(`feat: Agent Marketplace`);以角色為基礎的細緻權限 |
+| 2026-06 | Agent 的聯絡方式，沒設定時改顯示擁有者名稱(`AgentContact.tsx`) |
 | 2026-07 | 可程式化的工具核准政策(`loadToolApprovalHooks`);建構器改版為統一的工具市集 |
 
 ## 驗證(11a)
@@ -96,6 +127,23 @@ MCP、Skills 的這些檔案只是建構器引用的元件，對應的功能開�
 | 和 Agent 聊天 | 串流完成，收到回覆 |
 | `GET /api/mcp/tools` | 404(MCP 階段才補回) |
 | `GET /api/actions/x/oauth/callback`(不帶 state) | 錯誤頁 `invalid_state`;日誌 `Error verifying state parameter` |
+
+## 驗證(11b)
+
+在暫存區(埠 3095、全新資料庫)補回、把 `marketplace.use` 改成 `true` 並重新建置前端後，用一個測試管理員與一個一般使用者驗證:
+
+| 項目 | 結果 |
+|---|---|
+| 前端建置 | 成功 |
+| MVP 的 API 驗收 11 項 | 全部通過 |
+| 市集權限 | `USER`、`ADMIN` 的 `MARKETPLACE.USE` 都是 `true` |
+| `GET /api/agents/categories` | 200,有 `general` 等分類 |
+| 管理員建立一個分類為 `general` 的測試 Agent | 201;管理員的清單看得到 |
+| 分享前，一般使用者 | 清單看不到;讀取這個 Agent 回 403 |
+| 管理員公開分享(`agent_viewer`) | 200 |
+| 分享後，一般使用者 | 清單看得到;`category=general`、`search=market` 都找得到,`search=zzz` 找不到;讀取回 200 |
+| 一般使用者修改這個 Agent | 403(檢視者不能編輯) |
+| 取消公開 | 200;一般使用者的清單又看不到 |
 
 ## References
 

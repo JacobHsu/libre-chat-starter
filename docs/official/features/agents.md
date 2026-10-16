@@ -66,7 +66,7 @@ Agent 的指示可以使用 `{{current_date}}`、`{{current_datetime}}` 與 `{{i
 3. 直接在原處編輯已存的提示，或選它的 **X** 按鈕移除。
 4. 儲存 Agent。
 
-使用者和這個 Agent 開新對話時，開場提示會以按鈕顯示在空白的聊天畫面上。選一個就會立即當作第一則訊息送出。如果 Agent 有開場提示，它們會優先於使用中的 model spec 所定義的 [`conversation_starters`](https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/model_specs#conversation_starters)。開場提示也會出現在 Agent 的 [Marketplace](https://www.librechat.ai/docs/features/agents#agent-marketplace) 詳細資料對話框中。
+使用者和這個 Agent 開新對話時，開場提示會以按鈕顯示在空白的聊天畫面上。選一個就會立即當作第一則訊息送出。如果 Agent 有開場提示，它們會優先於使用中的 model spec 所定義的 [`conversation_starters`](https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/model_specs#conversation_starters)。開場提示也會出現在 Agent 的 [Marketplace](#agent-市集agent-marketplace) 詳細資料對話框中。
 
 ## Agent 的能力(Agent Capabilities)
 
@@ -172,6 +172,86 @@ Agent 在「能力」之外的進階設定(在 Agent 表單的 Advanced 檢視�
 **處理優先順序:** OCR > STT > 文字解析(和「以文字上傳」相同)
 
 **注意:** 擷取出的文字會成為 Agent 系統指示的一部分。
+
+## 分享與權限(Sharing and Permissions)
+
+Agents 使用 LibreChat 細緻的[存取控制](access_control.md)系統。每個 Agent 都有自己的存取控制清單(ACL),可以分享給特定的**使用者**、**群組**、**角色**,或**公開**,每一個都可以選擇權限等級。
+
+受信任的服務也可以透過測試版的 [Agent Management API](https://www.librechat.ai/docs/features/agents_api#agent-management-api) 管理 Agents、附加的檔案與 Skills。管理員把每個 OIDC 機器用戶端綁定到一個既有的 LibreChat 使用者與租戶;每個請求都沿用那個使用者目前的角色能力與資源 ACL,不會另外取得管理權限。
+
+### 存取角色(Access Roles)
+
+分享 Agent 時，被授權的對象會被指派三種角色之一:
+
+| 角色 | 被授權的對象能做什麼 |
+| --- | --- |
+| **Viewer(檢視者)** | 在對話中使用這個 Agent;不能打開建構器，也看不到指示、工具或附加的檔案 |
+| **Editor(編輯者)** | 檢視之外，還能修改 Agent 的指示、模型、工具與檔案 |
+| **Owner(擁有者)** | 完整控制：檢視、編輯、刪除，以及再分享這個 Agent |
+
+不論 ACL 怎麼設定，原作者與管理員永遠保有完整控制權。
+
+### 分享 Agent
+
+1. 在 Agent Builder 打開這個 Agent
+2. 點下方的 **Share** 按鈕(當你是作者、管理員，或在這個 Agent 上被授予 `SHARE` 權限時才看得到)
+3. 在人員選擇器中搜尋使用者、群組或角色，替每一個指派角色
+4. 視需要打開 **Public**,讓這個 Agent 對實例上的所有人可見(需要 `SHARE_PUBLIC` 功能權限)
+
+Agent 卡片與首頁會顯示設定的支援聯絡方式。沒有設定時,LibreChat 可以改顯示第一個能辨識的擁有者的顯示名稱，但不會公開擁有者的 email,除非它被明確設定為支援聯絡方式。
+
+對話介面一律以 Agent 作為顯示的身分，不會改用它背後的模型或 model spec 的標籤。
+
+主體、權限位元，以及 ACL 如何和以角色為基礎的功能權限組合的完整說明，見[存取控制](access_control.md)。
+
+### Agent 市集(Agent Marketplace)
+
+**Agent Marketplace** 讓使用者瀏覽他們可用的 Agent。從側邊欄的 **Agent Marketplace** 打開;只有角色被允許使用市集的使用者，才會看到這個入口。
+
+- **瀏覽與搜尋**:Agent 以格狀排列。用搜尋欄依名稱或描述找 Agent,用分類標籤(例如 **Top Picks**、**All** 或特定分類)縮小範圍。
+- **排序**:用 **Sort by** 依 **Newest first**(最新的在前，預設)、**Oldest first**(最舊的在前)、**Popular**(最多人釘選)或 **By creator name**(依建立者名稱)排序。
+- **我的 Agent**:打開 **My agents**,只顯示你建立的 Agent。在 **Top Picks** 打開它，會切換到 **All**。
+- **可分享的檢視**:搜尋、排序與 **My agents** 篩選都保留在頁面網址中(`?q=`、`?sort=`、`?mine=1`),所以篩選後的檢視可以加入書籤或分享。
+
+選一張 Agent 卡片會打開它的詳細資料對話框，顯示完整的描述與 Agent 的聯絡方式，以及這些動作:
+
+- **Pin** 或 **Unpin**:把 Agent 加入或移出你釘選的 Agent。
+- **Copy Link**:複製一個連結，打開它就會和這個 Agent 開始新對話。
+- **Start Chat**:和這個 Agent 開新對話。
+- **試試開場提示**:Agent 有[開場提示](#開場提示conversation-starters)時，選一個會打開新對話，並把那個提示放進訊息輸入框。它不會自動送出，所以你可以先編輯。
+
+管理員可以用 [`interface.marketplace`](https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/interface#marketplace) 設定，以及[存取控制](access_control.md)中說明的角色權限控制存取。
+
+### 管理員控制(Administrator Controls)
+
+管理員在 Agent 建構器的介面中，可以使用全域的權限設定:
+
+- 對所有使用者啟用或停用 Agent 分享
+- 控制 Agent 的使用權限
+- 管理建立 Agent 的權利
+- 設定整個平台的設定
+
+在沒有分租戶的單一租戶部署中，實例建立的第一個帳號就是管理員。分租戶的部署不會自動把第一個註冊的使用者升為管理員;要透過受信任的管理流程佈建租戶管理員。如果需要手動新增管理員，可以[存取 MongoDB](https://www.librechat.ai/docs/configuration/mongodb/mongodb_auth),更新使用者的資料:
+
+```
+db.users.updateOne(
+  { email: 'USER_EMAIL_ADDRESS' },
+  { $set: { role: 'ADMIN' } }
+)
+```
+
+也可以透過設定對所有使用者停用 Agents,[更多資訊](https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/interface)。
+
+功能層級的權限(誰可以*使用*、*建立*、*分享*或*公開分享* Agents),在 [**LibreChat 管理面板**](admin_panel.md)中依角色管理，包括自訂角色。`librechat.yaml` 的 [`interface.agents`](https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/interface#agents) 區塊，仍然可以在啟動時為內建的 `USER` 角色設定預設值，但今後建議用管理面板編輯它們。
+
+### 使用者層級的分享(User-Level Sharing)
+
+個別使用者可以:
+
+- 把自己的 Agent 分享給特定的使用者、群組或角色(如果他們的角色啟用了 `SHARE`)
+- 讓 Agent 對實例上的所有人可見(如果啟用了 `SHARE_PUBLIC`)
+- 給每個接收者不同的存取等級(Viewer / Editor / Owner)
+- 隨時從分享對話框再分享或撤銷存取
 
 ## 選用設定(Optional Configuration)
 
