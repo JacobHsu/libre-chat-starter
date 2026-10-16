@@ -4,21 +4,21 @@
 
 ## 現況與最終版的差距
 
-最終版就是官方 `v0.8.8-rc4`:所有檔案與官方完全相同,包含測試與根目錄的工具與部署檔。下表是階段 10(書籤與標籤)完成後的狀態。
+最終版就是官方 `v0.8.8-rc4`:所有檔案與官方完全相同,包含測試與根目錄的工具與部署檔。下表是階段 11a(Agent 建構器)完成後的狀態。
 
 | 項目 | 官方 rc4 | 現在 | 差距 |
 |---|---|---|---|
-| 全部檔案 | 5492 | 2928 | 少 2564 個 |
-| 程式碼檔(非測試) | 3039(後端 372、前端 1421、函式庫 1246) | 2692(89%) | 少 **347 個**(後端 46、前端 301) |
+| 全部檔案 | 5492 | 3034 | 少 2458 個 |
+| 程式碼檔(非測試) | 3039(後端 372、前端 1421、函式庫 1246) | 2798(92%) | 少 **241 個**(後端 45、前端 196) |
 | 測試檔 | 1723 | 0 | 最終階段補回 |
-| 精簡過的檔案 | | 8 個(後端 2、前端 6) | 各階段逐步換回官方版 |
+| 精簡過的檔案 | | 6 個(後端 2、前端 4) | 各階段逐步換回官方版 |
 | 根目錄 | `.github`(44)、`config`(52)、`e2e`(229)、`helm`(35)、`scripts`(16)、`redis-config`(12)、`otel`(9)、`Dockerfile`、`docker-compose.yml`、`eslint.config.mjs`、`LICENSE` 等 | 都還沒有 | 最終階段(或用到它的功能階段)帶入 |
 
-少的 347 個程式碼檔,分成兩種:
+少的 241 個程式碼檔,分成兩種:
 
 | 種類 | 檔案數 | 意思 |
 |---|---|---|
-| 完整版會載入,屬於某個功能 | **244**(前端 215、後端 29) | 隨功能階段補回,下面的階段表就是它們的分配 |
+| 完整版會載入,屬於某個功能 | **138**(前端 110、後端 28) | 隨功能階段補回,下面的階段表就是它們的分配 |
 | 完整版也不會載入 | **103**(前端 87、後端 16) | 官方 rc4 裡沒有任何入口引用它們(舊版元件、測試用的假資料、效能測試檔等)。放在最後的收尾階段 |
 
 ## 每個階段怎麼做
@@ -51,7 +51,7 @@
 | 8(已完成,`stage-admin`) | 管理面板 | 2024-06 | 0 / 7 | 後端:`routes/index.js`、`server/index.js`(`/api/admin/*`) | 管理畫面是獨立程式，本機不接(見[管理面板](features/admin-panel.md));`admin/` 另外 3 個檔案移到階段 9、13、16 |
 | 9(已完成,`stage-observability`) | Trace 與可觀測(含洞察) | 2024-06 | 21 / 4(含 `admin/langfuse.js`) | 前端:`ChatView.tsx`、`Header.tsx`、`HeaderMenu.tsx`、`routes/index.tsx`。後端:`routes/index.js`、`server/index.js` | 開關維持官方預設(全關);Trace Viewer 需要 Langfuse,Insights 需要 Agent(見[Trace 與可觀測](features/observability.md)) |
 | 10(已完成,`stage-bookmarks`) | 書籤與標籤 | 2024-07 | 8 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | `interface.bookmarks` 改回開啟(見[書籤](features/bookmarks.md)) |
-| 11 | Agents(建構器與市集) | 2024-08 | 100 / 3 | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`Landing.tsx`、`BadgeRow.tsx`、`hooks/MCP/index.ts`。後端:`routes/index.js`、`server/index.js`(工具核准 hooks) | `interface.marketplace` 改回開啟 |
+| 11(進行中:11a 建構器已完成) | Agents(建構器與市集) | 2024-08 | 100 / 3(11a 實際補回 105 / 1) | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`Landing.tsx`、`BadgeRow.tsx`、`hooks/MCP/index.ts`。後端:`routes/index.js`、`server/index.js`(工具核准 hooks) | `interface.marketplace` 改回開啟(11b);分三步:11a 建構器、11b 市集、11c Agents API(見[Agents](features/agents.md)) |
 | 12 | Assistants(OpenAI) | 功能表未列,階段開始前確認順序 | 25 / 15 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | |
 | 13 | 程式碼環境 | 2024-08 | 0 / 2(含 `admin/code.js`) | 後端:`routes/index.js`、`server/index.js`(生命週期協調器) | |
 | 14 | MCP | 2024-12 | 19 / 3 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js`(OAuth 重新連線) | `interface.mcpServers` 改回開啟 |
@@ -60,7 +60,7 @@
 | 17 | 專案 | 2026-06 | 10 / 1 | 前端:`routes/index.tsx`、`ConversationsSection.tsx`。後端:`routes/index.js`、`server/index.js` | |
 | 18 | 排程與觸發 | 2026-06 | 11 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js`(排程引擎) | `interface.schedules` |
 
-階段表合計:前端 302、後端 47(階段 1 已補回 55 與 2、階段 4 已補回 4、階段 5 已補回 2、階段 7 已補回 3、階段 8 已補回 7、階段 9 已補回 21 與 4、階段 10 已補回 8 與 1,剩前端 214、後端 28);另有 `hooks/useInfiniteScroll.ts` 與 `app/clients/index.js` 兩個沒有歸屬的檔案,放進收尾階段。
+階段表合計:前端 302、後端 47(階段 1 已補回 55 與 2、階段 4 已補回 4、階段 5 已補回 2、階段 7 已補回 3、階段 8 已補回 7、階段 9 已補回 21 與 4、階段 10 已補回 8 與 1、階段 11a 已補回 105 與 1,剩前端 109、後端 27);另有 `hooks/useInfiniteScroll.ts` 與 `app/clients/index.js` 兩個沒有歸屬的檔案,放進收尾階段。
 
 「精簡檔案」欄原本有 15 個檔案(階段 1 之後剩 11 個),有幾個被多個階段共用。例如前端的 `useSideNavLinks.ts` 在提示詞、檔案、書籤、Agents、Assistants、MCP、記憶、Skills、排程各階段都會再補回一段。做法是每個階段把**該功能那一段**從官方完整版補回,最後一個階段做完,整個檔案就與官方完全相同。後端的 `server/index.js` 與 `routes/index.js` 同理。精簡的細節見[後端精簡清單](api/mvp-trim.md)與[前端精簡清單](client/mvp-trim.md)。
 
