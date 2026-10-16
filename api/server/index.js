@@ -33,6 +33,7 @@ const {
   agentStartupIngressMiddleware,
   agentStartupTelemetryMiddleware,
   initializeFileStorage,
+  loadToolApprovalHooks,
   maybeInjectQueryDevtoolsBootstrap,
   injectConfiguredFooterBootstrap,
   preAuthTenantMiddleware,
@@ -214,6 +215,16 @@ const startServer = async () => {
   warnOnUnreachableDeliveryPaths(appConfig);
   initializeFileStorage(appConfig);
   startExpiredFileSweep({ appConfig, loadAppConfig: getAppConfig });
+  // Register any programmatic tool-approval policy hooks declared in
+  // `endpoints.agents.toolApproval.hooks`. Honor the `enabled` kill switch: when tool
+  // approval is off we pass no hooks, so a disabled endpoint imports/runs nothing (and any
+  // previously loaded batch is unregistered). Hooks are read from the BASE config only —
+  // they register once, process-wide; per-user/tenant differences belong inside the hook
+  // (via its context), not in per-override module lists.
+  const toolApproval = appConfig?.endpoints?.agents?.toolApproval;
+  await loadToolApprovalHooks(toolApproval?.enabled ? toolApproval.hooks : undefined, {
+    basePath: path.resolve(__dirname, '../..'),
+  });
   await runAsSystem(async () => {
     await performStartupChecks(appConfig);
     await updateInterfacePermissions({ appConfig, getRoleByName, updateAccessPermissions });
@@ -354,6 +365,7 @@ const startServer = async () => {
   app.use('/api/admin/roles', routes.adminRoles);
   app.use('/api/admin/users', routes.adminUsers);
   app.use('/api/admin/audit-log', routes.adminAuditLog);
+  app.use('/api/actions', routes.actions);
   app.use('/api/keys', routes.keys);
   app.use('/api/user', routes.user);
   app.use('/api/search', routes.search);

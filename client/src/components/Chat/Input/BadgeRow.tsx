@@ -16,6 +16,7 @@ import CodeInterpreter from './CodeInterpreter';
 import { BadgeRowProvider } from '~/Providers';
 import ToolsDropdown from './ToolsDropdown';
 import { useChatBadges } from '~/hooks';
+import ToolDialogs from './ToolDialogs';
 import FileSearch from './FileSearch';
 import Artifacts from './Artifacts';
 import MCPSelect from './MCPSelect';
@@ -406,6 +407,7 @@ function BadgeRow({
           </div>
         )}
       </div>
+      <ToolDialogs />
     </BadgeRowProvider>
   );
 }

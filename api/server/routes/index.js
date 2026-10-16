@@ -14,6 +14,7 @@ const messages = require('./messages');
 const presets = require('./presets');
 const prompts = require('./prompts');
 const balance = require('./balance');
+const actions = require('./actions');
 const banner = require('./banner');
 const search = require('./search');
 const models = require('./models');
@@ -59,6 +60,7 @@ module.exports = {
   config,
   models,
   prompts,
+  actions,
   presets,
   balance,
   messages,
