@@ -26,6 +26,7 @@ import {
   useGetAgentsConfig,
   useHasAccess,
 } from '~/hooks';
+import BookmarkPanel from '~/components/SidePanel/Bookmarks/BookmarkPanel';
 import Parameters from '~/components/SidePanel/Parameters/Panel';
 import FilesPanel from '~/components/SidePanel/Files/Panel';
 import { PromptsAccordion } from '~/components/Prompts';
@@ -102,6 +103,16 @@ export default function useSideNavLinks({
         icon: NotebookPen,
         id: 'prompts',
         Component: PromptsAccordion,
+      });
+    }
+
+    if (hasAccessToBookmarks) {
+      links.push({
+        title: 'com_sidepanel_conversation_tags',
+        label: '',
+        icon: Bookmark,
+        id: 'bookmarks',
+        Component: BookmarkPanel,
       });
     }
 

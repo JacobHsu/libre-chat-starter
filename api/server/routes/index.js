@@ -25,6 +25,7 @@ const roles = require('./roles');
 const oauth = require('./oauth');
 const files = require('./files');
 const share = require('./share');
+const tags = require('./tags');
 const auth = require('./auth');
 const keys = require('./keys');
 const user = require('./user');
@@ -45,6 +46,7 @@ module.exports = {
   adminAuditLog,
   keys,
   user,
+  tags,
   roles,
   oauth,
   files,
