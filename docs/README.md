@@ -55,3 +55,4 @@ powershell -ExecutionPolicy Bypass -File tools/start.ps1
 | 37 | [管理面板](features/admin-panel.md) | 階段 8:補回的 7 個管理 API、留到之後的 3 個、誰是管理員、稽核紀錄記什麼、本機接上管理面板容器與 `HOST=0.0.0.0`、驗證結果 |
 | 38 | [管理員洞察(官方文件翻譯)](official/features/insights.md) | Insights 儀表板:啟用方式、存取需求、四個指標與排行、日期範圍與搜尋、資料來源 |
 | 39 | [Trace 與可觀測](features/observability.md) | 階段 9:Trace Viewer、Insights、RUM 三者的差別與資料來源、rc4 實測的 Insights 存取規則(以 Agent 為單位)、驗證結果 |
+| 40 | [書籤](features/bookmarks.md) | 階段 10:書籤的三個入口、`interface.bookmarks` 的實測行為(每次啟動寫入、`ADMIN` 也受影響)、`/api/tags` API、驗證結果 |
