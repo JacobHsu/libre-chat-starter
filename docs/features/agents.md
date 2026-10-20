@@ -2,7 +2,7 @@
 
 在介面上建立自訂的 AI 助理：選模型、寫指示、加工具，存成一個 Agent,之後直接和它聊天。功能本身的說明見官方頁面的翻譯 [Agents](../official/features/agents.md);這份文件補充程式碼的對應，以及階段 11 做了什麼。
 
-階段 11 分三步:**11a 建構器**、**11b 市集**、11c Agents API。目前完成 11a、11b。
+階段 11 分三步:**11a 建構器**、**11b 市集**、**11c Agents API**。
 
 ## Agent 和 MVP 的關係
 
@@ -99,6 +99,45 @@ MCP、Skills 的這些檔案只是建構器引用的元件，對應的功能開�
 
 `interface.marketplace.use` 和書籤一樣，在每次啟動時寫入角色的 `MARKETPLACE.USE` 權限。前端的 `hooks/Nav/useShowMarketplace.ts`(側邊欄的市集入口，MVP-1 就有)與 `Marketplace.tsx` 都檢查這個權限。
 
+## 11c:Agents API
+
+讓外部程式用 API 金鑰呼叫 Agent。官方說明見[Agents API(官方文件翻譯)](../official/features/agents_api.md)。
+
+### 補回的檔案
+
+| 檔案 | 動作 |
+|---|---|
+| `api/server/routes/apiKeys.js` | 新增:`/api/api-keys`,建立、列出、讀取、刪除 API 金鑰;每條路由都檢查角色的 `REMOTE_AGENTS.USE` |
+| `api/server/routes/openapi.js` | 新增:`/api/openapi.json`(OpenAPI 規格)與 `/api/docs`(Swagger UI),由最上層的 `openapi.enabled` 控制 |
+| `api/server/routes/index.js`、`api/server/index.js` | 補回這兩個的 `require`、匯出與掛載 |
+
+Agents API 本身的路由(`/api/agents/v1/chat/completions`、`/v1/responses`、`/v1/models` 等)在 `api/server/routes/agents/` 裡，MVP-1 就已經在專案內;前端管理金鑰的畫面(**Settings → Data** 的 **Agent API keys**,繁中介面為「Agent API 金鑰」;`components/Nav/SettingsTabs/ApiKeys/`)也是，只對有 `REMOTE_AGENTS` 權限的角色顯示。缺的是發金鑰的路由，沒有它就沒有金鑰能呼叫 Agents API。
+
+### 開關
+
+| 設定 | 預設 | 作用 |
+|---|---|---|
+| `interface.remoteAgents.use`、`create` | `USER` 角色 `false`;`ADMIN` 角色 `true` | 能不能使用、建立 API 金鑰。寫進角色的 `REMOTE_AGENTS` 權限 |
+| `openapi.enabled`(最上層) | 停用 | 是否提供 `/api/openapi.json` 與 `/api/docs` |
+
+本專案維持官方預設:管理員可以使用 Agents API,一般使用者不行;API 文件不提供。
+
+`remoteAgents` 寫進的是資料庫裡的角色權限：設成 `true` 啟動過一次之後，再把設定拿掉，`USER` 的 `REMOTE_AGENTS` 仍然是 `true`,要關閉必須明確寫 `use: false`、`create: false`。`openapi.enabled` 不是角色權限，拿掉就回到停用。
+
+### 用法
+
+1. 在 **Settings → Data** 的 **Agent API keys** 建立金鑰(`POST /api/api-keys`,欄位 `name`)。回應中的 `key`(`sk-` 開頭)只出現這一次，之後清單只顯示前綴。
+2. 用金鑰呼叫 Agents API,`model` 填 Agent 的 ID(`agent_` 開頭):
+
+```bash
+curl -X POST http://localhost:3090/api/agents/v1/chat/completions \
+  -H "Authorization: Bearer <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"<AGENT_ID>","messages":[{"role":"user","content":"Hello"}],"stream":false}'
+```
+
+`GET /api/agents/v1/models` 列出這把金鑰能用的 Agent。
+
 ## 歷史
 
 | 時間 | 事件 |
@@ -107,8 +146,10 @@ MCP、Skills 的這些檔案只是建構器引用的元件，對應的功能開�
 | 2025-02 | Actions 的 OAuth(`routes/actions.js`) |
 | 2025-05 | Agent 版本歷史 |
 | 2025-06 | 各端點統一走 Agent 框架(`ToolDialogs.tsx`);Agent 市集(`feat: Agent Marketplace`);以角色為基礎的細緻權限 |
+| 2026-01 | 遠端存取 Agent 的外部 API(`routes/apiKeys.js`、`routes/agents/openai.js`、`routes/agents/responses.js`) |
 | 2026-06 | Agent 的聯絡方式，沒設定時改顯示擁有者名稱(`AgentContact.tsx`) |
 | 2026-07 | 可程式化的工具核准政策(`loadToolApprovalHooks`);建構器改版為統一的工具市集 |
+| 2026-09 | 公開 Agents API 的 OpenAPI 規格與文件(`routes/openapi.js`) |
 
 ## 驗證(11a)
 
@@ -145,10 +186,34 @@ MCP、Skills 的這些檔案只是建構器引用的元件，對應的功能開�
 | 一般使用者修改這個 Agent | 403(檢視者不能編輯) |
 | 取消公開 | 200;一般使用者的清單又看不到 |
 
+## 驗證(11c)
+
+在暫存區(埠 3095、全新資料庫)補回後，先用官方預設，再打開 `remoteAgents`(`use`、`create`)與 `openapi.enabled` 並重新啟動(同一個資料庫):
+
+| 項目 | 官方預設 | 打開之後 |
+|---|---|---|
+| `USER` 的 `REMOTE_AGENTS` | 全部 `false` | `USE`、`CREATE` 為 `true` |
+| `ADMIN` 的 `REMOTE_AGENTS` | 全部 `true` | 全部 `true` |
+| 一般使用者 `GET` / `POST /api/api-keys` | 403 | 200 / 201 |
+| 管理員建立金鑰 | 201,回傳 `sk-` 開頭的金鑰;清單只顯示前綴 | 同左 |
+| 用金鑰 `GET /api/agents/v1/models` | 200,列出測試 Agent | 同左 |
+| 用金鑰 `POST /api/agents/v1/chat/completions` | 200,收到回覆;`stream: true` 時收到 `chat.completion.chunk` 串流 | 同左 |
+| 錯誤的金鑰 | 401 `invalid_api_key` | 同左 |
+| 刪除金鑰(204)後再用 | 401 | 同左 |
+| `/api/openapi.json`、`/api/docs` | 404 | 200(OpenAPI 3.1 規格、Swagger UI) |
+
+MVP 的 API 驗收 11 項全部通過。
+
+專案內(`librechat.yaml` 沒有 `remoteAgents` 與 `openapi`)連到同一個測試資料庫再驗證一次：金鑰與 Agents API 的結果相同;`/api/openapi.json`、`/api/docs` 回 404;`USER` 的 `REMOTE_AGENTS.USE` 仍然是先前寫入的 `true`。
+
 ## References
 
 - [Agents(官方文件翻譯)](../official/features/agents.md)
 - [Agents(官方文件)](https://www.librechat.ai/docs/features/agents)
+- [Agents API(官方文件翻譯)](../official/features/agents_api.md)
+- [Agents API(官方文件)](https://www.librechat.ai/docs/features/agents_api)
+- [api/server/routes/apiKeys.js(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/api/server/routes/apiKeys.js)
+- [api/server/routes/openapi.js(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/api/server/routes/openapi.js)
 - [agents 物件(官方文件)](https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/agents):`capabilities`、`toolApproval`、`recursionLimit`
 - [client/src/components/SidePanel/Agents/(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/tree/v0.8.8-rc4/client/src/components/SidePanel/Agents)
 - [client/src/hooks/Nav/useSideNavLinks.ts(官方 repo,rc4)](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.8-rc4/client/src/hooks/Nav/useSideNavLinks.ts)

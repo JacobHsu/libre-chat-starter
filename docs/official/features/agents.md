@@ -284,6 +284,12 @@ LibreChat 讓管理員透過 [`librechat.yaml`](https://www.librechat.ai/docs/co
 - 用「Upload for File Search」對文件做語意搜尋(需要 RAG API)
 - 把檔案加到 Agent 的「File Context」,把檔案的完整內容納入 Agent 的系統指示
 
+## Agents API(測試版)
+
+LibreChat 的 Agents 也可以透過 API 以程式存取，讓外部的應用程式與腳本用與 OpenAI 相容的 SDK,或 Open Responses 格式，和你的 Agents 互動。
+
+設定與使用方式，見 [Agents API 文件](agents_api.md)。
+
 ## References
 
 - [Agents(官方文件)](https://www.librechat.ai/docs/features/agents)

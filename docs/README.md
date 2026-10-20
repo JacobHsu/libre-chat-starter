@@ -57,4 +57,5 @@ powershell -ExecutionPolicy Bypass -File tools/start.ps1
 | 39 | [Trace 與可觀測](features/observability.md) | 階段 9:Trace Viewer、Insights、RUM 三者的差別與資料來源、rc4 實測的 Insights 存取規則(以 Agent 為單位)、驗證結果 |
 | 40 | [書籤](features/bookmarks.md) | 階段 10:書籤的三個入口、`interface.bookmarks` 的實測行為(每次啟動寫入、`ADMIN` 也受影響)、`/api/tags` API、驗證結果 |
 | 41 | [Agents(官方文件翻譯)](official/features/agents.md) | 建構器:開始使用、工具庫、模型設定、版本歷史、開場提示、Ask User 與工具核准、工具、Actions、進階設定、檔案;分享與權限、Agent 市集;選用設定(其餘段落隨後續階段補上) |
-| 42 | [Agents](features/agents.md) | 階段 11a、11b:Agent 和 MVP 的關係、建構器補回的 105 個檔案、側邊欄顯示條件、建構器的 API、工具核准 hooks;市集顯示哪些 Agent、分享 API、驗證結果 |
+| 42 | [Agents](features/agents.md) | 階段 11(11a 建構器、11b 市集、11c Agents API):Agent 和 MVP 的關係、建構器補回的 105 個檔案、側邊欄顯示條件、建構器的 API、工具核准 hooks;市集顯示哪些 Agent、分享 API;API 金鑰與 Agents API 的開關、用法、驗證結果 |
+| 43 | [Agents API(官方文件翻譯)](official/features/agents_api.md) | 用 API 金鑰從外部呼叫 Agent:概觀、啟用 `remoteAgents`、OpenAPI 文件、API 金鑰、Chat Completions、列出模型 |
