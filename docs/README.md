@@ -59,3 +59,5 @@ powershell -ExecutionPolicy Bypass -File tools/start.ps1
 | 41 | [Agents(官方文件翻譯)](official/features/agents.md) | 建構器:開始使用、工具庫、模型設定、版本歷史、開場提示、Ask User 與工具核准、工具、Actions、進階設定、檔案;分享與權限、Agent 市集;選用設定(其餘段落隨後續階段補上) |
 | 42 | [Agents](features/agents.md) | 階段 11(11a 建構器、11b 市集、11c Agents API):Agent 和 MVP 的關係、建構器補回的 105 個檔案、側邊欄顯示條件、建構器的 API、工具核准 hooks;市集顯示哪些 Agent、分享 API;API 金鑰與 Agents API 的開關、用法、驗證結果 |
 | 43 | [Agents API(官方文件翻譯)](official/features/agents_api.md) | 用 API 金鑰從外部呼叫 Agent:概觀、啟用 `remoteAgents`、OpenAPI 文件、API 金鑰、Chat Completions、列出模型 |
+| 44 | [Assistants(官方文件翻譯)](official/configuration/pre_configured_ai/assistants.md) | OpenAI Assistants API 端點(OpenAI 已於 2026-08 移除):金鑰、模型、基礎網址、`librechat.yaml` 選項、Strict 函式呼叫 |
+| 45 | [Assistants](features/assistants.md) | 階段 12:補回的 41 個檔案、建構器顯示條件、端點選單為什麼一直有 Assistants、`uaParser` 封鎖非瀏覽器請求、驗證結果 |

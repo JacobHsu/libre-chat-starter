@@ -4,21 +4,21 @@
 
 ## 現況與最終版的差距
 
-最終版就是官方 `v0.8.8-rc4`:所有檔案與官方完全相同,包含測試與根目錄的工具與部署檔。下表是階段 11(Agents)完成後的狀態。
+最終版就是官方 `v0.8.8-rc4`:所有檔案與官方完全相同,包含測試與根目錄的工具與部署檔。下表是階段 12(Assistants)完成後的狀態。
 
 | 項目 | 官方 rc4 | 現在 | 差距 |
 |---|---|---|---|
-| 全部檔案 | 5492 | 3048 | 少 2444 個 |
-| 程式碼檔(非測試) | 3039(後端 372、前端 1421、函式庫 1246) | 2812(93%) | 少 **227 個**(後端 43、前端 184) |
+| 全部檔案 | 5492 | 3090 | 少 2402 個 |
+| 程式碼檔(非測試) | 3039(後端 372、前端 1421、函式庫 1246) | 2853(94%) | 少 **186 個**(後端 27、前端 159) |
 | 測試檔 | 1723 | 0 | 最終階段補回 |
 | 精簡過的檔案 | | 5 個(後端 2、前端 3) | 各階段逐步換回官方版 |
 | 根目錄 | `.github`(44)、`config`(52)、`e2e`(229)、`helm`(35)、`scripts`(16)、`redis-config`(12)、`otel`(9)、`Dockerfile`、`docker-compose.yml`、`eslint.config.mjs`、`LICENSE` 等 | 都還沒有 | 最終階段(或用到它的功能階段)帶入 |
 
-少的 227 個程式碼檔,分成兩種:
+少的 186 個程式碼檔,分成兩種:
 
 | 種類 | 檔案數 | 意思 |
 |---|---|---|
-| 完整版會載入,屬於某個功能 | **124**(前端 98、後端 26) | 隨功能階段補回,下面的階段表就是它們的分配 |
+| 完整版會載入,屬於某個功能 | **83**(前端 73、後端 10) | 隨功能階段補回,下面的階段表就是它們的分配 |
 | 完整版也不會載入 | **103**(前端 87、後端 16) | 官方 rc4 裡沒有任何入口引用它們(舊版元件、測試用的假資料、效能測試檔等)。放在最後的收尾階段 |
 
 ## 每個階段怎麼做
@@ -52,7 +52,7 @@
 | 9(已完成,`stage-observability`) | Trace 與可觀測(含洞察) | 2024-06 | 21 / 4(含 `admin/langfuse.js`) | 前端:`ChatView.tsx`、`Header.tsx`、`HeaderMenu.tsx`、`routes/index.tsx`。後端:`routes/index.js`、`server/index.js` | 開關維持官方預設(全關);Trace Viewer 需要 Langfuse,Insights 需要 Agent(見[Trace 與可觀測](features/observability.md)) |
 | 10(已完成,`stage-bookmarks`) | 書籤與標籤 | 2024-07 | 8 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | `interface.bookmarks` 改回開啟(見[書籤](features/bookmarks.md)) |
 | 11(已完成,`stage-agents`) | Agents(建構器與市集) | 2024-08 | 100 / 3(實際補回:11a 105 / 1、11b 12 / 0、11c 0 / 2) | 前端:`useSideNavLinks.ts`、`routes/index.tsx`、`Landing.tsx`、`BadgeRow.tsx`、`hooks/MCP/index.ts`。後端:`routes/index.js`、`server/index.js`(工具核准 hooks) | `interface.marketplace` 改回開啟(11b);分三步:11a 建構器、11b 市集、11c Agents API,`remoteAgents`、`openapi` 維持官方預設(見[Agents](features/agents.md)) |
-| 12 | Assistants(OpenAI) | 功能表未列,階段開始前確認順序 | 25 / 15 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | |
+| 12(已完成,`stage-assistants`) | Assistants(OpenAI) | 2024-02 | 25 / 15(實際補回 25 / 16,含原本沒有歸屬的 `app/clients/index.js`) | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | OpenAI 已於 2026-08 移除 Assistants API,只補程式碼;`ENDPOINTS` 維持不設(見[Assistants](features/assistants.md)) |
 | 13 | 程式碼環境 | 2024-08 | 0 / 2(含 `admin/code.js`) | 後端:`routes/index.js`、`server/index.js`(生命週期協調器) | |
 | 14 | MCP | 2024-12 | 19 / 3 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js`(OAuth 重新連線) | `interface.mcpServers` 改回開啟 |
 | 15 | 記憶 | 2025-06 | 12 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js` | `interface.memories` 改回開啟 |
@@ -60,7 +60,7 @@
 | 17 | 專案 | 2026-06 | 10 / 1 | 前端:`routes/index.tsx`、`ConversationsSection.tsx`。後端:`routes/index.js`、`server/index.js` | |
 | 18 | 排程與觸發 | 2026-06 | 11 / 1 | 前端:`useSideNavLinks.ts`。後端:`routes/index.js`、`server/index.js`(排程引擎) | `interface.schedules` |
 
-階段表合計:前端 302、後端 47(階段 1 已補回 55 與 2、階段 4 已補回 4、階段 5 已補回 2、階段 7 已補回 3、階段 8 已補回 7、階段 9 已補回 21 與 4、階段 10 已補回 8 與 1、階段 11 已補回 117 與 3,剩前端 97、後端 25);另有 `hooks/useInfiniteScroll.ts` 與 `app/clients/index.js` 兩個沒有歸屬的檔案,放進收尾階段。
+階段表合計:前端 302、後端 47(階段 1 已補回 55 與 2、階段 4 已補回 4、階段 5 已補回 2、階段 7 已補回 3、階段 8 已補回 7、階段 9 已補回 21 與 4、階段 10 已補回 8 與 1、階段 11 已補回 117 與 3、階段 12 已補回 25 與 16,剩前端 72、後端 9);原本沒有歸屬的兩個檔案,`hooks/useInfiniteScroll.ts` 隨階段 11b(市集)、`app/clients/index.js` 隨階段 12(Assistants)補回。
 
 「精簡檔案」欄原本有 15 個檔案(階段 1 之後剩 11 個),有幾個被多個階段共用。例如前端的 `useSideNavLinks.ts` 在提示詞、檔案、書籤、Agents、Assistants、MCP、記憶、Skills、排程各階段都會再補回一段。做法是每個階段把**該功能那一段**從官方完整版補回,最後一個階段做完,整個檔案就與官方完全相同。後端的 `server/index.js` 與 `routes/index.js` 同理。精簡的細節見[後端精簡清單](api/mvp-trim.md)與[前端精簡清單](client/mvp-trim.md)。
 
@@ -81,7 +81,7 @@
 
 | 階段 | 內容 |
 |---|---|
-| 收尾 1:不屬於任何功能的檔案 | 103 個官方完整版也不會載入的檔案,加上 2 個沒有歸屬的檔案 |
+| 收尾 1:不屬於任何功能的檔案 | 103 個官方完整版也不會載入的檔案 |
 | 收尾 2:測試檔 | 1723 個,補回後各層的 `jest` 設定才有對象 |
 | 收尾 3:根目錄 | `.github`、`config`、`e2e`、`helm`、`scripts`、`redis-config`、`otel`、`Dockerfile`、`docker-compose.yml`、`eslint.config.mjs`、`LICENSE` 等 |
 | 收尾 4:對照官方 | 自動比對專案與官方 rc4,差異必須為零,`package-lock.json` 與官方完全相同 |
