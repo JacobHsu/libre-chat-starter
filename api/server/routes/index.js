@@ -1,4 +1,5 @@
 const accessPermissions = require('./accessPermissions');
+const assistants = require('./assistants');
 const categories = require('./categories');
 const adminAuth = require('./admin/auth');
 const adminConfig = require('./admin/config');
@@ -69,6 +70,7 @@ module.exports = {
   balance,
   messages,
   endpoints,
+  assistants,
   categories,
   staticRoute,
   accessPermissions,

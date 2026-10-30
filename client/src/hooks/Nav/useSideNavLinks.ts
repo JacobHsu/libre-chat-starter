@@ -28,6 +28,7 @@ import {
 } from '~/hooks';
 import AgentPanelSwitch from '~/components/SidePanel/Agents/AgentPanelSwitch';
 import BookmarkPanel from '~/components/SidePanel/Bookmarks/BookmarkPanel';
+import PanelSwitch from '~/components/SidePanel/Builder/PanelSwitch';
 import Parameters from '~/components/SidePanel/Parameters/Panel';
 import FilesPanel from '~/components/SidePanel/Files/Panel';
 import { PromptsAccordion } from '~/components/Prompts';
@@ -109,6 +110,25 @@ export default function useSideNavLinks({
         icon: Bot,
         id: EModelEndpoint.agents,
         Component: AgentPanelSwitch,
+      });
+    }
+
+    if (
+      isAssistantsEndpoint(endpoint) &&
+      ((endpoint === EModelEndpoint.assistants &&
+        endpointsConfig?.[EModelEndpoint.assistants] &&
+        endpointsConfig[EModelEndpoint.assistants].disableBuilder !== true) ||
+        (endpoint === EModelEndpoint.azureAssistants &&
+          endpointsConfig?.[EModelEndpoint.azureAssistants] &&
+          endpointsConfig[EModelEndpoint.azureAssistants].disableBuilder !== true)) &&
+      keyProvided
+    ) {
+      links.push({
+        title: 'com_sidepanel_assistant_builder',
+        label: '',
+        icon: OpenAIMinimalIcon,
+        id: EModelEndpoint.assistants,
+        Component: PanelSwitch,
       });
     }
 
