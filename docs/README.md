@@ -61,3 +61,5 @@ powershell -ExecutionPolicy Bypass -File tools/start.ps1
 | 43 | [Agents API(官方文件翻譯)](official/features/agents_api.md) | 用 API 金鑰從外部呼叫 Agent:概觀、啟用 `remoteAgents`、OpenAPI 文件、API 金鑰、Chat Completions、列出模型 |
 | 44 | [Assistants(官方文件翻譯)](official/configuration/pre_configured_ai/assistants.md) | OpenAI Assistants API 端點(OpenAI 已於 2026-08 移除):金鑰、模型、基礎網址、`librechat.yaml` 選項、Strict 函式呼叫 |
 | 45 | [Assistants](features/assistants.md) | 階段 12:補回的 41 個檔案、建構器顯示條件、端點選單為什麼一直有 Assistants、`uaParser` 封鎖非瀏覽器請求、驗證結果 |
+| 46 | [Code Interpreter API(官方文件翻譯)](official/features/code_interpreter.md) | 簡介、開始使用、有狀態的程式碼工作階段(附加環境與配對、工具權限等)、自架 JWT 驗證與基礎網址 |
+| 47 | [程式碼環境](features/code-environments.md) | 階段 13:和基本 Code Interpreter 的差別、補回的路由與生命週期協調器、API 與權限、驗證結果 |
