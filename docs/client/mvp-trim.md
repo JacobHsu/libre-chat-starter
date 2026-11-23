@@ -2,7 +2,7 @@
 
 MVP-1 的前端改 13 個檔案、**沒有新增任何自己寫的邏輯**。再加上不帶入只服務被延後功能的檔案,以及 `librechat.yaml` 的 `interface` 開關。最終階段這些檔案會換回官方完整版,其餘檔案補回。
 
-各階段補回功能時,會從清單拿掉對應的項目。階段 1(提示詞)換回了 4 個檔案、補回 `useSideNavLinks.ts` 與 `routes/index.tsx` 的提示詞部分,階段 4(檔案與圖片)又補回 `useSideNavLinks.ts` 的檔案面板與 `SidePanel/Files` 目錄,階段 9(Trace 與可觀測)換回了 `ChatView.tsx`、`Header.tsx`、`HeaderMenu.tsx`,並補回 `routes/index.tsx` 的 Insights 部分與 `Chat/Trace`、`Insights` 兩個目錄,階段 10(書籤)補回 `useSideNavLinks.ts` 的書籤面板與 `SidePanel/Bookmarks` 目錄,階段 11a(Agent 建構器)補回 `useSideNavLinks.ts` 的建構器面板、換回 `BadgeRow.tsx` 與 `hooks/MCP/index.ts`,並補回 `SidePanel/Agents` 目錄,階段 11b(Agent 市集)補回 `routes/index.tsx` 的市集路由、換回 `Landing.tsx`,並補回 `components/Agents` 目錄,階段 12(Assistants)補回 `useSideNavLinks.ts` 的 Assistants 建構器面板與 `SidePanel/Builder` 目錄,目前的狀態是**改 3 個檔案、刪 100 行**(MVP-1 當時是 13 個檔案、刪 247 行、改 1 行)。下面的數字都是目前的狀態。
+各階段補回功能時,會從清單拿掉對應的項目。階段 1(提示詞)換回了 4 個檔案、補回 `useSideNavLinks.ts` 與 `routes/index.tsx` 的提示詞部分,階段 4(檔案與圖片)又補回 `useSideNavLinks.ts` 的檔案面板與 `SidePanel/Files` 目錄,階段 9(Trace 與可觀測)換回了 `ChatView.tsx`、`Header.tsx`、`HeaderMenu.tsx`,並補回 `routes/index.tsx` 的 Insights 部分與 `Chat/Trace`、`Insights` 兩個目錄,階段 10(書籤)補回 `useSideNavLinks.ts` 的書籤面板與 `SidePanel/Bookmarks` 目錄,階段 11a(Agent 建構器)補回 `useSideNavLinks.ts` 的建構器面板、換回 `BadgeRow.tsx` 與 `hooks/MCP/index.ts`,並補回 `SidePanel/Agents` 目錄,階段 11b(Agent 市集)補回 `routes/index.tsx` 的市集路由、換回 `Landing.tsx`,並補回 `components/Agents` 目錄,階段 12(Assistants)補回 `useSideNavLinks.ts` 的 Assistants 建構器面板與 `SidePanel/Builder` 目錄,階段 14(MCP)補回 `useSideNavLinks.ts` 的 MCP 面板與 `SidePanel/MCPBuilder` 目錄,目前的狀態是**改 3 個檔案、刪 86 行**(MVP-1 當時是 13 個檔案、刪 247 行、改 1 行)。下面的數字都是目前的狀態。
 
 ## 規則
 
@@ -10,11 +10,10 @@ MVP-1 的前端改 13 個檔案、**沒有新增任何自己寫的邏輯**。再
 - MVP-1 唯一的修改(不是純刪除)是 `components/Chat/Header.tsx` 刪掉 `trace={trace}` 屬性,階段 9 已換回官方版。現在全部是純刪除。
 - 流程:先刪掉功能目錄,用 Vite 建置,依錯誤訊息找出還被引用的地方,逐一處理,直到建置成功。
 
-## 還沒補回的 6 個功能目錄
+## 還沒補回的 5 個功能目錄
 
 | 目錄 | 功能 |
 |---|---|
-| `components/SidePanel/MCPBuilder` | MCP 伺服器面板(其中 `MCPServerDialog` 已隨階段 11a 帶入) |
 | `components/SidePanel/Memories`、`Schedules` | 記憶、排程面板 |
 | `components/Skills` | Skills(其中 `dialogs` 已隨階段 11a 帶入) |
 | `components/Plugins` | 外掛(其中 `Store` 已隨階段 11a、12 帶入) |
@@ -28,7 +27,7 @@ MVP-1 的前端改 13 個檔案、**沒有新增任何自己寫的邏輯**。再
 
 | 檔案 | 刪除 |
 |---|---|
-| `hooks/Nav/useSideNavLinks.ts`(-57) | 4 條面板 `import`(MCPBuilder、Schedules、Memories、Skills)與對應的 4 個 `links.push` 區塊,只剩 `agents`、`assistants`、`prompts`、`bookmarks`、`files`、`parameters` 與 `hide-panel` |
+| `hooks/Nav/useSideNavLinks.ts`(-43) | 3 條面板 `import`(Schedules、Memories、Skills)與對應的 3 個 `links.push` 區塊,只剩 `agents`、`assistants`、`prompts`、`bookmarks`、`files`、`parameters`、`mcp-builder` 與 `hide-panel` |
 | `routes/index.tsx`(-39) | 3 個動態載入函式(Skills、Projects 兩個),以及 6 個路由項目(`skills*` 4 個、`projects*` 2 個) |
 
 ### 牽連型(被延後的功能引用的小元件或函式)
@@ -54,16 +53,13 @@ MVP-1 的前端改 13 個檔案、**沒有新增任何自己寫的邏輯**。再
 interface:
   memories: false
   skills: false
-  mcpServers:
-    use: false
 ```
 
 | 開關 | 隱藏的入口 |
 |---|---|
 | `memories`、`skills: false` | 關閉對應功能的介面權限 |
-| `mcpServers.use: false` | 前端不再請求 `/api/mcp/servers` |
 
-MVP-1 當時還有 `prompts: false`、`bookmarks: false` 與 `marketplace.use: false`(隱藏側邊欄指向 `/agents` 的市集連結)。階段 1 補回提示詞、階段 10 補回書籤、階段 11b 補回市集後,分別改成 `prompts: true`、`bookmarks: true`、`marketplace.use: true`,**不能只是刪掉**:`false` 在啟動時已經把 `USER` 角色的 `PROMPTS` 使用權限寫進資料庫,拿掉設定並不會改回來,必須明確寫 `true` 才會重新開啟。其餘的開關,等各自的階段補回功能時,同樣改成 `true`。
+MVP-1 當時還有 `prompts: false`、`bookmarks: false`、`marketplace.use: false`(隱藏側邊欄指向 `/agents` 的市集連結)與 `mcpServers.use: false`(前端不再請求 `/api/mcp/servers`)。階段 1 補回提示詞、階段 10 補回書籤、階段 11b 補回市集、階段 14 補回 MCP 後,分別改成 `prompts: true`、`bookmarks: true`、`marketplace.use: true`、`mcpServers.use: true`,**不能只是刪掉**:`false` 在啟動時已經把 `USER` 角色的 `PROMPTS` 使用權限寫進資料庫,拿掉設定並不會改回來,必須明確寫 `true` 才會重新開啟。其餘的開關,等各自的階段補回功能時,同樣改成 `true`。
 
 ## 驗證結果(MVP-1 當時)
 

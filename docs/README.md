@@ -63,3 +63,6 @@ powershell -ExecutionPolicy Bypass -File tools/start.ps1
 | 45 | [Assistants](features/assistants.md) | 階段 12:補回的 41 個檔案、建構器顯示條件、端點選單為什麼一直有 Assistants、`uaParser` 封鎖非瀏覽器請求、驗證結果 |
 | 46 | [Code Interpreter API(官方文件翻譯)](official/features/code_interpreter.md) | 簡介、開始使用、有狀態的程式碼工作階段(附加環境與配對、工具權限等)、自架 JWT 驗證與基礎網址 |
 | 47 | [程式碼環境](features/code-environments.md) | 階段 13:和基本 Code Interpreter 的差別、補回的路由與生命週期協調器、API 與權限、驗證結果 |
+| 48 | [MCP(官方文件翻譯)](official/features/mcp.md) | MCP 是什麼、為什麼重要、在聊天區與 Agents 中使用、基本設定、介面操作、伺服器管理、傳輸方式 |
+| 49 | [MCP 伺服器物件結構(官方文件翻譯)](official/configuration/librechat_yaml/object_structure/mcp_servers.md) | `librechat.yaml` 的 `mcpServers`:伺服器名稱、`type`、`command`、`args`、`env`、`timeout`、`initTimeout`、`stderr`、`stdio` 範例 |
+| 50 | [MCP](features/mcp.md) | 階段 14:MVP-1 已有的 MCP 部分、補回的面板與 `/api/mcp`、面板顯示條件、OAuth 重新連線管理器、工具名稱、filesystem 伺服器用法、驗證結果 |
