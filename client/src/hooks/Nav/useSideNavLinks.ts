@@ -26,6 +26,7 @@ import {
   useGetAgentsConfig,
   useHasAccess,
 } from '~/hooks';
+import MCPBuilderPanel from '~/components/SidePanel/MCPBuilder/MCPBuilderPanel';
 import AgentPanelSwitch from '~/components/SidePanel/Agents/AgentPanelSwitch';
 import BookmarkPanel from '~/components/SidePanel/Bookmarks/BookmarkPanel';
 import PanelSwitch from '~/components/SidePanel/Builder/PanelSwitch';
@@ -172,6 +173,19 @@ export default function useSideNavLinks({
         icon: SlidersHorizontal,
         id: 'parameters',
         Component: Parameters,
+      });
+    }
+
+    if (
+      (hasAccessToUseMCPSettings && availableMCPServers && availableMCPServers.length > 0) ||
+      hasAccessToCreateMCP
+    ) {
+      links.push({
+        title: 'com_nav_setting_mcp',
+        label: '',
+        icon: MCPIcon,
+        id: 'mcp-builder',
+        Component: MCPBuilderPanel,
       });
     }
 

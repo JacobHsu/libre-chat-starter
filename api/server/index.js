@@ -59,6 +59,7 @@ const {
   getRoleByName,
   seedDatabase,
 } = require('~/models');
+const initializeOAuthReconnectManager = require('./services/initializeOAuthReconnectManager');
 const { capabilityContextMiddleware } = require('./middleware/roles/capabilities');
 const createValidateImageRequest = require('./middleware/validateImageRequest');
 const { initializeAgentTriggerService } = require('./services/Agents/triggers');
@@ -401,6 +402,7 @@ const startServer = async () => {
   app.use('/api/permissions', routes.accessPermissions);
 
   app.use('/api/tags', routes.tags);
+  app.use('/api/mcp', routes.mcp);
   app.use('/api/rum', routes.rum);
 
   app.use('/metrics', metricsRouter);
@@ -447,6 +449,7 @@ const startServer = async () => {
     try {
       await runAsSystem(async () => {
         await initializeMCPs();
+        await initializeOAuthReconnectManager();
       });
       await checkMigrations();
 
