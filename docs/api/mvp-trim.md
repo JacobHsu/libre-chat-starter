@@ -2,26 +2,26 @@
 
 MVP-1 的後端只改 2 個檔案、**沒有新增任何自己寫的邏輯**。這份清單列出每一處,最終階段這 2 個檔案會換回官方完整版。
 
-各階段補回功能時,會從清單拿掉對應的項目。階段 1(提示詞)補回了 `prompts`、`categories` 兩條路由,階段 4(檔案與圖片)補回了過期檔案清理,階段 5(OAuth 與 OpenID)補回了 `oauth` 路由,階段 7(分享)補回了 `share` 路由,階段 8(管理面板)補回了 7 條 `admin` 路由,階段 9(Trace 與可觀測)補回了 `traces`、`insights`、`rum`、`adminLangfuse`,階段 10(書籤)補回了 `tags`,階段 11a(Agent 建構器)補回了 `actions` 與工具核准 hooks,階段 11c(Agents API)補回了 `apiKeys` 與 `openapi`,階段 12(Assistants)補回了 `assistants`,階段 13(程式碼環境)補回了 `codeEnvironments`、`adminCodeEnvironments` 與生命週期協調器,階段 14(MCP)補回了 `mcp` 與 OAuth 重新連線管理器,目前的狀態是**刪 63 行、改 1 行**(MVP-1 當時是刪 149 行)。下面的數字都是目前的狀態。
+各階段補回功能時,會從清單拿掉對應的項目。階段 1(提示詞)補回了 `prompts`、`categories` 兩條路由,階段 4(檔案與圖片)補回了過期檔案清理,階段 5(OAuth 與 OpenID)補回了 `oauth` 路由,階段 7(分享)補回了 `share` 路由,階段 8(管理面板)補回了 7 條 `admin` 路由,階段 9(Trace 與可觀測)補回了 `traces`、`insights`、`rum`、`adminLangfuse`,階段 10(書籤)補回了 `tags`,階段 11a(Agent 建構器)補回了 `actions` 與工具核准 hooks,階段 11c(Agents API)補回了 `apiKeys` 與 `openapi`,階段 12(Assistants)補回了 `assistants`,階段 13(程式碼環境)補回了 `codeEnvironments`、`adminCodeEnvironments` 與生命週期協調器,階段 14(MCP)補回了 `mcp` 與 OAuth 重新連線管理器,階段 15(記憶)補回了 `memories`,目前的狀態是**刪 60 行、改 1 行**(MVP-1 當時是刪 149 行)。下面的數字都是目前的狀態。
 
 ## 規則
 
 - 只刪不寫:每處精簡都是刪掉一個 `require` 與對應的呼叫,或一整段只服務被刪功能的程式碼。
 - 唯一的修改(不是純刪除):`server/index.js` 裡 `const { initializeScheduleEngine, recordExpiredScheduleApproval } = require('./services/Schedules')` 改成只匯入 `recordExpiredScheduleApproval`,因為 `initializeScheduleEngine` 的呼叫整段刪了。
 
-## `server/routes/index.js`(官方 93 行 → 83 行)
+## `server/routes/index.js`(官方 93 行 → 85 行)
 
-路由聚合檔。刪掉 5 條路由的 `require` 與匯出,保留 40 條:
+路由聚合檔。刪掉 4 條路由的 `require` 與匯出,保留 41 條:
 
-| 保留(40) | `auth`、`user`、`keys`、`roles`、`files`、`banner`、`agents`、`convos`、`search`、`config`、`models`、`presets`、`balance`、`messages`、`endpoints`、`staticRoute`、`accessPermissions`、`prompts`(階段 1)、`categories`(階段 1)、`oauth`(階段 5)、`share`(階段 7)、`adminAuth`、`adminConfig`、`adminGrants`、`adminGroups`、`adminRoles`、`adminUsers`、`adminAuditLog`(階段 8)、`traces`、`insights`、`rum`、`adminLangfuse`(階段 9)、`tags`(階段 10)、`actions`(階段 11a)、`apiKeys`、`openapi`(階段 11c)、`assistants`(階段 12)、`adminCodeEnvironments`、`codeEnvironments`(階段 13)、`mcp`(階段 14) |
+| 保留(41) | `auth`、`user`、`keys`、`roles`、`files`、`banner`、`agents`、`convos`、`search`、`config`、`models`、`presets`、`balance`、`messages`、`endpoints`、`staticRoute`、`accessPermissions`、`prompts`(階段 1)、`categories`(階段 1)、`oauth`(階段 5)、`share`(階段 7)、`adminAuth`、`adminConfig`、`adminGrants`、`adminGroups`、`adminRoles`、`adminUsers`、`adminAuditLog`(階段 8)、`traces`、`insights`、`rum`、`adminLangfuse`(階段 9)、`tags`(階段 10)、`actions`(階段 11a)、`apiKeys`、`openapi`(階段 11c)、`assistants`(階段 12)、`adminCodeEnvironments`、`codeEnvironments`(階段 13)、`mcp`(階段 14)、`memories`(階段 15) |
 |---|---|
-| 刪除(5) | `adminSkills`、`projects`、`skills`、`memories`、`schedules` |
+| 刪除(4) | `adminSkills`、`projects`、`skills`、`schedules` |
 
-## `server/index.js`(官方 634 行 → 582 行)
+## `server/index.js`(官方 634 行 → 583 行)
 
-### 路由掛載:刪 5 行 `app.use`
+### 路由掛載:刪 4 行 `app.use`
 
-與上面 5 條路由一一對應,例如 `app.use('/api/memories', routes.memories)`。其中排程路由多了一個寫入閘門:`app.use('/api/schedules', rejectScheduleWritesUntilReady, routes.schedules)`。
+與上面 4 條路由一一對應,例如 `app.use('/api/skills', routes.skills)`。其中排程路由多了一個寫入閘門:`app.use('/api/schedules', rejectScheduleWritesUntilReady, routes.schedules)`。
 
 ### 啟動項目:刪 2 項
 
@@ -38,13 +38,13 @@ MVP-1 的後端只改 2 個檔案、**沒有新增任何自己寫的邏輯**。�
 
 另一項實測:`setPluginHookSource` 可以刪,不影響聊天。
 
-## 沒帶入的 21 個檔案
+## 沒帶入的 20 個檔案
 
 只被已刪除路由使用的程式碼,不帶:
 
 | 位置 | 檔案 |
 |---|---|
-| `server/routes/`(6) | `memories.js`、`projects.js`、`schedules.js`、`skills.js`;`admin/skills.js`;`types/assistants.js` |
+| `server/routes/`(5) | `projects.js`、`schedules.js`、`skills.js`;`admin/skills.js`;`types/assistants.js` |
 | `server/services/`(2) | `cleanup.js`、`Files/index.js` |
 | `server/controllers/`(1) | `agents/errors.js` |
 | `app/`(6) | `app/index.js`、`clients/OllamaClient.js`、`clients/prompts/formatGoogleInputs.js`、`clients/specs/FakeClient.js`、`clients/tools/structured/TavilySearch.js`、`credentials.js` |

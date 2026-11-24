@@ -66,3 +66,6 @@ powershell -ExecutionPolicy Bypass -File tools/start.ps1
 | 48 | [MCP(官方文件翻譯)](official/features/mcp.md) | MCP 是什麼、為什麼重要、在聊天區與 Agents 中使用、基本設定、介面操作、伺服器管理、傳輸方式 |
 | 49 | [MCP 伺服器物件結構(官方文件翻譯)](official/configuration/librechat_yaml/object_structure/mcp_servers.md) | `librechat.yaml` 的 `mcpServers`:伺服器名稱、`type`、`command`、`args`、`env`、`timeout`、`initTimeout`、`stderr`、`stdio` 範例 |
 | 50 | [MCP](features/mcp.md) | 階段 14:MVP-1 已有的 MCP 部分、補回的面板與 `/api/mcp`、面板顯示條件、OAuth 重新連線管理器、工具名稱、filesystem 伺服器用法、驗證結果 |
+| 51 | [使用者記憶(官方文件翻譯)](official/features/memory.md) | 記憶是什麼(鍵值儲存，不是對話記憶)、主要功能、設定、運作方式、Agent 記憶與分區、最佳做法、範例、疑難排解 |
+| 52 | [記憶設定(官方文件翻譯)](official/configuration/librechat_yaml/object_structure/memory.md) | `librechat.yaml` 的 `memory`:`disabled`、`validKeys`、`tokenLimit`、`charLimit`、`maxInputTokens`、`personalize`、`messageWindowSize`、`agent` |
+| 53 | [記憶](features/memory.md) | 階段 15:MVP-1 已有的記憶部分、補回的面板與 `/api/memories`、面板顯示條件、我們的設定、API 與 `preferences` 鍵撞路由、驗證結果 |
