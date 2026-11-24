@@ -31,6 +31,7 @@ import AgentPanelSwitch from '~/components/SidePanel/Agents/AgentPanelSwitch';
 import BookmarkPanel from '~/components/SidePanel/Bookmarks/BookmarkPanel';
 import PanelSwitch from '~/components/SidePanel/Builder/PanelSwitch';
 import Parameters from '~/components/SidePanel/Parameters/Panel';
+import { MemoryPanel } from '~/components/SidePanel/Memories';
 import FilesPanel from '~/components/SidePanel/Files/Panel';
 import { PromptsAccordion } from '~/components/Prompts';
 
@@ -140,6 +141,16 @@ export default function useSideNavLinks({
         icon: NotebookPen,
         id: 'prompts',
         Component: PromptsAccordion,
+      });
+    }
+
+    if (hasAccessToMemories && hasAccessToReadMemories) {
+      links.push({
+        title: 'com_ui_memories',
+        label: '',
+        icon: Brain,
+        id: 'memories',
+        Component: MemoryPanel,
       });
     }
 
